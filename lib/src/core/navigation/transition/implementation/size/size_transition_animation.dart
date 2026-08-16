@@ -1,0 +1,33 @@
+import 'package:m_kemet/src/core/navigation/constants/imports_constants.dart';
+import 'package:m_kemet/src/core/navigation/transition/factory/transition_creator.dart';
+import 'package:m_kemet/src/core/navigation/transition/implementation/size/Animator/size_animator.dart';
+import 'package:m_kemet/src/core/navigation/transition/implementation/size/Option/size_animation_option.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class SizeTransitionAnimation implements TransitionCreator {
+  final SizeAnimationOptions options;
+
+  const SizeTransitionAnimation({required this.options});
+
+  @override
+  Widget animate(
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) => Align(
+      alignment: options.alignment,
+      child:
+          SizeTransition(
+            sizeFactor: SizeAnimator(options).animator(animation),
+            axis: options.axis,
+            alignment: options.axis == Axis.vertical
+                ? Alignment(0.0, options.axisAlignment)
+                : Alignment(options.axisAlignment, 0.0),
+            child: child,
+          ).buildSecondaryTransition(
+            animation: animation,
+            applySecondaryTransition: options.secondaryTransition,
+          ),
+    );
+}

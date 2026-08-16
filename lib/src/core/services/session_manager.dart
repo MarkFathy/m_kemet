@@ -1,0 +1,40 @@
+import 'package:m_kemet/src/core/helpers/cache_service.dart';
+
+class SessionManager {
+  SessionManager._();
+
+  static const String _kAccessToken = 'access_token';
+  static const String _kUserId = 'user_id';
+  static const String _kUserEmail = 'user_email';
+
+  static Future<void> saveSession({
+    required String token,
+    String? userId,
+    String? email,
+  }) async {
+    await SecureStorage.write(_kAccessToken, token);
+    if (userId != null) {
+      await SecureStorage.write(_kUserId, userId);
+    }
+    if (email != null) {
+      await SecureStorage.write(_kUserEmail, email);
+    }
+  }
+
+  static Future<String?> getToken() async => SecureStorage.read(_kAccessToken);
+
+  static Future<String?> getUserId() async => SecureStorage.read(_kUserId);
+
+  static Future<String?> getEmail() async => SecureStorage.read(_kUserEmail);
+
+  static Future<bool> isLoggedIn() async {
+    final token = await getToken();
+    return token != null && token.trim().isNotEmpty;
+  }
+
+  static Future<void> clearSession() async {
+    await SecureStorage.delete(_kAccessToken);
+    await SecureStorage.delete(_kUserId);
+    await SecureStorage.delete(_kUserEmail);
+  }
+}
