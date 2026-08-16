@@ -635,21 +635,271 @@ class S {
     );
   }
 
-  /// `المستندات الشخصية`
+  /// `المستندات الشخصية والبيانات المهنية`
   String get personalDocumentsTitle {
     return Intl.message(
-      'المستندات الشخصية',
+      'المستندات الشخصية والبيانات المهنية',
       name: 'personalDocumentsTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `يرجى رفع المستندات التالية لاستكمال ملفك الشخصي.`
+  /// `يرجى إكمال بياناتك المهنية ورفع المستندات لاستكمال ملفك الشخصي.`
   String get personalDocumentsSubtitle {
     return Intl.message(
-      'يرجى رفع المستندات التالية لاستكمال ملفك الشخصي.',
+      'يرجى إكمال بياناتك المهنية ورفع المستندات لاستكمال ملفك الشخصي.',
       name: 'personalDocumentsSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `البيانات المهنية`
+  String get professionalSectionTitle {
+    return Intl.message(
+      'البيانات المهنية',
+      name: 'professionalSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المهنة / المسمى الوظيفي`
+  String get professionLabel {
+    return Intl.message(
+      'المهنة / المسمى الوظيفي',
+      name: 'professionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختر المهنة (مثلاً: سائق، كهربائي...)`
+  String get professionHint {
+    return Intl.message(
+      'اختر المهنة (مثلاً: سائق، كهربائي...)',
+      name: 'professionHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ابحث عن المهنة...`
+  String get searchProfessionHint {
+    return Intl.message(
+      'ابحث عن المهنة...',
+      name: 'searchProfessionHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `التخصص الدقيق`
+  String get specializationLabel {
+    return Intl.message(
+      'التخصص الدقيق',
+      name: 'specializationLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أدخل تخصصك الدقيق`
+  String get specializationHint {
+    return Intl.message(
+      'أدخل تخصصك الدقيق',
+      name: 'specializationHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سنوات الخبرة`
+  String get experienceYearsLabel {
+    return Intl.message(
+      'سنوات الخبرة',
+      name: 'experienceYearsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختر سنوات الخبرة`
+  String get experienceYearsHint {
+    return Intl.message(
+      'اختر سنوات الخبرة',
+      name: 'experienceYearsHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المؤهل الدراسي`
+  String get qualificationLabel {
+    return Intl.message(
+      'المؤهل الدراسي',
+      name: 'qualificationLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختر المؤهل الدراسي`
+  String get qualificationHint {
+    return Intl.message(
+      'اختر المؤهل الدراسي',
+      name: 'qualificationHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اللغات التي تجيدها`
+  String get languagesLabel {
+    return Intl.message(
+      'اللغات التي تجيدها',
+      name: 'languagesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختر اللغات`
+  String get languagesHint {
+    return Intl.message(
+      'اختر اللغات',
+      name: 'languagesHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المهارات المهنية`
+  String get skillsLabel {
+    return Intl.message(
+      'المهارات المهنية',
+      name: 'skillsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أدخل مهاراتك الرئيسية`
+  String get skillsHint {
+    return Intl.message(
+      'أدخل مهاراتك الرئيسية',
+      name: 'skillsHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الخبرات السابقة`
+  String get previousExperienceLabel {
+    return Intl.message(
+      'الخبرات السابقة',
+      name: 'previousExperienceLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اكتب نبذة عن خبراتك وأماكن عملك السابقة`
+  String get previousExperienceHint {
+    return Intl.message(
+      'اكتب نبذة عن خبراتك وأماكن عملك السابقة',
+      name: 'previousExperienceHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الراتب المتوقع (بالدولار)`
+  String get expectedSalaryLabel {
+    return Intl.message(
+      'الراتب المتوقع (بالدولار)',
+      name: 'expectedSalaryLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختر الراتب المتوقع`
+  String get expectedSalaryHint {
+    return Intl.message(
+      'اختر الراتب المتوقع',
+      name: 'expectedSalaryHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إمكانية السفر والتنقل`
+  String get travelPossibilityLabel {
+    return Intl.message(
+      'إمكانية السفر والتنقل',
+      name: 'travelPossibilityLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختر إمكانية السفر`
+  String get travelPossibilityHint {
+    return Intl.message(
+      'اختر إمكانية السفر',
+      name: 'travelPossibilityHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الدول التي ترغب بالسفر إليها`
+  String get targetCountriesLabel {
+    return Intl.message(
+      'الدول التي ترغب بالسفر إليها',
+      name: 'targetCountriesLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختر الدول المرغوب السفر إليها`
+  String get targetCountriesHint {
+    return Intl.message(
+      'اختر الدول المرغوب السفر إليها',
+      name: 'targetCountriesHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المستندات والوسائط المطلوبة`
+  String get documentsSectionTitle {
+    return Intl.message(
+      'المستندات والوسائط المطلوبة',
+      name: 'documentsSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الصورة الشخصية`
+  String get personalPhotoTitle {
+    return Intl.message(
+      'الصورة الشخصية',
+      name: 'personalPhotoTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `صورة بطاقة الهوية / الرقم القومي`
+  String get idCardTitle {
+    return Intl.message(
+      'صورة بطاقة الهوية / الرقم القومي',
+      name: 'idCardTitle',
       desc: '',
       args: [],
     );
@@ -695,21 +945,31 @@ class S {
     );
   }
 
-  /// `الفيديو التعريفي وشهادات الخبرة`
+  /// `الفيديو التعريفي (⭐ هام جداً ⭐)`
   String get introVideoTitle {
     return Intl.message(
-      'الفيديو التعريفي وشهادات الخبرة',
+      'الفيديو التعريفي (⭐ هام جداً ⭐)',
       name: 'introVideoTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `مقطع فيديو تعريفي قصير (اختياري) أو شهادات خبرة`
+  /// `مقطع فيديو تعريفي قصير (لمدة 1 دقيقة) تشرح فيه اسمك، مهنتك، خبراتك والدول التي ترغب بالسفر إليها`
   String get introVideoDesc {
     return Intl.message(
-      'مقطع فيديو تعريفي قصير (اختياري) أو شهادات خبرة',
+      'مقطع فيديو تعريفي قصير (لمدة 1 دقيقة) تشرح فيه اسمك، مهنتك، خبراتك والدول التي ترغب بالسفر إليها',
       name: 'introVideoDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اضغط هنا لرفع مقطع الفيديو التعريفي (1 دقيقة)`
+  String get recordVideoHint {
+    return Intl.message(
+      'اضغط هنا لرفع مقطع الفيديو التعريفي (1 دقيقة)',
+      name: 'recordVideoHint',
       desc: '',
       args: [],
     );
@@ -755,10 +1015,10 @@ class S {
     );
   }
 
-  /// `اكتمال المستندات`
+  /// `اكتمال الملف الشخصي`
   String get documentsCompletion {
     return Intl.message(
-      'اكتمال المستندات',
+      'اكتمال الملف الشخصي',
       name: 'documentsCompletion',
       desc: '',
       args: [],
@@ -775,10 +1035,10 @@ class S {
     );
   }
 
-  /// `تأكد من وضوح جميع المستندات وسريان مفعول جواز السفر لمدة لا تقل عن 6 أشهر لتسريع عملية التوظيف.`
+  /// `تأكد من وضوح جميع المستندات وسريان مفعول جواز السفر لمدة لا تقل عن 6 أشهر وتصوير الفيديو بشكل واضح لتسريع ترشيحك للشركات.`
   String get importantInfoDesc {
     return Intl.message(
-      'تأكد من وضوح جميع المستندات وسريان مفعول جواز السفر لمدة لا تقل عن 6 أشهر لتسريع عملية التوظيف.',
+      'تأكد من وضوح جميع المستندات وسريان مفعول جواز السفر لمدة لا تقل عن 6 أشهر وتصوير الفيديو بشكل واضح لتسريع ترشيحك للشركات.',
       name: 'importantInfoDesc',
       desc: '',
       args: [],

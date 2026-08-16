@@ -55,7 +55,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "dateOfBirthLabel": MessageLookupByLibrary.simpleMessage("Date of Birth"),
     "documentsCompletion": MessageLookupByLibrary.simpleMessage(
-      "Documents Completion",
+      "Profile Completion",
+    ),
+    "documentsSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "Required Documents & Media",
     ),
     "dontHaveAccount": MessageLookupByLibrary.simpleMessage(
       "Don\'t have an account?",
@@ -80,6 +83,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "Manage and filter job candidates",
     ),
     "employerTitle": MessageLookupByLibrary.simpleMessage("Employer / Company"),
+    "expectedSalaryHint": MessageLookupByLibrary.simpleMessage(
+      "Select expected salary range",
+    ),
+    "expectedSalaryLabel": MessageLookupByLibrary.simpleMessage(
+      "Expected Salary (\$)",
+    ),
+    "experienceYearsHint": MessageLookupByLibrary.simpleMessage(
+      "Select years of experience",
+    ),
+    "experienceYearsLabel": MessageLookupByLibrary.simpleMessage(
+      "Years of Experience",
+    ),
     "female": MessageLookupByLibrary.simpleMessage("Female"),
     "forgotPassword": MessageLookupByLibrary.simpleMessage("Forgot Password?"),
     "fullNameHint": MessageLookupByLibrary.simpleMessage(
@@ -89,17 +104,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "genderHint": MessageLookupByLibrary.simpleMessage("Select gender"),
     "genderLabel": MessageLookupByLibrary.simpleMessage("Gender"),
     "getStarted": MessageLookupByLibrary.simpleMessage("Get Started"),
+    "idCardTitle": MessageLookupByLibrary.simpleMessage(
+      "National ID / Passport Card",
+    ),
     "importantInfoDesc": MessageLookupByLibrary.simpleMessage(
-      "Ensure all documents are clear and passport is valid for at least 6 months to speed up recruitment.",
+      "Ensure all documents are clear, passport is valid for at least 6 months, and your intro video is clear to accelerate job matches.",
     ),
     "importantInfoTitle": MessageLookupByLibrary.simpleMessage(
       "Important Information",
     ),
     "introVideoDesc": MessageLookupByLibrary.simpleMessage(
-      "Short intro video (optional) or experience certificates",
+      "Short 1-minute intro video presenting your name, profession, experience, and destination countries",
     ),
     "introVideoTitle": MessageLookupByLibrary.simpleMessage(
-      "Intro Video & Experience Certificates",
+      "Intro Video (⭐ Important ⭐)",
     ),
     "jobSeekerDesc": MessageLookupByLibrary.simpleMessage(
       "Explore distinguished job opportunities in tourism & travel and build your professional profile.",
@@ -111,6 +129,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Create and update your CV",
     ),
     "jobSeekerTitle": MessageLookupByLibrary.simpleMessage("Job Seeker"),
+    "languagesHint": MessageLookupByLibrary.simpleMessage("Select languages"),
+    "languagesLabel": MessageLookupByLibrary.simpleMessage("Spoken Languages"),
     "loginAction": MessageLookupByLibrary.simpleMessage("Login"),
     "loginSubtitle": MessageLookupByLibrary.simpleMessage(
       "Welcome back! Please enter your details to proceed",
@@ -153,18 +173,45 @@ class MessageLookup extends MessageLookupByLibrary {
       "Password must be at least 8 characters",
     ),
     "personalDocumentsSubtitle": MessageLookupByLibrary.simpleMessage(
-      "Please upload the following documents to complete your profile.",
+      "Please complete your professional profile and upload requested documents.",
     ),
     "personalDocumentsTitle": MessageLookupByLibrary.simpleMessage(
-      "Personal Documents",
+      "Professional Data & Documents",
+    ),
+    "personalPhotoTitle": MessageLookupByLibrary.simpleMessage(
+      "Personal Photo",
     ),
     "phoneHint": MessageLookupByLibrary.simpleMessage("Enter phone number"),
     "phoneLabel": MessageLookupByLibrary.simpleMessage("Phone Number"),
     "phoneValidationMessage": MessageLookupByLibrary.simpleMessage(
       "Please enter a valid phone number",
     ),
+    "previousExperienceHint": MessageLookupByLibrary.simpleMessage(
+      "Briefly describe your previous experience and work history",
+    ),
+    "previousExperienceLabel": MessageLookupByLibrary.simpleMessage(
+      "Previous Work Experience",
+    ),
+    "professionHint": MessageLookupByLibrary.simpleMessage(
+      "Select profession (e.g. Driver, Electrician...)",
+    ),
+    "professionLabel": MessageLookupByLibrary.simpleMessage(
+      "Profession / Job Title",
+    ),
+    "professionalSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "Professional Information",
+    ),
     "profileStatusTitle": MessageLookupByLibrary.simpleMessage(
       "Profile Status",
+    ),
+    "qualificationHint": MessageLookupByLibrary.simpleMessage(
+      "Select educational qualification",
+    ),
+    "qualificationLabel": MessageLookupByLibrary.simpleMessage(
+      "Educational Qualification",
+    ),
+    "recordVideoHint": MessageLookupByLibrary.simpleMessage(
+      "Tap to upload intro video (1 min max)",
     ),
     "registerAction": MessageLookupByLibrary.simpleMessage("Register"),
     "registerSubtitle": MessageLookupByLibrary.simpleMessage(
@@ -177,11 +224,34 @@ class MessageLookup extends MessageLookupByLibrary {
     "searchCountryHint": MessageLookupByLibrary.simpleMessage(
       "Search country name...",
     ),
+    "searchProfessionHint": MessageLookupByLibrary.simpleMessage(
+      "Search profession...",
+    ),
     "signInNow": MessageLookupByLibrary.simpleMessage("Sign In"),
     "signUpNow": MessageLookupByLibrary.simpleMessage("Sign Up"),
+    "skillsHint": MessageLookupByLibrary.simpleMessage("Enter key skills"),
+    "skillsLabel": MessageLookupByLibrary.simpleMessage("Professional Skills"),
     "skip": MessageLookupByLibrary.simpleMessage("Skip"),
+    "specializationHint": MessageLookupByLibrary.simpleMessage(
+      "Enter exact specialization",
+    ),
+    "specializationLabel": MessageLookupByLibrary.simpleMessage(
+      "Specialization",
+    ),
     "splashTitle": MessageLookupByLibrary.simpleMessage(
       "Your gateway to international job opportunities & an exceptional travel experience",
+    ),
+    "targetCountriesHint": MessageLookupByLibrary.simpleMessage(
+      "Select target countries",
+    ),
+    "targetCountriesLabel": MessageLookupByLibrary.simpleMessage(
+      "Preferred Destination Countries",
+    ),
+    "travelPossibilityHint": MessageLookupByLibrary.simpleMessage(
+      "Select travel availability",
+    ),
+    "travelPossibilityLabel": MessageLookupByLibrary.simpleMessage(
+      "Willingness to Travel",
     ),
     "uploadedBadge": MessageLookupByLibrary.simpleMessage("Uploaded"),
     "uploadingBadge": MessageLookupByLibrary.simpleMessage("Uploading"),

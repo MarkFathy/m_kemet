@@ -55,7 +55,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "dateOfBirthLabel": MessageLookupByLibrary.simpleMessage("تاريخ الميلاد"),
     "documentsCompletion": MessageLookupByLibrary.simpleMessage(
-      "اكتمال المستندات",
+      "اكتمال الملف الشخصي",
+    ),
+    "documentsSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "المستندات والوسائط المطلوبة",
     ),
     "dontHaveAccount": MessageLookupByLibrary.simpleMessage("ليس لديك حساب؟"),
     "dragAndDropHint": MessageLookupByLibrary.simpleMessage(
@@ -76,6 +79,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "إدارة وتصفية المرشحين للعمل",
     ),
     "employerTitle": MessageLookupByLibrary.simpleMessage("صاحب عمل / شركة"),
+    "expectedSalaryHint": MessageLookupByLibrary.simpleMessage(
+      "اختر الراتب المتوقع",
+    ),
+    "expectedSalaryLabel": MessageLookupByLibrary.simpleMessage(
+      "الراتب المتوقع (بالدولار)",
+    ),
+    "experienceYearsHint": MessageLookupByLibrary.simpleMessage(
+      "اختر سنوات الخبرة",
+    ),
+    "experienceYearsLabel": MessageLookupByLibrary.simpleMessage(
+      "سنوات الخبرة",
+    ),
     "female": MessageLookupByLibrary.simpleMessage("أنثى"),
     "forgotPassword": MessageLookupByLibrary.simpleMessage("نسيت كلمة المرور؟"),
     "fullNameHint": MessageLookupByLibrary.simpleMessage("أدخل الاسم الكامل"),
@@ -83,15 +98,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "genderHint": MessageLookupByLibrary.simpleMessage("اختر الجنس"),
     "genderLabel": MessageLookupByLibrary.simpleMessage("الجنس"),
     "getStarted": MessageLookupByLibrary.simpleMessage("ابدأ الآن"),
+    "idCardTitle": MessageLookupByLibrary.simpleMessage(
+      "صورة بطاقة الهوية / الرقم القومي",
+    ),
     "importantInfoDesc": MessageLookupByLibrary.simpleMessage(
-      "تأكد من وضوح جميع المستندات وسريان مفعول جواز السفر لمدة لا تقل عن 6 أشهر لتسريع عملية التوظيف.",
+      "تأكد من وضوح جميع المستندات وسريان مفعول جواز السفر لمدة لا تقل عن 6 أشهر وتصوير الفيديو بشكل واضح لتسريع ترشيحك للشركات.",
     ),
     "importantInfoTitle": MessageLookupByLibrary.simpleMessage("معلومات هامة"),
     "introVideoDesc": MessageLookupByLibrary.simpleMessage(
-      "مقطع فيديو تعريفي قصير (اختياري) أو شهادات خبرة",
+      "مقطع فيديو تعريفي قصير (لمدة 1 دقيقة) تشرح فيه اسمك، مهنتك، خبراتك والدول التي ترغب بالسفر إليها",
     ),
     "introVideoTitle": MessageLookupByLibrary.simpleMessage(
-      "الفيديو التعريفي وشهادات الخبرة",
+      "الفيديو التعريفي (⭐ هام جداً ⭐)",
     ),
     "jobSeekerDesc": MessageLookupByLibrary.simpleMessage(
       "استكشف فرصال وظيفية متميزة في قطاع السياحة والسفر وابنِ ملفك المهني.",
@@ -103,6 +121,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "إنشاء وتحديث سيرتك الذاتية",
     ),
     "jobSeekerTitle": MessageLookupByLibrary.simpleMessage("باحث عن عمل"),
+    "languagesHint": MessageLookupByLibrary.simpleMessage("اختر اللغات"),
+    "languagesLabel": MessageLookupByLibrary.simpleMessage(
+      "اللغات التي تجيدها",
+    ),
     "loginAction": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
     "loginSubtitle": MessageLookupByLibrary.simpleMessage(
       "مرحباً بك مجدداً! يرجى إدخال بياناتك للمتابعة",
@@ -147,17 +169,44 @@ class MessageLookup extends MessageLookupByLibrary {
       "كلمة المرور يجب ألا تقل عن 8 أحرف",
     ),
     "personalDocumentsSubtitle": MessageLookupByLibrary.simpleMessage(
-      "يرجى رفع المستندات التالية لاستكمال ملفك الشخصي.",
+      "يرجى إكمال بياناتك المهنية ورفع المستندات لاستكمال ملفك الشخصي.",
     ),
     "personalDocumentsTitle": MessageLookupByLibrary.simpleMessage(
-      "المستندات الشخصية",
+      "المستندات الشخصية والبيانات المهنية",
+    ),
+    "personalPhotoTitle": MessageLookupByLibrary.simpleMessage(
+      "الصورة الشخصية",
     ),
     "phoneHint": MessageLookupByLibrary.simpleMessage("أدخل رقم الهاتف"),
     "phoneLabel": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
     "phoneValidationMessage": MessageLookupByLibrary.simpleMessage(
       "يرجى إدخال رقم هاتف صحيح",
     ),
+    "previousExperienceHint": MessageLookupByLibrary.simpleMessage(
+      "اكتب نبذة عن خبراتك وأماكن عملك السابقة",
+    ),
+    "previousExperienceLabel": MessageLookupByLibrary.simpleMessage(
+      "الخبرات السابقة",
+    ),
+    "professionHint": MessageLookupByLibrary.simpleMessage(
+      "اختر المهنة (مثلاً: سائق، كهربائي...)",
+    ),
+    "professionLabel": MessageLookupByLibrary.simpleMessage(
+      "المهنة / المسمى الوظيفي",
+    ),
+    "professionalSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "البيانات المهنية",
+    ),
     "profileStatusTitle": MessageLookupByLibrary.simpleMessage("حالة الملف"),
+    "qualificationHint": MessageLookupByLibrary.simpleMessage(
+      "اختر المؤهل الدراسي",
+    ),
+    "qualificationLabel": MessageLookupByLibrary.simpleMessage(
+      "المؤهل الدراسي",
+    ),
+    "recordVideoHint": MessageLookupByLibrary.simpleMessage(
+      "اضغط هنا لرفع مقطع الفيديو التعريفي (1 دقيقة)",
+    ),
     "registerAction": MessageLookupByLibrary.simpleMessage("إنشاء حساب"),
     "registerSubtitle": MessageLookupByLibrary.simpleMessage(
       "قم بإنشاء حسابك واستكشف أحدث وأفضل الفرص",
@@ -169,11 +218,34 @@ class MessageLookup extends MessageLookupByLibrary {
     "searchCountryHint": MessageLookupByLibrary.simpleMessage(
       "ابحث عن اسم الدولة...",
     ),
+    "searchProfessionHint": MessageLookupByLibrary.simpleMessage(
+      "ابحث عن المهنة...",
+    ),
     "signInNow": MessageLookupByLibrary.simpleMessage("سجل الدخول"),
     "signUpNow": MessageLookupByLibrary.simpleMessage("سجل الآن"),
+    "skillsHint": MessageLookupByLibrary.simpleMessage("أدخل مهاراتك الرئيسية"),
+    "skillsLabel": MessageLookupByLibrary.simpleMessage("المهارات المهنية"),
     "skip": MessageLookupByLibrary.simpleMessage("تخطي"),
+    "specializationHint": MessageLookupByLibrary.simpleMessage(
+      "أدخل تخصصك الدقيق",
+    ),
+    "specializationLabel": MessageLookupByLibrary.simpleMessage(
+      "التخصص الدقيق",
+    ),
     "splashTitle": MessageLookupByLibrary.simpleMessage(
       "بوابتك لفرص العمل الدولية وتجربة سفر استثنائية",
+    ),
+    "targetCountriesHint": MessageLookupByLibrary.simpleMessage(
+      "اختر الدول المرغوب السفر إليها",
+    ),
+    "targetCountriesLabel": MessageLookupByLibrary.simpleMessage(
+      "الدول التي ترغب بالسفر إليها",
+    ),
+    "travelPossibilityHint": MessageLookupByLibrary.simpleMessage(
+      "اختر إمكانية السفر",
+    ),
+    "travelPossibilityLabel": MessageLookupByLibrary.simpleMessage(
+      "إمكانية السفر والتنقل",
     ),
     "uploadedBadge": MessageLookupByLibrary.simpleMessage("تم الرفع"),
     "uploadingBadge": MessageLookupByLibrary.simpleMessage("قيد الرفع"),
