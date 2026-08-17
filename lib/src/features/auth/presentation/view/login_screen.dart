@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (selectedType == UserType.jobSeeker) {
         Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
       } else {
-        Go.offAllNamed(NamedRoutes.home);
+        Go.offAllNamed(NamedRoutes.companyMain);
       }
     }
   }
@@ -69,7 +69,6 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top Bar with Custom iOS Back Button & Role Badge
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

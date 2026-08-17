@@ -89,6 +89,19 @@ class CustomSnackBar {
     );
   }
 
+  static void showInfo(
+    BuildContext context, {
+    required String message,
+    Duration duration = const Duration(seconds: 4),
+  }) {
+    show(
+      context,
+      message: message,
+      type: SnackBarType.info,
+      duration: duration,
+    );
+  }
+
   static _SnackBarThemeData _getSnackBarTheme(BuildContext context, SnackBarType type) {
     switch (type) {
       case SnackBarType.success:

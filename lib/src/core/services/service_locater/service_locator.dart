@@ -1,8 +1,16 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_it/get_it.dart';
 import 'package:m_kemet/src/core/app_cubit/app_cubit.dart';
 import 'package:m_kemet/src/core/helpers/cache_service.dart';
 import 'package:m_kemet/src/core/services/app_lock_service.dart';
 import 'package:m_kemet/src/core/services/notification_service.dart';
 import 'package:m_kemet/src/core/services/user_status_service.dart';
+import 'package:m_kemet/src/features/company/data/datasources/candidate_local_data_source.dart';
+import 'package:m_kemet/src/features/company/data/repositories/candidate_repository_impl.dart';
+import 'package:m_kemet/src/features/company/domain/repositories/candidate_repository.dart';
+import 'package:m_kemet/src/features/company/domain/usecases/get_candidates_usecase.dart';
+import 'package:m_kemet/src/features/company/domain/usecases/toggle_save_candidate_usecase.dart';
+import 'package:m_kemet/src/features/company/presentation/cubit/candidate_search_cubit.dart';
 import 'package:m_kemet/src/features/onboarding/data/datasources/onboarding_local_data_source.dart';
 import 'package:m_kemet/src/features/onboarding/data/repositories/onboarding_repository_impl.dart';
 import 'package:m_kemet/src/features/onboarding/domain/repositories/onboarding_repository.dart';
@@ -14,8 +22,6 @@ import 'package:m_kemet/src/features/user_type_selection/data/repositories/user_
 import 'package:m_kemet/src/features/user_type_selection/domain/repositories/user_type_repository.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/usecases/save_user_type_usecase.dart';
 import 'package:m_kemet/src/features/user_type_selection/presentation/cubit/user_type_cubit.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.instance;
@@ -65,6 +71,22 @@ Future<void> setupServiceLocator() async {
     ..registerFactory(
       () => UserTypeCubit(
         saveUserTypeUseCase: sl(),
+      ),
+    )
+
+    // Employer Dashboard Candidate Search Feature
+    ..registerLazySingleton<CandidateLocalDataSource>(
+      CandidateLocalDataSourceImpl.new,
+    )
+    ..registerLazySingleton<CandidateRepository>(
+      () => CandidateRepositoryImpl(localDataSource: sl()),
+    )
+    ..registerLazySingleton(() => GetCandidatesUseCase(sl()))
+    ..registerLazySingleton(() => ToggleSaveCandidateUseCase(sl()))
+    ..registerFactory(
+      () => CandidateSearchCubit(
+        getCandidatesUseCase: sl(),
+        toggleSaveCandidateUseCase: sl(),
       ),
     );
 }

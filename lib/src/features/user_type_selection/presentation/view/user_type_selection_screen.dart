@@ -6,13 +6,13 @@ import 'package:m_kemet/src/config/res/app_sizes.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
-import 'package:m_kemet/src/core/app_cubit/app_cubit.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/services/service_locater/service_locator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
+import 'package:m_kemet/src/core/widgets/buttons/language_switcher_button.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 import 'package:m_kemet/src/features/user_type_selection/presentation/cubit/user_type_cubit.dart';
 import 'package:m_kemet/src/features/user_type_selection/presentation/cubit/user_type_state.dart';
@@ -41,60 +41,31 @@ class UserTypeSelectionScreen extends StatelessWidget {
           return AppScaffold(
             safeTop: true,
             safeBottom: true,
-            backgroundColor: const Color(0xFFF7F9FC),
+            backgroundColor: AppColors.pageBg,
             body: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               padding: EdgeInsets.symmetric(
-                horizontal: AppPadding.pW20,
+                horizontal: AppPadding.pW12,
                 vertical: AppPadding.pH12,
               ),
               child: Column(
                 children: [
-                  Align(
+                  const Align(
                     alignment: AlignmentDirectional.centerStart,
-                    child: InkWell(
-                      onTap: () {
-                        context.read<AppCubit>().toggleLanguage();
-                      },
-                      borderRadius: BorderRadius.circular(8.r),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 4.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              context.watch<AppCubit>().state.locale.languageCode == 'ar' ? 'EN' : 'عربي',
-                              style: getTextStyle().darkNavy.bold.s16,
-                            ),
-                            4.szW,
-                            Icon(Icons.language_rounded, size: 24.sp, color: AppColors.darkNavy),
-                          ],
-                        ),
-                      ),
-                    ),
+                    child: LanguageSwitcherButton(),
                   ),
+                  40.szH,
 
-                  4.szH,
-
-                  // Header Titles
-                  Text(
-                    S.of(context).userTypeTitle,
-                    textAlign: TextAlign.center,
-                    style: getTextStyle().darkNavy.w700.s24,
-                  ),
-
-                  8.szH,
 
                   Text(
                     S.of(context).userTypeSubtitle,
                     textAlign: TextAlign.center,
-                    style: getTextStyle().greyColor.w400.s14.copyWith(
-                      height: 1.5,
+                    style: getTextStyle().steelBlue.w400.s16.copyWith(
+                      height: 1.4,
                     ),
                   ),
 
-                  24.szH,
+                  16.szH,
 
                   // Card 1: Job Seeker
                   UserTypeOptionCard(
@@ -103,7 +74,7 @@ class UserTypeSelectionScreen extends StatelessWidget {
                     iconContainerColor: const Color(0xFFD0E8FF),
                     iconWidget: Icon(
                       Icons.person_search_rounded,
-                      size: 32.sp,
+                      size: 24.sp,
                       color: AppColors.darkNavy,
                     ),
                     title: S.of(context).jobSeekerTitle,
@@ -118,7 +89,7 @@ class UserTypeSelectionScreen extends StatelessWidget {
                     ],
                   ),
 
-                  16.szH,
+                  12.szH,
 
                   // Card 2: Employer / Company
                   UserTypeOptionCard(
@@ -127,7 +98,7 @@ class UserTypeSelectionScreen extends StatelessWidget {
                     iconContainerColor: const Color(0xFFE2F3EC),
                     iconWidget: Icon(
                       Icons.business_rounded,
-                      size: 32.sp,
+                      size: 24.sp,
                       color: const Color(0xFF0F7D59),
                     ),
                     title: S.of(context).employerTitle,
@@ -142,7 +113,7 @@ class UserTypeSelectionScreen extends StatelessWidget {
                     ],
                   ),
 
-                  32.szH,
+                  20.szH,
 
                   // Bottom Action Button ("المتابعة")
                   CustomButton(
@@ -155,10 +126,10 @@ class UserTypeSelectionScreen extends StatelessWidget {
                     backgroundColor: state.selectedUserType == null
                         ? AppColors.lightGrey
                         : AppColors.darkNavy,
-                    textStyle: getTextStyle().whiteColor.w700.s18,
+                    textStyle: getTextStyle().whiteColor.w700.s16,
                   ),
 
-                  16.szH,
+                  12.szH,
                 ],
               ),
             ),

@@ -22,13 +22,45 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "ageLabel": MessageLookupByLibrary.simpleMessage("العمر"),
     "alreadyHaveAccount": MessageLookupByLibrary.simpleMessage(
       "لديك حساب بالفعل؟",
     ),
     "appBrandName": MessageLookupByLibrary.simpleMessage("مسار للتوظيف"),
+    "appLanguageSub": MessageLookupByLibrary.simpleMessage(
+      "تغيير لغة العرض بين العربية والإنجليزية",
+    ),
+    "appLanguageTitle": MessageLookupByLibrary.simpleMessage("لغة التطبيق"),
+    "applyFilters": MessageLookupByLibrary.simpleMessage("تطبيق الفلاتر"),
+    "approvedHeaderDesc": MessageLookupByLibrary.simpleMessage(
+      "تم اعتماد ملفك المهني بنجاح وأصبح متاحاً للعرض أمام كبرى الشركات والمؤسسات.",
+    ),
+    "approvedHeaderTitle": MessageLookupByLibrary.simpleMessage(
+      "تهانينا! تمت الموافقة على طلبك",
+    ),
+    "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
+    "candidateBioTitle": MessageLookupByLibrary.simpleMessage("نبذة عن المرشح"),
+    "candidateDetailsTitle": MessageLookupByLibrary.simpleMessage(
+      "البيانات المهنية والتفاصيل",
+    ),
+    "candidateProfileTitle": MessageLookupByLibrary.simpleMessage(
+      "الملف الشخصي للمرشح",
+    ),
+    "candidateVideoTitle": MessageLookupByLibrary.simpleMessage(
+      "الفيديو التعريفي للمرشح",
+    ),
     "companyNameHint": MessageLookupByLibrary.simpleMessage("أدخل اسم الشركة"),
     "companyNameLabel": MessageLookupByLibrary.simpleMessage(
       "اسم الشركة / المؤسسة",
+    ),
+    "companyProfileHeader": MessageLookupByLibrary.simpleMessage(
+      "شركة الخليج للاستقدام والتطوير",
+    ),
+    "companyProfileSub": MessageLookupByLibrary.simpleMessage(
+      "حساب مؤسسة موثق | الرياض، السعودية",
+    ),
+    "confirmDeleteAction": MessageLookupByLibrary.simpleMessage(
+      "حذف الحساب نهائياً",
     ),
     "confirmPasswordHint": MessageLookupByLibrary.simpleMessage(
       "أدخل تأكيد كلمة المرور",
@@ -39,21 +71,40 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirmPasswordMismatch": MessageLookupByLibrary.simpleMessage(
       "كلمتا المرور غير متطابقتين",
     ),
+    "contactRequestSuccess": MessageLookupByLibrary.simpleMessage(
+      "تم إرسال طلب التواصل بنجاح! سيتم مراجعة الطلب من الداشبورد والموافقة عليه للتواصل مع المرشح.",
+    ),
+    "contactSupport": MessageLookupByLibrary.simpleMessage("الدعم الفني"),
     "continueAction": MessageLookupByLibrary.simpleMessage("المتابعة"),
+    "countryLabel": MessageLookupByLibrary.simpleMessage("الدولة الحالية"),
     "currentCountryHint": MessageLookupByLibrary.simpleMessage(
       "اختر الدولة الحالية",
     ),
     "currentCountryLabel": MessageLookupByLibrary.simpleMessage(
       "الدولة الحالية",
     ),
+    "currentLocation": MessageLookupByLibrary.simpleMessage("الموقع الحالي"),
     "cvDesc": MessageLookupByLibrary.simpleMessage(
       "صيغة PDF أو DOCX، أقصى حجم 5 ميجابايت",
+    ),
+    "cvDownloadInfo": MessageLookupByLibrary.simpleMessage(
+      "جارٍ فتح ملف السيرة الذاتية (CV) للمرشح...",
     ),
     "cvTitle": MessageLookupByLibrary.simpleMessage("السيرة الذاتية (CV)"),
     "dateOfBirthHint": MessageLookupByLibrary.simpleMessage(
       "اختر تاريخ الميلاد",
     ),
     "dateOfBirthLabel": MessageLookupByLibrary.simpleMessage("تاريخ الميلاد"),
+    "deleteAccount": MessageLookupByLibrary.simpleMessage("حذف الحساب نهائياً"),
+    "deleteAccountConfirmMsg": MessageLookupByLibrary.simpleMessage(
+      "سيؤدي حذف الحساب إلى إلغاء كافة طلبات التواصل، المرشحين المحفوظين، والمعلومات بشكل نهائي ولا يمكن استعادتها.",
+    ),
+    "deleteAccountConfirmTitle": MessageLookupByLibrary.simpleMessage(
+      "تنبيه: حذف حساب الشركة",
+    ),
+    "deleteAccountSub": MessageLookupByLibrary.simpleMessage(
+      "حذف حساب الشركة وكافة البيانات بشكل نهائي",
+    ),
     "documentsCompletion": MessageLookupByLibrary.simpleMessage(
       "اكتمال الملف الشخصي",
     ),
@@ -61,6 +112,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "المستندات والوسائط المطلوبة",
     ),
     "dontHaveAccount": MessageLookupByLibrary.simpleMessage("ليس لديك حساب؟"),
+    "downloadCv": MessageLookupByLibrary.simpleMessage("تحميل السيرة الذاتية"),
     "dragAndDropHint": MessageLookupByLibrary.simpleMessage(
       "اضغط هنا لتصفح الملفات أو رفع المستند",
     ),
@@ -78,13 +130,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "employerFeature2": MessageLookupByLibrary.simpleMessage(
       "إدارة وتصفية المرشحين للعمل",
     ),
+    "employerProfileTitle": MessageLookupByLibrary.simpleMessage("ملف الشركة"),
+    "employerSearchTitle": MessageLookupByLibrary.simpleMessage(
+      "البحث عن المرشحين",
+    ),
     "employerTitle": MessageLookupByLibrary.simpleMessage("صاحب عمل / شركة"),
+    "estimatedTimeLabel": MessageLookupByLibrary.simpleMessage(
+      "الوقت المتوقع للرد:",
+    ),
+    "estimatedTimeValue": MessageLookupByLibrary.simpleMessage(
+      "24 - 48 ساعة عمل",
+    ),
     "expectedSalaryHint": MessageLookupByLibrary.simpleMessage(
       "اختر الراتب المتوقع",
     ),
     "expectedSalaryLabel": MessageLookupByLibrary.simpleMessage(
-      "الراتب المتوقع (بالدولار)",
+      "الراتب المتوقع",
     ),
+    "experienceLabel": MessageLookupByLibrary.simpleMessage("الخبرة"),
     "experienceYearsHint": MessageLookupByLibrary.simpleMessage(
       "اختر سنوات الخبرة",
     ),
@@ -92,12 +155,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "سنوات الخبرة",
     ),
     "female": MessageLookupByLibrary.simpleMessage("أنثى"),
+    "filterTitle": MessageLookupByLibrary.simpleMessage("تصفية نتائج البحث"),
     "forgotPassword": MessageLookupByLibrary.simpleMessage("نسيت كلمة المرور؟"),
     "fullNameHint": MessageLookupByLibrary.simpleMessage("أدخل الاسم الكامل"),
     "fullNameLabel": MessageLookupByLibrary.simpleMessage("الاسم الكامل"),
     "genderHint": MessageLookupByLibrary.simpleMessage("اختر الجنس"),
     "genderLabel": MessageLookupByLibrary.simpleMessage("الجنس"),
     "getStarted": MessageLookupByLibrary.simpleMessage("ابدأ الآن"),
+    "goToHome": MessageLookupByLibrary.simpleMessage("الانتقال إلى الرئيسية"),
     "idCardTitle": MessageLookupByLibrary.simpleMessage(
       "صورة بطاقة الهوية / الرقم القومي",
     ),
@@ -109,8 +174,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "مقطع فيديو تعريفي قصير (لمدة 1 دقيقة) تشرح فيه اسمك، مهنتك، خبراتك والدول التي ترغب بالسفر إليها",
     ),
     "introVideoTitle": MessageLookupByLibrary.simpleMessage(
-      "الفيديو التعريفي (⭐ هام جداً ⭐)",
+      "الفيديو التعريفي (هام جداً)",
     ),
+    "invalidPassport": MessageLookupByLibrary.simpleMessage("غير ساري"),
     "jobSeekerDesc": MessageLookupByLibrary.simpleMessage(
       "استكشف فرصال وظيفية متميزة في قطاع السياحة والسفر وابنِ ملفك المهني.",
     ),
@@ -130,10 +196,68 @@ class MessageLookup extends MessageLookupByLibrary {
       "مرحباً بك مجدداً! يرجى إدخال بياناتك للمتابعة",
     ),
     "loginTitle": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
+    "logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
+    "logoutConfirmMsg": MessageLookupByLibrary.simpleMessage(
+      "هل أنت تأكد من رغبتك في تسجيل الخروج من حساب الشركة؟",
+    ),
+    "logoutConfirmTitle": MessageLookupByLibrary.simpleMessage(
+      "تأكيد تسجيل الخروج",
+    ),
+    "logoutSub": MessageLookupByLibrary.simpleMessage(
+      "تسجيل الخروج من الحساب الحالي",
+    ),
     "male": MessageLookupByLibrary.simpleMessage("ذكر"),
+    "navNotifications": MessageLookupByLibrary.simpleMessage("الإشعارات"),
+    "navProfile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
+    "navRequests": MessageLookupByLibrary.simpleMessage("الطلبات"),
+    "navSaved": MessageLookupByLibrary.simpleMessage("المحفوظين"),
+    "navSearchCandidates": MessageLookupByLibrary.simpleMessage(
+      "البحث عن عمالة",
+    ),
+    "navSettings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
     "next": MessageLookupByLibrary.simpleMessage("التالي"),
     "noCountryFound": MessageLookupByLibrary.simpleMessage(
       "لا توجد نتائج مطابقة",
+    ),
+    "noNotificationsSub": MessageLookupByLibrary.simpleMessage(
+      "سيصلك تنبيه فور قيام الإدارة بالموافقة على طلب التواصل أو تحديث حالته.",
+    ),
+    "noNotificationsTitle": MessageLookupByLibrary.simpleMessage(
+      "لا يوجد إشعارات جديدة",
+    ),
+    "noRequestsSub": MessageLookupByLibrary.simpleMessage(
+      "جميع طلبات التواصل والاستقدام المعروضة ستظهر هنا ومتابعة حالتها (قيد المراجعة، مقبول، مكتمل).",
+    ),
+    "noRequestsTitle": MessageLookupByLibrary.simpleMessage(
+      "لا يوجد طلبات تواصل حالية",
+    ),
+    "noSavedCandidates": MessageLookupByLibrary.simpleMessage(
+      "لا يوجد مرشحين محفوظين حالياً",
+    ),
+    "noSearchResultsSub": MessageLookupByLibrary.simpleMessage(
+      "جرب تغيير كلمات البحث أو إعادة ضبط الفلاتر",
+    ),
+    "noSearchResultsTitle": MessageLookupByLibrary.simpleMessage(
+      "لا توجد نتائج طابقها البحث الحالي",
+    ),
+    "notificationsDisabledMsg": MessageLookupByLibrary.simpleMessage(
+      "تم إيقاف إشعارات التطبيق",
+    ),
+    "notificationsEnabledMsg": MessageLookupByLibrary.simpleMessage(
+      "تم تفعيل إشعارات التطبيق",
+    ),
+    "notificationsHistorySub": MessageLookupByLibrary.simpleMessage(
+      "مراجعة كافة الرسائل والتنبيهات السابقة",
+    ),
+    "notificationsHistoryTitle": MessageLookupByLibrary.simpleMessage(
+      "سجل الإشعارات والتنبيهات",
+    ),
+    "notificationsTitle": MessageLookupByLibrary.simpleMessage("الإشعارات"),
+    "notificationsToggleSub": MessageLookupByLibrary.simpleMessage(
+      "استلام تنبيهات فورية عند الرد على طلبات التواصل",
+    ),
+    "notificationsToggleTitle": MessageLookupByLibrary.simpleMessage(
+      "تنبيهات وإشعارات التطبيق",
     ),
     "onboardingSubTitle1": MessageLookupByLibrary.simpleMessage(
       "اكتشف آلاف الوظائف المتاحة في مختلف المجالات ودول العالم بحرية وسهولة",
@@ -163,10 +287,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "passportCopyTitle": MessageLookupByLibrary.simpleMessage(
       "صورة جواز السفر",
     ),
+    "passportStatusLabel": MessageLookupByLibrary.simpleMessage(
+      "حالة جواز السفر",
+    ),
     "passwordHint": MessageLookupByLibrary.simpleMessage("أدخل كلمة المرور"),
     "passwordLabel": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
     "passwordValidationMessage": MessageLookupByLibrary.simpleMessage(
       "كلمة المرور يجب ألا تقل عن 8 أحرف",
+    ),
+    "pendingHeaderDesc": MessageLookupByLibrary.simpleMessage(
+      "قام فريقنا باستلام بياناتك ومستنداتك بنجاح، ويتم الآن التحقق من صحتها لترشيحك لأفضل فرص العمل.",
+    ),
+    "pendingHeaderTitle": MessageLookupByLibrary.simpleMessage(
+      "طلبك قيد الدراسة والمراجعة",
     ),
     "personalDocumentsSubtitle": MessageLookupByLibrary.simpleMessage(
       "يرجى إكمال بياناتك المهنية ورفع المستندات لاستكمال ملفك الشخصي.",
@@ -207,14 +340,54 @@ class MessageLookup extends MessageLookupByLibrary {
     "recordVideoHint": MessageLookupByLibrary.simpleMessage(
       "اضغط هنا لرفع مقطع الفيديو التعريفي (1 دقيقة)",
     ),
+    "refreshStatus": MessageLookupByLibrary.simpleMessage("تحديث الحالة"),
     "registerAction": MessageLookupByLibrary.simpleMessage("إنشاء حساب"),
     "registerSubtitle": MessageLookupByLibrary.simpleMessage(
       "قم بإنشاء حسابك واستكشف أحدث وأفضل الفرص",
     ),
     "registerTitle": MessageLookupByLibrary.simpleMessage("إنشاء حساب جديد"),
+    "rejectedHeaderDesc": MessageLookupByLibrary.simpleMessage(
+      "يتعذر قبول الطلب في الوقت الحالي بسبب وجود ملاحظات على البيانات أو المستندات المرفقة.",
+    ),
+    "rejectedHeaderTitle": MessageLookupByLibrary.simpleMessage(
+      "نأسف، تم رفض الطلب حالياً",
+    ),
+    "rejectionReasonSample": MessageLookupByLibrary.simpleMessage(
+      "صورة جواز السفر غير واضحة، والفيديو التعريفي يحتوي على تشويش في الصوت. يرجى إعادة الرفع.",
+    ),
+    "rejectionReasonTitle": MessageLookupByLibrary.simpleMessage(
+      "سبب عدم القبول:",
+    ),
+    "requestContact": MessageLookupByLibrary.simpleMessage("طلب تواصل"),
+    "requestIdLabel": MessageLookupByLibrary.simpleMessage(
+      "الرقم المرجعي للطلب:",
+    ),
+    "requestStatusScreenTitle": MessageLookupByLibrary.simpleMessage(
+      "حالة طلب التوظيف",
+    ),
+    "requestedDestination": MessageLookupByLibrary.simpleMessage(
+      "الدول المطلوبة",
+    ),
+    "requestsTitle": MessageLookupByLibrary.simpleMessage("طلبات التوظيف"),
     "requiredBadge": MessageLookupByLibrary.simpleMessage("مطلوب"),
     "resendCode": MessageLookupByLibrary.simpleMessage("إعادة إرسال الرمز"),
     "resendIn": MessageLookupByLibrary.simpleMessage("إعادة الإرسال خلال "),
+    "resetFilters": MessageLookupByLibrary.simpleMessage("إعادة ضبط"),
+    "resubmitRequest": MessageLookupByLibrary.simpleMessage(
+      "تعديل وإعادة تقديم الطلب",
+    ),
+    "savedCandidatesEmptySub": MessageLookupByLibrary.simpleMessage(
+      "يمكنك حفظ المرشحين المميزين أثناء البحث للعودة إليهم لاحقاً بسهولة.",
+    ),
+    "savedCandidatesSub": MessageLookupByLibrary.simpleMessage(
+      "عرض وتصفح المرشحين المميزين المحفوظين لديك",
+    ),
+    "savedCandidatesTitle": MessageLookupByLibrary.simpleMessage(
+      "المرشحين المحفوظين",
+    ),
+    "searchCandidateHint": MessageLookupByLibrary.simpleMessage(
+      "ابحث بالاسم، المهنة، أو المهارة...",
+    ),
     "searchCountryHint": MessageLookupByLibrary.simpleMessage(
       "ابحث عن اسم الدولة...",
     ),
@@ -235,6 +408,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "splashTitle": MessageLookupByLibrary.simpleMessage(
       "بوابتك لفرص العمل الدولية وتجربة سفر استثنائية",
     ),
+    "statusApproved": MessageLookupByLibrary.simpleMessage("تمت الموافقة"),
+    "statusCompleted": MessageLookupByLibrary.simpleMessage("مكتمل"),
+    "statusPending": MessageLookupByLibrary.simpleMessage("قيد المراجعة"),
+    "statusRejected": MessageLookupByLibrary.simpleMessage("مرفوض"),
+    "step1Title": MessageLookupByLibrary.simpleMessage("إرسال البيانات"),
+    "step2Title": MessageLookupByLibrary.simpleMessage("فحص المستندات"),
+    "step3Title": MessageLookupByLibrary.simpleMessage("القرار النهائي"),
+    "submissionDateLabel": MessageLookupByLibrary.simpleMessage(
+      "تاريخ التقديم:",
+    ),
     "targetCountriesHint": MessageLookupByLibrary.simpleMessage(
       "اختر الدول المرغوب السفر إليها",
     ),
@@ -247,6 +430,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "travelPossibilityLabel": MessageLookupByLibrary.simpleMessage(
       "إمكانية السفر والتنقل",
     ),
+    "unverifiedBadge": MessageLookupByLibrary.simpleMessage("غير محقق"),
     "uploadedBadge": MessageLookupByLibrary.simpleMessage("تم الرفع"),
     "uploadingBadge": MessageLookupByLibrary.simpleMessage("قيد الرفع"),
     "userTypeSubtitle": MessageLookupByLibrary.simpleMessage(
@@ -255,6 +439,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "userTypeTitle": MessageLookupByLibrary.simpleMessage(
       "كيف ترغب في استخدام مسار؟",
     ),
+    "validPassport": MessageLookupByLibrary.simpleMessage("جواز ساري"),
+    "verifiedBadge": MessageLookupByLibrary.simpleMessage("محقق"),
     "verifyAction": MessageLookupByLibrary.simpleMessage("تأكيد الرمز"),
+    "viewCandidateProfile": MessageLookupByLibrary.simpleMessage("عرض الملف"),
   };
 }

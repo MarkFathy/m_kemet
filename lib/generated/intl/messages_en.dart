@@ -22,14 +22,46 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "ageLabel": MessageLookupByLibrary.simpleMessage("Age Range"),
     "alreadyHaveAccount": MessageLookupByLibrary.simpleMessage(
       "Already have an account?",
     ),
     "appBrandName": MessageLookupByLibrary.simpleMessage("Masar Recruitment"),
+    "appLanguageSub": MessageLookupByLibrary.simpleMessage(
+      "Switch display language between Arabic and English",
+    ),
+    "appLanguageTitle": MessageLookupByLibrary.simpleMessage("App Language"),
+    "applyFilters": MessageLookupByLibrary.simpleMessage("Apply Filters"),
+    "approvedHeaderDesc": MessageLookupByLibrary.simpleMessage(
+      "Your professional profile has been verified and is now live for top employers and organizations.",
+    ),
+    "approvedHeaderTitle": MessageLookupByLibrary.simpleMessage(
+      "Congratulations! Application Approved",
+    ),
+    "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "candidateBioTitle": MessageLookupByLibrary.simpleMessage("Candidate Bio"),
+    "candidateDetailsTitle": MessageLookupByLibrary.simpleMessage(
+      "Professional Data & Details",
+    ),
+    "candidateProfileTitle": MessageLookupByLibrary.simpleMessage(
+      "Candidate Profile",
+    ),
+    "candidateVideoTitle": MessageLookupByLibrary.simpleMessage(
+      "Candidate Intro Video",
+    ),
     "companyNameHint": MessageLookupByLibrary.simpleMessage(
       "Enter company name",
     ),
     "companyNameLabel": MessageLookupByLibrary.simpleMessage("Company Name"),
+    "companyProfileHeader": MessageLookupByLibrary.simpleMessage(
+      "Gulf Recruitment & Development Co.",
+    ),
+    "companyProfileSub": MessageLookupByLibrary.simpleMessage(
+      "Verified Corporate Account | Riyadh, KSA",
+    ),
+    "confirmDeleteAction": MessageLookupByLibrary.simpleMessage(
+      "Delete Account Permanently",
+    ),
     "confirmPasswordHint": MessageLookupByLibrary.simpleMessage(
       "Enter confirm password",
     ),
@@ -39,21 +71,40 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirmPasswordMismatch": MessageLookupByLibrary.simpleMessage(
       "Passwords do not match",
     ),
+    "contactRequestSuccess": MessageLookupByLibrary.simpleMessage(
+      "Contact request submitted successfully! Admin will review and approve your request for communication.",
+    ),
+    "contactSupport": MessageLookupByLibrary.simpleMessage("Contact Support"),
     "continueAction": MessageLookupByLibrary.simpleMessage("Continue"),
+    "countryLabel": MessageLookupByLibrary.simpleMessage("Current Country"),
     "currentCountryHint": MessageLookupByLibrary.simpleMessage(
       "Select current country",
     ),
     "currentCountryLabel": MessageLookupByLibrary.simpleMessage(
       "Current Country",
     ),
+    "currentLocation": MessageLookupByLibrary.simpleMessage("Current Location"),
     "cvDesc": MessageLookupByLibrary.simpleMessage(
       "PDF or DOCX format, max size 5MB",
+    ),
+    "cvDownloadInfo": MessageLookupByLibrary.simpleMessage(
+      "Opening candidate CV file...",
     ),
     "cvTitle": MessageLookupByLibrary.simpleMessage("Resume / CV"),
     "dateOfBirthHint": MessageLookupByLibrary.simpleMessage(
       "Select date of birth",
     ),
     "dateOfBirthLabel": MessageLookupByLibrary.simpleMessage("Date of Birth"),
+    "deleteAccount": MessageLookupByLibrary.simpleMessage("Delete Account"),
+    "deleteAccountConfirmMsg": MessageLookupByLibrary.simpleMessage(
+      "Deleting your account will permanently remove all company data, contact requests, and bookmarked candidates. This action cannot be undone.",
+    ),
+    "deleteAccountConfirmTitle": MessageLookupByLibrary.simpleMessage(
+      "Warning: Delete Company Account",
+    ),
+    "deleteAccountSub": MessageLookupByLibrary.simpleMessage(
+      "Permanently delete company account and data",
+    ),
     "documentsCompletion": MessageLookupByLibrary.simpleMessage(
       "Profile Completion",
     ),
@@ -63,6 +114,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dontHaveAccount": MessageLookupByLibrary.simpleMessage(
       "Don\'t have an account?",
     ),
+    "downloadCv": MessageLookupByLibrary.simpleMessage("Download CV"),
     "dragAndDropHint": MessageLookupByLibrary.simpleMessage(
       "Tap here to browse files or upload document",
     ),
@@ -82,13 +134,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "employerFeature2": MessageLookupByLibrary.simpleMessage(
       "Manage and filter job candidates",
     ),
+    "employerProfileTitle": MessageLookupByLibrary.simpleMessage(
+      "Company Profile",
+    ),
+    "employerSearchTitle": MessageLookupByLibrary.simpleMessage(
+      "Search Candidates",
+    ),
     "employerTitle": MessageLookupByLibrary.simpleMessage("Employer / Company"),
+    "estimatedTimeLabel": MessageLookupByLibrary.simpleMessage(
+      "Estimated Response Time:",
+    ),
+    "estimatedTimeValue": MessageLookupByLibrary.simpleMessage(
+      "24 - 48 Business Hours",
+    ),
     "expectedSalaryHint": MessageLookupByLibrary.simpleMessage(
       "Select expected salary range",
     ),
     "expectedSalaryLabel": MessageLookupByLibrary.simpleMessage(
-      "Expected Salary (\$)",
+      "Expected Salary",
     ),
+    "experienceLabel": MessageLookupByLibrary.simpleMessage("Experience"),
     "experienceYearsHint": MessageLookupByLibrary.simpleMessage(
       "Select years of experience",
     ),
@@ -96,6 +161,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Years of Experience",
     ),
     "female": MessageLookupByLibrary.simpleMessage("Female"),
+    "filterTitle": MessageLookupByLibrary.simpleMessage(
+      "Filter Search Results",
+    ),
     "forgotPassword": MessageLookupByLibrary.simpleMessage("Forgot Password?"),
     "fullNameHint": MessageLookupByLibrary.simpleMessage(
       "Enter your full name",
@@ -104,6 +172,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "genderHint": MessageLookupByLibrary.simpleMessage("Select gender"),
     "genderLabel": MessageLookupByLibrary.simpleMessage("Gender"),
     "getStarted": MessageLookupByLibrary.simpleMessage("Get Started"),
+    "goToHome": MessageLookupByLibrary.simpleMessage(
+      "Proceed to Home Dashboard",
+    ),
     "idCardTitle": MessageLookupByLibrary.simpleMessage(
       "National ID / Passport Card",
     ),
@@ -117,8 +188,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Short 1-minute intro video presenting your name, profession, experience, and destination countries",
     ),
     "introVideoTitle": MessageLookupByLibrary.simpleMessage(
-      "Intro Video (⭐ Important ⭐)",
+      "Intro Video (Important)",
     ),
+    "invalidPassport": MessageLookupByLibrary.simpleMessage("Invalid Passport"),
     "jobSeekerDesc": MessageLookupByLibrary.simpleMessage(
       "Explore distinguished job opportunities in tourism & travel and build your professional profile.",
     ),
@@ -136,10 +208,68 @@ class MessageLookup extends MessageLookupByLibrary {
       "Welcome back! Please enter your details to proceed",
     ),
     "loginTitle": MessageLookupByLibrary.simpleMessage("Login"),
+    "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+    "logoutConfirmMsg": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to log out of your company account?",
+    ),
+    "logoutConfirmTitle": MessageLookupByLibrary.simpleMessage(
+      "Confirm Logout",
+    ),
+    "logoutSub": MessageLookupByLibrary.simpleMessage(
+      "Log out of your current account",
+    ),
     "male": MessageLookupByLibrary.simpleMessage("Male"),
+    "navNotifications": MessageLookupByLibrary.simpleMessage("Notifications"),
+    "navProfile": MessageLookupByLibrary.simpleMessage("Profile"),
+    "navRequests": MessageLookupByLibrary.simpleMessage("Requests"),
+    "navSaved": MessageLookupByLibrary.simpleMessage("Saved"),
+    "navSearchCandidates": MessageLookupByLibrary.simpleMessage(
+      "Search Candidates",
+    ),
+    "navSettings": MessageLookupByLibrary.simpleMessage("Settings"),
     "next": MessageLookupByLibrary.simpleMessage("Next"),
     "noCountryFound": MessageLookupByLibrary.simpleMessage(
       "No matching countries found",
+    ),
+    "noNotificationsSub": MessageLookupByLibrary.simpleMessage(
+      "You will receive instant alerts when the admin approves your contact request.",
+    ),
+    "noNotificationsTitle": MessageLookupByLibrary.simpleMessage(
+      "No new notifications",
+    ),
+    "noRequestsSub": MessageLookupByLibrary.simpleMessage(
+      "All your submitted contact and recruitment requests will appear here to track their lifecycle status (Pending, Approved, Rejected, Completed).",
+    ),
+    "noRequestsTitle": MessageLookupByLibrary.simpleMessage(
+      "No contact requests yet",
+    ),
+    "noSavedCandidates": MessageLookupByLibrary.simpleMessage(
+      "No saved candidates yet",
+    ),
+    "noSearchResultsSub": MessageLookupByLibrary.simpleMessage(
+      "Try modifying your keywords or resetting search filters",
+    ),
+    "noSearchResultsTitle": MessageLookupByLibrary.simpleMessage(
+      "No candidates match your current search",
+    ),
+    "notificationsDisabledMsg": MessageLookupByLibrary.simpleMessage(
+      "App notifications disabled",
+    ),
+    "notificationsEnabledMsg": MessageLookupByLibrary.simpleMessage(
+      "App notifications enabled",
+    ),
+    "notificationsHistorySub": MessageLookupByLibrary.simpleMessage(
+      "Review all past alerts and incoming messages",
+    ),
+    "notificationsHistoryTitle": MessageLookupByLibrary.simpleMessage(
+      "Notifications History",
+    ),
+    "notificationsTitle": MessageLookupByLibrary.simpleMessage("Notifications"),
+    "notificationsToggleSub": MessageLookupByLibrary.simpleMessage(
+      "Receive instant alerts on contact request status updates",
+    ),
+    "notificationsToggleTitle": MessageLookupByLibrary.simpleMessage(
+      "App Push Notifications",
     ),
     "onboardingSubTitle1": MessageLookupByLibrary.simpleMessage(
       "Discover thousands of jobs available across various fields and countries worldwide effortlessly.",
@@ -167,10 +297,19 @@ class MessageLookup extends MessageLookupByLibrary {
       "PDF or JPG format, max size 5MB",
     ),
     "passportCopyTitle": MessageLookupByLibrary.simpleMessage("Passport Copy"),
+    "passportStatusLabel": MessageLookupByLibrary.simpleMessage(
+      "Passport Status",
+    ),
     "passwordHint": MessageLookupByLibrary.simpleMessage("Enter your password"),
     "passwordLabel": MessageLookupByLibrary.simpleMessage("Password"),
     "passwordValidationMessage": MessageLookupByLibrary.simpleMessage(
       "Password must be at least 8 characters",
+    ),
+    "pendingHeaderDesc": MessageLookupByLibrary.simpleMessage(
+      "Our team has successfully received your documents and is currently reviewing them to match you with top opportunities.",
+    ),
+    "pendingHeaderTitle": MessageLookupByLibrary.simpleMessage(
+      "Your Application is Under Review",
     ),
     "personalDocumentsSubtitle": MessageLookupByLibrary.simpleMessage(
       "Please complete your professional profile and upload requested documents.",
@@ -213,14 +352,54 @@ class MessageLookup extends MessageLookupByLibrary {
     "recordVideoHint": MessageLookupByLibrary.simpleMessage(
       "Tap to upload intro video (1 min max)",
     ),
+    "refreshStatus": MessageLookupByLibrary.simpleMessage("Refresh Status"),
     "registerAction": MessageLookupByLibrary.simpleMessage("Register"),
     "registerSubtitle": MessageLookupByLibrary.simpleMessage(
       "Create your account and discover the latest and best opportunities",
     ),
     "registerTitle": MessageLookupByLibrary.simpleMessage("Create Account"),
+    "rejectedHeaderDesc": MessageLookupByLibrary.simpleMessage(
+      "We could not approve your application at this time due to issues with the provided information or files.",
+    ),
+    "rejectedHeaderTitle": MessageLookupByLibrary.simpleMessage(
+      "Application Not Approved",
+    ),
+    "rejectionReasonSample": MessageLookupByLibrary.simpleMessage(
+      "Passport scan is unclear and intro video audio is noisy. Please re-upload clearer files.",
+    ),
+    "rejectionReasonTitle": MessageLookupByLibrary.simpleMessage(
+      "Reason for Rejection:",
+    ),
+    "requestContact": MessageLookupByLibrary.simpleMessage("Request Contact"),
+    "requestIdLabel": MessageLookupByLibrary.simpleMessage("Request Ref ID:"),
+    "requestStatusScreenTitle": MessageLookupByLibrary.simpleMessage(
+      "Request Approval Status",
+    ),
+    "requestedDestination": MessageLookupByLibrary.simpleMessage(
+      "Target Destinations",
+    ),
+    "requestsTitle": MessageLookupByLibrary.simpleMessage(
+      "Recruitment Requests",
+    ),
     "requiredBadge": MessageLookupByLibrary.simpleMessage("Required"),
     "resendCode": MessageLookupByLibrary.simpleMessage("Resend Code"),
     "resendIn": MessageLookupByLibrary.simpleMessage("Resend in "),
+    "resetFilters": MessageLookupByLibrary.simpleMessage("Reset"),
+    "resubmitRequest": MessageLookupByLibrary.simpleMessage(
+      "Edit & Resubmit Application",
+    ),
+    "savedCandidatesEmptySub": MessageLookupByLibrary.simpleMessage(
+      "Bookmark top candidates during search to easily access them later.",
+    ),
+    "savedCandidatesSub": MessageLookupByLibrary.simpleMessage(
+      "View and manage your bookmarked candidate list",
+    ),
+    "savedCandidatesTitle": MessageLookupByLibrary.simpleMessage(
+      "Saved Candidates",
+    ),
+    "searchCandidateHint": MessageLookupByLibrary.simpleMessage(
+      "Search by name, title, or skill...",
+    ),
     "searchCountryHint": MessageLookupByLibrary.simpleMessage(
       "Search country name...",
     ),
@@ -241,6 +420,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "splashTitle": MessageLookupByLibrary.simpleMessage(
       "Your gateway to international job opportunities & an exceptional travel experience",
     ),
+    "statusApproved": MessageLookupByLibrary.simpleMessage("Approved"),
+    "statusCompleted": MessageLookupByLibrary.simpleMessage("Completed"),
+    "statusPending": MessageLookupByLibrary.simpleMessage("Pending Review"),
+    "statusRejected": MessageLookupByLibrary.simpleMessage("Rejected"),
+    "step1Title": MessageLookupByLibrary.simpleMessage("Submitted"),
+    "step2Title": MessageLookupByLibrary.simpleMessage("Verification"),
+    "step3Title": MessageLookupByLibrary.simpleMessage("Final Approval"),
+    "submissionDateLabel": MessageLookupByLibrary.simpleMessage(
+      "Submission Date:",
+    ),
     "targetCountriesHint": MessageLookupByLibrary.simpleMessage(
       "Select target countries",
     ),
@@ -253,6 +442,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "travelPossibilityLabel": MessageLookupByLibrary.simpleMessage(
       "Willingness to Travel",
     ),
+    "unverifiedBadge": MessageLookupByLibrary.simpleMessage("Unverified"),
     "uploadedBadge": MessageLookupByLibrary.simpleMessage("Uploaded"),
     "uploadingBadge": MessageLookupByLibrary.simpleMessage("Uploading"),
     "userTypeSubtitle": MessageLookupByLibrary.simpleMessage(
@@ -261,6 +451,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "userTypeTitle": MessageLookupByLibrary.simpleMessage(
       "How would you like to use Masar?",
     ),
+    "validPassport": MessageLookupByLibrary.simpleMessage("Valid Passport"),
+    "verifiedBadge": MessageLookupByLibrary.simpleMessage("Verified"),
     "verifyAction": MessageLookupByLibrary.simpleMessage("Verify Code"),
+    "viewCandidateProfile": MessageLookupByLibrary.simpleMessage(
+      "View Profile",
+    ),
   };
 }

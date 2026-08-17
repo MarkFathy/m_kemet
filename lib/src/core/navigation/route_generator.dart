@@ -3,12 +3,18 @@ import 'package:m_kemet/src/core/navigation/helper/Interfaces/helper_imports.dar
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/navigation/page_router/imports_page_router_builder.dart';
-import 'package:m_kemet/src/features/auth/presentation/view/job_seeker_profile_setup_screen.dart';
 import 'package:m_kemet/src/features/auth/presentation/view/login_screen.dart';
 import 'package:m_kemet/src/features/auth/presentation/view/otp_verification_screen.dart';
 import 'package:m_kemet/src/features/auth/presentation/view/register_screen.dart';
+import 'package:m_kemet/src/features/job_seeker/presentation/view/job_seeker_profile_setup_screen.dart';
+import 'package:m_kemet/src/features/job_seeker/presentation/view/request_status_screen.dart';
 import 'package:m_kemet/src/features/onboarding/presentation/view/onboarding_screen.dart';
 import 'package:m_kemet/src/features/splash/presentation/splash_screen.dart';
+import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
+import 'package:m_kemet/src/features/company/presentation/view/candidate_detail_screen.dart';
+import 'package:m_kemet/src/features/company/presentation/view/company_main_screen.dart';
+import 'package:m_kemet/src/features/company/presentation/view/saved_candidates_screen.dart';
+import 'package:m_kemet/src/features/notifications/presentation/view/notifications_history_screen.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 import 'package:m_kemet/src/features/user_type_selection/presentation/view/user_type_selection_screen.dart';
 import 'package:flutter/material.dart';
@@ -165,6 +171,42 @@ class RouterGenerator {
       ),
       NamedRoutes.appLock => _pageRouter.build(
         buildPlaceholder('App Lock'),
+        settings: actualSettings,
+        transition: transition,
+        options: options,
+      ),
+      NamedRoutes.requestStatus => _pageRouter.build(
+        RequestStatusScreen(
+          initialStatus: realArguments is RequestApprovalStatus
+              ? realArguments
+              : RequestApprovalStatus.pending,
+        ),
+        settings: actualSettings,
+        transition: transition,
+        options: options,
+      ),
+      NamedRoutes.companyMain => _pageRouter.build(
+        const CompanyMainScreen(),
+        settings: actualSettings,
+        transition: transition,
+        options: options,
+      ),
+      NamedRoutes.candidateDetail => _pageRouter.build(
+        CandidateDetailScreen(
+          candidate: realArguments as CandidateEntity,
+        ),
+        settings: actualSettings,
+        transition: transition,
+        options: options,
+      ),
+      NamedRoutes.savedCandidates => _pageRouter.build(
+        const SavedCandidatesScreen(),
+        settings: actualSettings,
+        transition: transition,
+        options: options,
+      ),
+      NamedRoutes.notificationsHistory => _pageRouter.build(
+        const NotificationsHistoryScreen(),
         settings: actualSettings,
         transition: transition,
         options: options,

@@ -27,7 +27,7 @@ class AppScaffold extends StatelessWidget {
       appBar: appBar,
       floatingActionButton: floatingActionButton,
       body: Padding(
-        padding:  EdgeInsets.symmetric(horizontal: 16.w,vertical: 12.h),
+        padding:  EdgeInsets.symmetric(horizontal: 12.w,vertical: 12.h),
         child: SafeArea(top: safeTop, bottom: safeBottom, child: body),
       ),
       bottomNavigationBar: bottomNavigationBar != null

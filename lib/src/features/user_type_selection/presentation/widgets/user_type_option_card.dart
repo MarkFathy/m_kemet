@@ -34,10 +34,10 @@ class UserTypeOptionCard extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        padding: EdgeInsets.all(AppPadding.pW20),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(AppCircular.r20),
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(AppCircular.r16),
           border: Border.all(
             color: isSelected ? AppColors.darkNavy : AppColors.lightGrey.withValues(alpha: 0.6),
             width: isSelected ? 2.w : 1.w,
@@ -47,7 +47,7 @@ class UserTypeOptionCard extends StatelessWidget {
               color: isSelected
                   ? AppColors.darkNavy.withValues(alpha: 0.08)
                   : Colors.black.withValues(alpha: 0.03),
-              blurRadius: 12.r,
+              blurRadius: 10.r,
               offset: const Offset(0, 4),
             ),
           ],
@@ -57,66 +57,66 @@ class UserTypeOptionCard extends StatelessWidget {
             // Top Row: Selection Radio Button & Icon Container
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Radio Selection Circle
                 Container(
-                  width: 22.w,
-                  height: 22.h,
+                  width: 20.w,
+                  height: 20.h,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: isSelected ? AppColors.darkNavy : AppColors.lightGrey,
-                      width: isSelected ? 6.w : 1.5.w,
+                      width: isSelected ? 5.5.w : 1.5.w,
                     ),
                   ),
                 ),
 
                 // Icon Box
                 Container(
-                  width: 64.w,
-                  height: 64.h,
+                  width: 48.w,
+                  height: 48.h,
                   decoration: BoxDecoration(
                     color: iconContainerColor,
-                    borderRadius: BorderRadius.circular(AppCircular.r16),
+                    borderRadius: BorderRadius.circular(AppCircular.r12),
                   ),
                   child: Center(child: iconWidget),
                 ),
 
-                // Spacer to balance alignment
-                22.szW,
+                // Spacer for visual symmetry
+                20.szW,
               ],
             ),
 
-            16.szH,
+            10.szH,
 
             // Title
             Text(
               title,
               textAlign: TextAlign.center,
-              style: getTextStyle().darkNavy.w700.s20,
+              style: getTextStyle().darkNavy.w700.s18,
             ),
 
-            8.szH,
+            6.szH,
 
             // Description
             Text(
               description,
               textAlign: TextAlign.center,
-              style: getTextStyle().greyColor.w400.s14.copyWith(height: 1.5),
+              style: getTextStyle().greyColor.w400.s13.copyWith(height: 1.4),
             ),
 
-            16.szH,
-
-            const Divider(color: Color(0xFFF0F2F5), thickness: 1),
-
             12.szH,
+
+            const Divider(color: AppColors.dividerGrey, thickness: 1),
+
+            8.szH,
 
             // Features List
             Column(
               children: List.generate(features.length, (index) {
                 return Padding(
-                  padding: EdgeInsets.only(bottom: index == features.length - 1 ? 0 : AppPadding.pH8),
+                  padding: EdgeInsets.only(bottom: index == features.length - 1 ? 0 : AppPadding.pH6),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -124,7 +124,7 @@ class UserTypeOptionCard extends StatelessWidget {
                         features[index],
                         style: getTextStyle().darkNavy.w400.s12,
                       ),
-                      8.szW,
+                      6.szW,
                       Container(
                         padding: EdgeInsets.all(4.r),
                         decoration: BoxDecoration(
@@ -133,7 +133,7 @@ class UserTypeOptionCard extends StatelessWidget {
                         ),
                         child: Icon(
                           featureIcons[index],
-                          size: 14.sp,
+                          size: 13.sp,
                           color: AppColors.darkNavy,
                         ),
                       ),
