@@ -272,10 +272,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "تم تفعيل إشعارات التطبيق",
     ),
     "notificationsHistorySub": MessageLookupByLibrary.simpleMessage(
-      "مراجعة كافة الرسائل والتنبيهات السابقة",
+      "مراجعة كافة الرسائل والتنبيهات",
     ),
     "notificationsHistoryTitle": MessageLookupByLibrary.simpleMessage(
-      "سجل الإشعارات والتنبيهات",
+      "الإشعارات",
     ),
     "notificationsTitle": MessageLookupByLibrary.simpleMessage("الإشعارات"),
     "notificationsToggleSub": MessageLookupByLibrary.simpleMessage(

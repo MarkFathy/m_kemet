@@ -30,7 +30,6 @@ class RequestStatusScreen extends StatefulWidget {
 
 class _RequestStatusScreenState extends State<RequestStatusScreen> {
   late RequestApprovalStatus _currentStatus;
-  bool _isRefreshing = false;
 
   @override
   void initState() {
@@ -38,15 +37,9 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
     _currentStatus = widget.initialStatus;
   }
 
-  void _onRefresh() async {
-    setState(() {
-      _isRefreshing = true;
-    });
+  Future<void> _onRefresh() async {
     await Future.delayed(const Duration(milliseconds: 800));
     if (mounted) {
-      setState(() {
-        _isRefreshing = false;
-      });
       CustomSnackBar.showSuccess(
         context,
         message: _currentStatus == RequestApprovalStatus.pending
@@ -64,74 +57,81 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
       safeTop: true,
       safeBottom: true,
       backgroundColor: AppColors.pageBg,
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.symmetric(
-          horizontal: AppPadding.pW12,
-          vertical: AppPadding.pH12,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Screen Main Title
-            Text(
-              S.of(context).requestStatusScreenTitle,
-              style: getTextStyle().darkNavy.w700.s22,
-            ),
-
-            14.szH,
-
-            // Interactive Status Selector Tabs for testing
-            if (widget.showTestTabs) ...[
-              Container(
-                padding: EdgeInsets.all(4.w),
-                decoration: BoxDecoration(
-                  color: AppColors.borderGrey,
-                  borderRadius: BorderRadius.circular(14.r),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _buildStatusTab(
-                        status: RequestApprovalStatus.pending,
-                        title: S.of(context).statusPending,
-                        icon: Icons.hourglass_top_rounded,
-                        activeColor: AppColors.warningAmber,
-                        activeBgColor: AppColors.warningBg,
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildStatusTab(
-                        status: RequestApprovalStatus.approved,
-                        title: S.of(context).statusApproved,
-                        icon: Icons.check_circle_rounded,
-                        activeColor: AppColors.successGreen,
-                        activeBgColor: AppColors.successBg,
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildStatusTab(
-                        status: RequestApprovalStatus.rejected,
-                        title: S.of(context).statusRejected,
-                        icon: Icons.cancel_rounded,
-                        activeColor: AppColors.errorRed,
-                        activeBgColor: AppColors.errorBg,
-                      ),
-                    ),
-                  ],
-                ),
+      body: RefreshIndicator(
+        onRefresh: _onRefresh,
+        color: AppColors.darkNavy,
+        backgroundColor: AppColors.whiteColor,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: AppPadding.pW12,
+            vertical: AppPadding.pH12,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Screen Main Title
+              Text(
+                S.of(context).requestStatusScreenTitle,
+                style: getTextStyle().darkNavy.w700.s22,
               ),
+
+              14.szH,
+
+              // Interactive Status Selector Tabs for testing
+              if (widget.showTestTabs) ...[
+                Container(
+                  padding: EdgeInsets.all(4.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.borderGrey,
+                    borderRadius: BorderRadius.circular(14.r),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _buildStatusTab(
+                          status: RequestApprovalStatus.pending,
+                          title: S.of(context).statusPending,
+                          icon: Icons.hourglass_top_rounded,
+                          activeColor: AppColors.warningAmber,
+                          activeBgColor: AppColors.warningBg,
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildStatusTab(
+                          status: RequestApprovalStatus.approved,
+                          title: S.of(context).statusApproved,
+                          icon: Icons.check_circle_rounded,
+                          activeColor: AppColors.successGreen,
+                          activeBgColor: AppColors.successBg,
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildStatusTab(
+                          status: RequestApprovalStatus.rejected,
+                          title: S.of(context).statusRejected,
+                          icon: Icons.cancel_rounded,
+                          activeColor: AppColors.errorRed,
+                          activeBgColor: AppColors.errorBg,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                20.szH,
+              ],
+
+              // Animated Dynamic Status Content Body
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: _buildStatusCardContent(context),
+              ),
+
               20.szH,
             ],
-
-            // Animated Dynamic Status Content Body
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: _buildStatusCardContent(context),
-            ),
-
-            20.szH,
-          ],
+          ),
         ),
       ),
     );
@@ -191,10 +191,8 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
   Widget _buildStatusCardContent(BuildContext context) {
     switch (_currentStatus) {
       case RequestApprovalStatus.pending:
-        return PendingStatusCard(
-          key: const ValueKey('pending_view'),
-          isRefreshing: _isRefreshing,
-          onRefresh: _onRefresh,
+        return const PendingStatusCard(
+          key: ValueKey('pending_view'),
         );
       case RequestApprovalStatus.approved:
         return const ApprovedStatusCard(

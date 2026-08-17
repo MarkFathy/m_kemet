@@ -1545,20 +1545,20 @@ class S {
     );
   }
 
-  /// `سجل الإشعارات والتنبيهات`
+  /// `الإشعارات`
   String get notificationsHistoryTitle {
     return Intl.message(
-      'سجل الإشعارات والتنبيهات',
+      'الإشعارات',
       name: 'notificationsHistoryTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `مراجعة كافة الرسائل والتنبيهات السابقة`
+  /// `مراجعة كافة الرسائل والتنبيهات`
   String get notificationsHistorySub {
     return Intl.message(
-      'مراجعة كافة الرسائل والتنبيهات السابقة',
+      'مراجعة كافة الرسائل والتنبيهات',
       name: 'notificationsHistorySub',
       desc: '',
       args: [],

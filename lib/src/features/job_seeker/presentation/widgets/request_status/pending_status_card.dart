@@ -5,19 +5,11 @@ import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
-import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
 import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/request_status/application_timeline_step.dart';
 
 class PendingStatusCard extends StatelessWidget {
-  final bool isRefreshing;
-  final VoidCallback onRefresh;
-
-  const PendingStatusCard({
-    super.key,
-    required this.isRefreshing,
-    required this.onRefresh,
-  });
+  const PendingStatusCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -172,17 +164,7 @@ class PendingStatusCard extends StatelessWidget {
 
           20.szH,
 
-          // Action Buttons
-          CustomButton(
-            text: S.of(context).refreshStatus,
-            isLoading: isRefreshing,
-            onPressed: onRefresh,
-            backgroundColor: AppColors.darkNavy,
-            textStyle: getTextStyle().whiteColor.w700.s16,
-          ),
-
-          12.szH,
-
+          // Support Button
           OutlinedButton(
             onPressed: () {
               CustomSnackBar.showInfo(
@@ -191,7 +173,7 @@ class PendingStatusCard extends StatelessWidget {
               );
             },
             style: OutlinedButton.styleFrom(
-              minimumSize: Size(double.infinity, 44.h),
+              minimumSize: Size(double.infinity, 48.h),
               foregroundColor: AppColors.darkNavy,
               side: const BorderSide(color: AppColors.darkNavy),
               shape: RoundedRectangleBorder(

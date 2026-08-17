@@ -261,14 +261,14 @@ class _SettingsTabState extends State<SettingsTab> {
 
           14.szH,
 
-          // 3. Notifications History
+          // 3. Notifications
           SettingActionTile(
             icon: Icons.notifications_none_rounded,
             iconBgColor: AppColors.successBg,
             iconColor: AppColors.successGreen,
-            title: S.of(context).notificationsHistoryTitle,
+            title: S.of(context).notificationsTitle,
             subtitle: S.of(context).notificationsHistorySub,
-            onTap: () => Go.toNamed(NamedRoutes.notificationsHistory),
+            onTap: () => Go.toNamed(NamedRoutes.notifications),
           ),
 
           14.szH,

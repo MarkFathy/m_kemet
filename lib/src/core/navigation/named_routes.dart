@@ -12,7 +12,7 @@ enum NamedRoutes {
   companyMain('/companyMain'),
   candidateDetail('/candidateDetail'),
   savedCandidates('/savedCandidates'),
-  notificationsHistory('/notificationsHistory');
+  notifications('/notifications');
 
   final String routeName;
 

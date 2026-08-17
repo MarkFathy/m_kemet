@@ -284,10 +284,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "App notifications enabled",
     ),
     "notificationsHistorySub": MessageLookupByLibrary.simpleMessage(
-      "Review all past alerts and incoming messages",
+      "Review all alerts and incoming messages",
     ),
     "notificationsHistoryTitle": MessageLookupByLibrary.simpleMessage(
-      "Notifications History",
+      "Notifications",
     ),
     "notificationsTitle": MessageLookupByLibrary.simpleMessage("Notifications"),
     "notificationsToggleSub": MessageLookupByLibrary.simpleMessage(
