@@ -14,6 +14,7 @@ import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_back_button.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
+import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
 import 'package:m_kemet/src/core/widgets/text_fields/default_text_field.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 
@@ -42,6 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   DateTime? _selectedDob;
   String? _selectedGender;
+  bool _termsAccepted = false;
 
   final List<String> _countries = [
     'مصر (Egypt)',
@@ -74,9 +76,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _onRegisterPressed() {
-    if (_formKey.currentState?.validate() ?? false) {
-      Go.toNamed(NamedRoutes.otpVerification, arguments: widget.userType);
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    if (!_termsAccepted) {
+      CustomSnackBar.showError(
+        context,
+        message: S.of(context).acceptTermsRequired,
+      );
+      return;
     }
+    Go.toNamed(NamedRoutes.otpVerification, arguments: widget.userType);
   }
 
   void _showCountryBottomSheet() {
@@ -593,7 +601,51 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
 
-              32.szH,
+              16.szH,
+
+              // 9. Terms & Conditions Checkbox Row
+              Row(
+                children: [
+                  Checkbox(
+                    value: _termsAccepted,
+                    activeColor: AppColors.darkNavy,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.r)),
+                    onChanged: (val) {
+                      setState(() {
+                        _termsAccepted = val ?? false;
+                      });
+                    },
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () async {
+                        final result = await Go.toNamed(NamedRoutes.termsAndConditions);
+                        if (result == true) {
+                          setState(() {
+                            _termsAccepted = true;
+                          });
+                        }
+                      },
+                      child: Text.rich(
+                        TextSpan(
+                          text: S.of(context).agreeToTermsPrefix,
+                          style: getTextStyle().greyColor.w400.s13,
+                          children: [
+                            TextSpan(
+                              text: S.of(context).termsAndConditions,
+                              style: getTextStyle().darkNavy.w700.s13.copyWith(
+                                    decoration: TextDecoration.underline,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              20.szH,
 
               // Register Action Button
               CustomButton(

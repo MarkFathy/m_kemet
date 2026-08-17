@@ -203,5 +203,21 @@
   "deleteAccountConfirmTitle": "Warning: Delete Company Account",
   "deleteAccountConfirmMsg": "Deleting your account will permanently remove all company data, contact requests, and bookmarked candidates. This action cannot be undone.",
   "confirmDeleteAction": "Delete Account Permanently",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "agreeToTermsPrefix": "I agree to the ",
+  "termsAndConditions": "Terms & Conditions & Privacy Policy",
+  "acceptTermsRequired": "Please accept the Terms & Conditions to complete registration",
+  "termsScreenTitle": "Terms & Conditions",
+  "termsLastUpdated": "Last updated: August 17, 2026",
+  "acceptAndContinue": "Accept & Agree",
+  "companyInfoTitle": "Contact & Facility Details",
+  "companyNameField": "Company Name",
+  "companyPhoneField": "Phone Number",
+  "companyEmailField": "Email Address",
+  "companyCrField": "Commercial Record (CR)",
+  "companyLocationField": "Headquarters",
+  "forgotPasswordTitle": "Reset Password",
+  "forgotPasswordSub": "Enter your registered email address or phone number and we will send you a verification code.",
+  "sendResetCode": "Send Verification Code",
+  "rememberedPassword": "Remembered your password?"
 }

@@ -30,7 +30,7 @@ class OtpVerificationScreen extends StatefulWidget {
 class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   final _pinController = TextEditingController();
   Timer? _timer;
-  int _secondsRemaining = 30;
+  int _secondsRemaining = 120;
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   }
 
   void _startTimer() {
-    _secondsRemaining = 30;
+    _secondsRemaining = 120;
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_secondsRemaining > 0) {
@@ -50,6 +50,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         _timer?.cancel();
       }
     });
+  }
+
+  String _formatTimer(int totalSeconds) {
+    final minutes = (totalSeconds ~/ 60).toString().padLeft(2, '0');
+    final seconds = (totalSeconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
   }
 
   @override
@@ -64,7 +70,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       if (widget.userType == UserType.jobSeeker || widget.userType == null) {
         Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
       } else {
-        Go.offAllNamed(NamedRoutes.home);
+        Go.offAllNamed(NamedRoutes.companyMain);
       }
     }
   }
@@ -77,12 +83,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     return AppScaffold(
       safeTop: true,
       safeBottom: true,
-      backgroundColor: const Color(0xFFF7F9FC),
+      backgroundColor: AppColors.pageBg,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(
-          horizontal: AppPadding.pW20,
-          vertical: AppPadding.pH16,
+          horizontal: AppPadding.pW12,
+          vertical: AppPadding.pH12,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +101,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
                   decoration: BoxDecoration(
-                    color: isEmployer ? const Color(0xFFE2F3EC) : const Color(0xFFD0E8FF),
+                    color: isEmployer ? AppColors.successBg : AppColors.softBlueBg,
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Row(
@@ -104,7 +110,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       Icon(
                         isEmployer ? Icons.business_rounded : Icons.person_search_rounded,
                         size: 16.sp,
-                        color: isEmployer ? const Color(0xFF0F7D59) : AppColors.darkNavy,
+                        color: isEmployer ? AppColors.successGreen : AppColors.darkNavy,
                       ),
                       6.szW,
                       Text(
@@ -117,23 +123,23 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               ],
             ),
 
-            24.szH,
+            20.szH,
 
             // Title
             Text(
               S.of(context).otpTitle,
-              style: getTextStyle().darkNavy.w700.s28,
+              style: getTextStyle().darkNavy.w700.s26,
             ),
 
-            8.szH,
+            6.szH,
 
             // Subtitle
             Text(
               S.of(context).otpSubtitle,
-              style: getTextStyle().greyColor.w400.s14.copyWith(height: 1.5),
+              style: getTextStyle().greyColor.w400.s14.copyWith(height: 1.4),
             ),
 
-            36.szH,
+            32.szH,
 
             // 6-digit Pinput OTP Input Widget
             CustomPinInput(
@@ -144,14 +150,14 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               },
             ),
 
-            32.szH,
+            28.szH,
 
             // Resend Code Countdown
             Center(
               child: _secondsRemaining > 0
                   ? Text(
-                      '${S.of(context).resendIn}$_secondsRemaining',
-                      style: getTextStyle().greyColor.w400.s14,
+                      '${S.of(context).resendIn}${_formatTimer(_secondsRemaining)}',
+                      style: getTextStyle().greyColor.w500.s14,
                     )
                   : TextButton(
                       onPressed: () {

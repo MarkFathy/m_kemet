@@ -3,9 +3,11 @@ import 'package:m_kemet/src/core/navigation/helper/Interfaces/helper_imports.dar
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/navigation/page_router/imports_page_router_builder.dart';
+import 'package:m_kemet/src/features/auth/presentation/view/forgot_password_screen.dart';
 import 'package:m_kemet/src/features/auth/presentation/view/login_screen.dart';
 import 'package:m_kemet/src/features/auth/presentation/view/otp_verification_screen.dart';
 import 'package:m_kemet/src/features/auth/presentation/view/register_screen.dart';
+import 'package:m_kemet/src/features/auth/presentation/view/terms_and_conditions_screen.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/view/job_seeker_profile_setup_screen.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/view/request_status_screen.dart';
 import 'package:m_kemet/src/features/onboarding/presentation/view/onboarding_screen.dart';
@@ -38,21 +40,12 @@ class RouterGenerator {
 
     final actualSettings = RouteSettings(name: settings.name, arguments: realArguments);
 
-    debugPrint('RouterGenerator: getRoute called for name: ${settings.name}, arguments: $realArguments');
-
     final namedRoute = NamedRoutes.values.cast<NamedRoutes?>().firstWhere(
       (e) => e?.routeName == actualSettings.name,
       orElse: () => null,
     );
 
     if (namedRoute == null) return undefineRoute();
-
-    Widget buildPlaceholder(String title) {
-      return Scaffold(
-        appBar: AppBar(title: Text(title)),
-        body: Center(child: Text('$title Screen')),
-      );
-    }
 
     return switch (namedRoute) {
       NamedRoutes.splash => _pageRouter.build(
@@ -89,6 +82,14 @@ class RouterGenerator {
         transition: transition,
         options: options,
       ),
+      NamedRoutes.forgotPassword => _pageRouter.build(
+        ForgotPasswordScreen(
+          userType: realArguments is UserType ? realArguments : null,
+        ),
+        settings: actualSettings,
+        transition: transition,
+        options: options,
+      ),
       NamedRoutes.otpVerification => _pageRouter.build(
         OtpVerificationScreen(
           userType: realArguments is UserType ? realArguments : null,
@@ -97,80 +98,14 @@ class RouterGenerator {
         transition: transition,
         options: options,
       ),
+      NamedRoutes.termsAndConditions => _pageRouter.build(
+        const TermsAndConditionsScreen(),
+        settings: actualSettings,
+        transition: transition,
+        options: options,
+      ),
       NamedRoutes.jobSeekerProfileSetup => _pageRouter.build(
         const JobSeekerProfileSetupScreen(),
-        settings: actualSettings,
-        transition: transition,
-        options: options,
-      ),
-      NamedRoutes.home => _pageRouter.build(
-        buildPlaceholder('Home'),
-        settings: actualSettings,
-        transition: transition,
-        options: options,
-      ),
-      NamedRoutes.settings => _pageRouter.build(
-        buildPlaceholder('Settings'),
-        settings: actualSettings,
-        transition: transition,
-        options: options,
-      ),
-      NamedRoutes.profile => _pageRouter.build(
-        buildPlaceholder('Profile'),
-        settings: actualSettings,
-        transition: transition,
-        options: options,
-      ),
-      NamedRoutes.roomLobby => _pageRouter.build(
-        buildPlaceholder('Room Lobby'),
-        settings: actualSettings,
-        transition: transition,
-        options: options,
-      ),
-      NamedRoutes.countdown => _pageRouter.build(
-        buildPlaceholder('Game Countdown'),
-        settings: actualSettings,
-        transition: transition,
-        options: options,
-      ),
-      NamedRoutes.gameBoard => _pageRouter.build(
-        buildPlaceholder('Game Board'),
-        settings: actualSettings,
-        transition: transition,
-        options: options,
-      ),
-      NamedRoutes.scoring => _pageRouter.build(
-        buildPlaceholder('Scoring'),
-        settings: actualSettings,
-        transition: transition,
-        options: options,
-      ),
-      NamedRoutes.leaderboard => _pageRouter.build(
-        buildPlaceholder('Leaderboard'),
-        settings: actualSettings,
-        transition: transition,
-        options: options,
-      ),
-      NamedRoutes.privacyPolicy => _pageRouter.build(
-        buildPlaceholder('Privacy Policy'),
-        settings: actualSettings,
-        transition: transition,
-        options: options,
-      ),
-      NamedRoutes.aboutGame => _pageRouter.build(
-        buildPlaceholder('About Game'),
-        settings: actualSettings,
-        transition: transition,
-        options: options,
-      ),
-      NamedRoutes.complaints => _pageRouter.build(
-        buildPlaceholder('Complaints'),
-        settings: actualSettings,
-        transition: transition,
-        options: options,
-      ),
-      NamedRoutes.appLock => _pageRouter.build(
-        buildPlaceholder('App Lock'),
         settings: actualSettings,
         transition: transition,
         options: options,
@@ -211,10 +146,22 @@ class RouterGenerator {
         transition: transition,
         options: options,
       ),
+      NamedRoutes.appLock => _pageRouter.build(
+        const Scaffold(body: Center(child: Text('App Lock'))),
+        settings: actualSettings,
+        transition: transition,
+        options: options,
+      ),
+      NamedRoutes.complaints => _pageRouter.build(
+        const Scaffold(body: Center(child: Text('Complaints'))),
+        settings: actualSettings,
+        transition: transition,
+        options: options,
+      ),
     };
   }
 
   static Route<dynamic> undefineRoute() => MaterialPageRoute(
-    builder: (_) => const Scaffold(body: Center(child: Text('No route exists here ! '))),
+    builder: (_) => const Scaffold(body: Center(child: Text('No route defined'))),
   );
 }

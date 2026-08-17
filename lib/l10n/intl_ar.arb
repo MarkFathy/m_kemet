@@ -203,5 +203,21 @@
   "deleteAccountConfirmTitle": "تنبيه: حذف حساب الشركة",
   "deleteAccountConfirmMsg": "سيؤدي حذف الحساب إلى إلغاء كافة طلبات التواصل، المرشحين المحفوظين، والمعلومات بشكل نهائي ولا يمكن استعادتها.",
   "confirmDeleteAction": "حذف الحساب نهائياً",
-  "cancel": "إلغاء"
+  "cancel": "إلغاء",
+  "agreeToTermsPrefix": "أوافق على ",
+  "termsAndConditions": "الشروط والأحكام وسياسة الخصوصية",
+  "acceptTermsRequired": "يرجى الموافقة على الشروط والأحكام لإتمام عملية التسجيل",
+  "termsScreenTitle": "الشروط والأحكام وسياسة الخصوصية",
+  "termsLastUpdated": "آخر تحديث: 17 أغسطس 2026",
+  "acceptAndContinue": "الموافقة والقبول",
+  "companyInfoTitle": "معلومات الاتصال والمنشأة",
+  "companyNameField": "اسم الشركة",
+  "companyPhoneField": "رقم الهاتف",
+  "companyEmailField": "البريد الإلكتروني",
+  "companyCrField": "رقم السجل التجاري",
+  "companyLocationField": "المقر الرئيسي",
+  "forgotPasswordTitle": "استعادة كلمة المرور",
+  "forgotPasswordSub": "أدخل البريد الإلكتروني أو رقم الهاتف المسجل بحسابك وسنرسل لك رمز التحقق لاستعادة الحساب.",
+  "sendResetCode": "إرسال رمز التحقق",
+  "rememberedPassword": "تذكرت كلمة المرور؟"
 }
