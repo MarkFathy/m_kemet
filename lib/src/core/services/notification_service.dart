@@ -105,7 +105,7 @@ class NotificationService {
     debugPrint('[NotificationService] Notification tapped with type: $type, data: $data');
 
     if (type == 'complaint_reply' || type == 'complaint' || type == 'complaints') {
-      _pendingNotificationRoute = NamedRoutes.complaints;
+      _pendingNotificationRoute = NamedRoutes.notificationsHistory;
       consumePendingNotificationRoute();
     }
   }

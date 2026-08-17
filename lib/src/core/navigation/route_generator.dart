@@ -146,18 +146,6 @@ class RouterGenerator {
         transition: transition,
         options: options,
       ),
-      NamedRoutes.appLock => _pageRouter.build(
-        const Scaffold(body: Center(child: Text('App Lock'))),
-        settings: actualSettings,
-        transition: transition,
-        options: options,
-      ),
-      NamedRoutes.complaints => _pageRouter.build(
-        const Scaffold(body: Center(child: Text('Complaints'))),
-        settings: actualSettings,
-        transition: transition,
-        options: options,
-      ),
     };
   }
 

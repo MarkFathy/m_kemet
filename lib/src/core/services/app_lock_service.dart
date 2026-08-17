@@ -45,11 +45,10 @@ class AppLockService {
     final currentRouteName = ModalRoute.of(context)?.settings.name;
 
     if (_isLocked) {
-      if (currentRouteName != NamedRoutes.appLock.routeName) {
-        unawaited(Go.offAllNamed(NamedRoutes.appLock));
-      }
+      // App lock screen not implemented — navigate to splash as fallback
+      unawaited(Go.offAllNamed(NamedRoutes.splash));
     } else {
-      if (currentRouteName == NamedRoutes.appLock.routeName) {
+      if (currentRouteName == NamedRoutes.splash.routeName) {
         unawaited(Go.offAllNamed(NamedRoutes.splash));
       }
     }
