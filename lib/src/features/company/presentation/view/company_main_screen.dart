@@ -4,7 +4,7 @@ import 'package:m_kemet/generated/l10n.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
-import 'package:m_kemet/src/core/services/service_locater/service_locator.dart';
+import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/floating_bottom_nav_bar.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';

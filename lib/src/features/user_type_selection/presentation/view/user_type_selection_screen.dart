@@ -9,7 +9,7 @@ import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
-import 'package:m_kemet/src/core/services/service_locater/service_locator.dart';
+import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
 import 'package:m_kemet/src/core/widgets/buttons/language_switcher_button.dart';

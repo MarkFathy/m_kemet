@@ -7,6 +7,7 @@ import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
+import 'package:m_kemet/src/core/widgets/empty_state.dart';
 import 'package:m_kemet/src/core/widgets/text_fields/default_text_field.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
 import 'package:m_kemet/src/features/company/presentation/cubit/candidate_search_cubit.dart';
@@ -103,25 +104,10 @@ class SearchTab extends StatelessWidget {
               }
 
               if (state.candidates.isEmpty) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 40.h),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Icon(Icons.search_off_rounded, size: 54.sp, color: AppColors.greyColor),
-                        12.szH,
-                        Text(
-                          S.of(context).noSearchResultsTitle,
-                          style: getTextStyle().darkNavy.w700.s16,
-                        ),
-                        6.szH,
-                        Text(
-                          S.of(context).noSearchResultsSub,
-                          style: getTextStyle().greyColor.w400.s13,
-                        ),
-                      ],
-                    ),
-                  ),
+                return EmptyState(
+                  icon: Icons.search_off_rounded,
+                  title: S.of(context).noSearchResultsTitle,
+                  subtitle: S.of(context).noSearchResultsSub,
                 );
               }
 

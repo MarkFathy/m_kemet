@@ -9,7 +9,7 @@ import 'package:m_kemet/src/core/app_cubit/app_state.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/navigation/route_generator.dart';
-import 'package:m_kemet/src/core/services/service_locater/service_locator.dart';
+import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -6,6 +6,7 @@ import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
+import 'package:m_kemet/src/core/widgets/status_badge.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/request_status/application_timeline_step.dart';
 
 class PendingStatusCard extends StatelessWidget {
@@ -48,31 +49,10 @@ class PendingStatusCard extends StatelessWidget {
 
           14.szH,
 
-          // Status Pill
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: AppColors.warningBg,
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 8.w,
-                  height: 8.w,
-                  decoration: const BoxDecoration(
-                    color: AppColors.warningAmber,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                8.szW,
-                Text(
-                  S.of(context).statusPending,
-                  style: getTextStyle().w700.s13.copyWith(color: AppColors.warningAmber),
-                ),
-              ],
-            ),
+          StatusBadge(
+            label: S.of(context).statusPending,
+            color: AppColors.warningAmber,
+            bgColor: AppColors.warningBg,
           ),
 
           14.szH,

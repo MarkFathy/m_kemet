@@ -9,6 +9,7 @@ import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/widgets/buttons/language_switcher_button.dart';
+import 'package:m_kemet/src/core/widgets/confirm_action_bottom_sheet.dart';
 import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
 import 'package:m_kemet/src/core/widgets/setting_action_tile.dart';
 
@@ -23,156 +24,32 @@ class _SettingsTabState extends State<SettingsTab> {
   bool _notificationsEnabled = true;
 
   void _showLogoutWarningSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: AppColors.whiteColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-      ),
-      builder: (_) {
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 44.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: AppColors.lightGrey,
-                  borderRadius: BorderRadius.circular(2.r),
-                ),
-              ),
-              16.szH,
-              Container(
-                padding: EdgeInsets.all(14.w),
-                decoration: const BoxDecoration(
-                  color: AppColors.softBlueBg,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.logout_rounded, color: AppColors.darkNavy, size: 32.sp),
-              ),
-              14.szH,
-              Text(S.of(context).logoutConfirmTitle, style: getTextStyle().darkNavy.w700.s18),
-              8.szH,
-              Text(
-                S.of(context).logoutConfirmMsg,
-                textAlign: TextAlign.center,
-                style: getTextStyle().greyColor.w400.s14.copyWith(height: 1.5),
-              ),
-              24.szH,
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.borderGrey),
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-                      ),
-                      child: Text(S.of(context).cancel, style: getTextStyle().darkNavy.w700.s14),
-                    ),
-                  ),
-                  12.szW,
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Go.offAllNamed(NamedRoutes.userTypeSelection);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.darkNavy,
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-                      ),
-                      child: Text(S.of(context).logout, style: getTextStyle().whiteColor.w700.s14),
-                    ),
-                  ),
-                ],
-              ),
-              10.szH,
-            ],
-          ),
-        );
-      },
+    showConfirmActionBottomSheet(
+      context,
+      icon: Icons.logout_rounded,
+      iconBgColor: AppColors.softBlueBg,
+      iconColor: AppColors.darkNavy,
+      title: S.of(context).logoutConfirmTitle,
+      message: S.of(context).logoutConfirmMsg,
+      cancelLabel: S.of(context).cancel,
+      confirmLabel: S.of(context).logout,
+      confirmColor: AppColors.darkNavy,
+      onConfirm: () => Go.offAllNamed(NamedRoutes.userTypeSelection),
     );
   }
 
   void _showDeleteAccountWarningSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: AppColors.whiteColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-      ),
-      builder: (_) {
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 44.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: AppColors.lightGrey,
-                  borderRadius: BorderRadius.circular(2.r),
-                ),
-              ),
-              16.szH,
-              Container(
-                padding: EdgeInsets.all(14.w),
-                decoration: const BoxDecoration(
-                  color: AppColors.errorBg,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.warning_amber_rounded, color: AppColors.errorRed, size: 32.sp),
-              ),
-              14.szH,
-              Text(S.of(context).deleteAccountConfirmTitle, style: getTextStyle().darkNavy.w700.s18),
-              8.szH,
-              Text(
-                S.of(context).deleteAccountConfirmMsg,
-                textAlign: TextAlign.center,
-                style: getTextStyle().greyColor.w400.s13.copyWith(height: 1.5),
-              ),
-              24.szH,
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.borderGrey),
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-                      ),
-                      child: Text(S.of(context).cancel, style: getTextStyle().darkNavy.w700.s14),
-                    ),
-                  ),
-                  12.szW,
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Go.offAllNamed(NamedRoutes.userTypeSelection);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.errorRed,
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-                      ),
-                      child: Text(S.of(context).confirmDeleteAction, style: getTextStyle().whiteColor.w700.s13),
-                    ),
-                  ),
-                ],
-              ),
-              10.szH,
-            ],
-          ),
-        );
-      },
+    showConfirmActionBottomSheet(
+      context,
+      icon: Icons.warning_amber_rounded,
+      iconBgColor: AppColors.errorBg,
+      iconColor: AppColors.errorRed,
+      title: S.of(context).deleteAccountConfirmTitle,
+      message: S.of(context).deleteAccountConfirmMsg,
+      cancelLabel: S.of(context).cancel,
+      confirmLabel: S.of(context).confirmDeleteAction,
+      confirmColor: AppColors.errorRed,
+      onConfirm: () => Go.offAllNamed(NamedRoutes.userTypeSelection),
     );
   }
 

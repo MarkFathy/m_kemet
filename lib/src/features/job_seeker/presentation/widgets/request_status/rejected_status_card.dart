@@ -9,6 +9,7 @@ import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
 import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
+import 'package:m_kemet/src/core/widgets/status_badge.dart';
 
 class RejectedStatusCard extends StatelessWidget {
   const RejectedStatusCard({super.key});
@@ -50,31 +51,10 @@ class RejectedStatusCard extends StatelessWidget {
 
           14.szH,
 
-          // Status Pill
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: AppColors.errorBg,
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 8.w,
-                  height: 8.w,
-                  decoration: const BoxDecoration(
-                    color: AppColors.errorRed,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                8.szW,
-                Text(
-                  S.of(context).statusRejected,
-                  style: getTextStyle().w700.s13.copyWith(color: AppColors.errorRed),
-                ),
-              ],
-            ),
+          StatusBadge(
+            label: S.of(context).statusRejected,
+            color: AppColors.errorRed,
+            bgColor: AppColors.errorBg,
           ),
 
           14.szH,

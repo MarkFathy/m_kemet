@@ -5,6 +5,7 @@ import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
+import 'package:m_kemet/src/core/widgets/info_chip.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
 
 class CandidateCard extends StatelessWidget {
@@ -118,19 +119,19 @@ class CandidateCard extends StatelessWidget {
             spacing: 8.w,
             runSpacing: 8.h,
             children: [
-              _buildInfoChip(
+              InfoChip(
                 icon: Icons.location_on_outlined,
                 label: '${S.of(context).currentLocation}: ${candidate.currentCountry}',
                 bgColor: AppColors.chipBg,
                 textColor: AppColors.darkNavy,
               ),
-              _buildInfoChip(
+              InfoChip(
                 icon: Icons.flight_takeoff_rounded,
                 label: '${S.of(context).requestedDestination}: ${candidate.targetCountries}',
                 bgColor: AppColors.softBlueBg,
                 textColor: AppColors.darkNavy,
               ),
-              _buildInfoChip(
+              InfoChip(
                 icon: Icons.badge_outlined,
                 label: candidate.isValidPassport
                     ? S.of(context).validPassport
@@ -175,29 +176,4 @@ class CandidateCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoChip({
-    required IconData icon,
-    required String label,
-    required Color bgColor,
-    required Color textColor,
-  }) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(8.r),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 13.sp, color: textColor),
-          4.szW,
-          Text(
-            label,
-            style: getTextStyle().w500.s11.copyWith(color: textColor),
-          ),
-        ],
-      ),
-    );
-  }
 }
