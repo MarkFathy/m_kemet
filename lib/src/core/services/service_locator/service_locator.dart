@@ -6,6 +6,23 @@ import 'package:m_kemet/src/core/network/dio_client.dart';
 import 'package:m_kemet/src/core/services/app_lock_service.dart';
 import 'package:m_kemet/src/core/services/notification_service.dart';
 import 'package:m_kemet/src/core/services/user_status_service.dart';
+import 'package:m_kemet/src/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:m_kemet/src/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:m_kemet/src/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:m_kemet/src/features/auth/domain/repositories/auth_repository.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/forgot_password_usecase.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/get_countries_usecase.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/get_genders_usecase.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/get_profile_usecase.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/login_usecase.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/register_candidate_usecase.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/register_company_usecase.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/resend_otp_usecase.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/reset_password_usecase.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/verify_otp_usecase.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/verify_reset_otp_usecase.dart';
+import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:m_kemet/src/features/company/data/datasources/candidate_local_data_source.dart';
 import 'package:m_kemet/src/features/company/data/datasources/candidate_remote_data_source.dart';
 import 'package:m_kemet/src/features/company/data/repositories/candidate_repository_impl.dart';
@@ -86,6 +103,48 @@ Future<void> setupServiceLocator() async {
     ..registerFactory(
       () => UserTypeCubit(
         saveUserTypeUseCase: sl(),
+      ),
+    )
+
+    // ─── Auth Feature ──────────────────────────────────────────────────────
+    ..registerLazySingleton<AuthLocalDataSource>(
+      AuthLocalDataSourceImpl.new,
+    )
+    ..registerLazySingleton<AuthRemoteDataSource>(
+      () => AuthRemoteDataSourceImpl(sl()),
+    )
+    ..registerLazySingleton<AuthRepository>(
+      () => AuthRepositoryImpl(
+        remoteDataSource: sl(),
+        localDataSource: sl(),
+      ),
+    )
+    ..registerLazySingleton(() => RegisterCandidateUseCase(sl()))
+    ..registerLazySingleton(() => RegisterCompanyUseCase(sl()))
+    ..registerLazySingleton(() => LoginUseCase(sl()))
+    ..registerLazySingleton(() => VerifyOtpUseCase(sl()))
+    ..registerLazySingleton(() => ResendOtpUseCase(sl()))
+    ..registerLazySingleton(() => ForgotPasswordUseCase(sl()))
+    ..registerLazySingleton(() => VerifyResetOtpUseCase(sl()))
+    ..registerLazySingleton(() => ResetPasswordUseCase(sl()))
+    ..registerLazySingleton(() => GetProfileUseCase(sl()))
+    ..registerLazySingleton(() => LogoutUseCase(sl()))
+    ..registerLazySingleton(() => GetGendersUseCase(sl()))
+    ..registerLazySingleton(() => GetCountriesUseCase(sl()))
+    ..registerFactory(
+      () => AuthCubit(
+        registerCandidateUseCase: sl(),
+        registerCompanyUseCase: sl(),
+        loginUseCase: sl(),
+        verifyOtpUseCase: sl(),
+        resendOtpUseCase: sl(),
+        forgotPasswordUseCase: sl(),
+        verifyResetOtpUseCase: sl(),
+        resetPasswordUseCase: sl(),
+        getProfileUseCase: sl(),
+        logoutUseCase: sl(),
+        getGendersUseCase: sl(),
+        getCountriesUseCase: sl(),
       ),
     )
 

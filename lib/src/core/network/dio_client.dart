@@ -15,7 +15,7 @@ class DioClient {
   late final Dio dio;
 
   /// Base URL — swap this environment variable with your real API base URL.
-  static const String _baseUrl = 'https://api.m-kemet.com/v1';
+  static const String _baseUrl = 'https://m-kemet.aqarmousa.com';
 
   DioClient() {
     dio = Dio(

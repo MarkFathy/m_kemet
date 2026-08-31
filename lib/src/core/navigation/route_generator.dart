@@ -92,7 +92,10 @@ class RouterGenerator {
       ),
       NamedRoutes.otpVerification => _pageRouter.build(
         OtpVerificationScreen(
-          userType: realArguments is UserType ? realArguments : null,
+          args: realArguments is OtpScreenArgs ? realArguments : null,
+          userType: realArguments is UserType
+              ? realArguments
+              : (realArguments is OtpScreenArgs ? realArguments.userType : null),
         ),
         settings: actualSettings,
         transition: transition,

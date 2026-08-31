@@ -12,6 +12,11 @@ class AuthInterceptor extends Interceptor {
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }
+
+    final lang = (CacheStorage.read('app_language') as String?) ?? 'ar';
+    options.headers['Accept-Language'] = lang;
+    options.headers['Accept'] = 'application/json';
+
     handler.next(options);
   }
 
