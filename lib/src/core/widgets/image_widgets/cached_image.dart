@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:m_kemet/src/config/res/app_sizes.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
+import 'package:m_kemet/src/core/widgets/app_progress_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -94,7 +95,7 @@ class CachedImage extends StatelessWidget {
             shape: boxShape ?? BoxShape.rectangle,
             color: bgColor ?? AppColors.whiteColor.withValues(alpha: .5),
           ),
-          child: const CircularProgressIndicator(
+          child: const AppProgressIndicator(
             color: AppColors.whiteColor,
             strokeWidth: 2,
           ),

@@ -7,6 +7,7 @@ import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
+import 'package:m_kemet/src/core/widgets/app_progress_indicator.dart';
 import 'package:m_kemet/src/core/widgets/empty_state.dart';
 import 'package:m_kemet/src/core/widgets/text_fields/default_text_field.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
@@ -97,9 +98,7 @@ class SearchTab extends StatelessWidget {
               if (state.status == CandidateSearchStatus.loading) {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 40.h),
-                  child: const Center(
-                    child: CircularProgressIndicator(color: AppColors.darkNavy),
-                  ),
+                  child: const AppProgressIndicator.centered(),
                 );
               }
 

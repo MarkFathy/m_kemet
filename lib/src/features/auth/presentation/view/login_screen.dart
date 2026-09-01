@@ -11,6 +11,7 @@ import 'package:m_kemet/src/core/helpers/validators.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
+import 'package:m_kemet/src/core/services/session_manager.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_back_button.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
@@ -18,6 +19,7 @@ import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
 import 'package:m_kemet/src/core/widgets/text_fields/default_text_field.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_state.dart';
+import 'package:m_kemet/src/features/auth/presentation/widgets/auth_widgets.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -59,7 +61,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final selectedType = widget.userType ?? UserType.jobSeeker;
 
     return BlocProvider<AuthCubit>(
-      create: (context) => sl<AuthCubit>()..setUserType(selectedType),
+      create: (context) => sl<AuthCubit>()
+        ..setUserType(selectedType),
       child: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state.status == AuthStatus.error && state.errorMessage != null) {
@@ -68,7 +71,13 @@ class _LoginScreenState extends State<LoginScreen> {
               state.status == AuthStatus.authenticated) {
             final targetType = state.userType ?? selectedType;
             if (targetType == UserType.jobSeeker) {
-              Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
+              SessionManager.isJobSeekerProfileCompleted().then((isCompleted) {
+                if (isCompleted) {
+                  Go.offAllNamed(NamedRoutes.jobSeekerMain);
+                } else {
+                  Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
+                }
+              });
             } else {
               Go.offAllNamed(NamedRoutes.companyMain);
             }
@@ -92,57 +101,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Top Bar
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const CustomBackButton(),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
-                          decoration: BoxDecoration(
-                            color: selectedType == UserType.jobSeeker
-                                ? const Color(0xFFD0E8FF)
-                                : const Color(0xFFE2F3EC),
-                            borderRadius: BorderRadius.circular(20.r),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                selectedType == UserType.jobSeeker
-                                    ? Icons.person_search_rounded
-                                    : Icons.business_rounded,
-                                size: 16.sp,
-                                color: selectedType == UserType.jobSeeker
-                                    ? AppColors.darkNavy
-                                    : const Color(0xFF0F7D59),
-                              ),
-                              6.szW,
-                              Text(
-                                selectedType == UserType.jobSeeker
-                                    ? S.of(context).jobSeekerTitle
-                                    : S.of(context).employerTitle,
-                                style: getTextStyle().darkNavy.w600.s12,
-                              ),
-                            ],
-                          ),
-                        ),
+                        AuthRoleBadge(isEmployer: selectedType == UserType.employer),
                       ],
                     ),
 
                     20.szH,
 
-                    // Title
-                    Text(
-                      S.of(context).loginTitle,
-                      style: getTextStyle().darkNavy.w700.s28,
-                    ),
-
-                    8.szH,
-
-                    // Subtitle
-                    Text(
-                      S.of(context).loginSubtitle,
-                      style: getTextStyle().greyColor.w400.s14.copyWith(height: 1.5),
+                    // Header
+                    AuthHeader(
+                      title: S.of(context).loginTitle,
+                      subtitle: S.of(context).loginSubtitle,
                     ),
 
                     32.szH,
@@ -208,23 +181,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     32.szH,
 
                     // Register Toggle Prompt
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          S.of(context).dontHaveAccount,
-                          style: getTextStyle().greyColor.w400.s14,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Go.offNamed(NamedRoutes.register, arguments: selectedType);
-                          },
-                          child: Text(
-                            S.of(context).signUpNow,
-                            style: getTextStyle().darkNavy.w700.s14,
-                          ),
-                        ),
-                      ],
+                    AuthSwitchPrompt(
+                      promptText: S.of(context).dontHaveAccount,
+                      actionText: S.of(context).signUpNow,
+                      onAction: () => Go.offNamed(NamedRoutes.register, arguments: selectedType),
                     ),
                   ],
                 ),

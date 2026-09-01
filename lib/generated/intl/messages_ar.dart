@@ -46,7 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "candidateDetailsTitle":
             MessageLookupByLibrary.simpleMessage("البيانات المهنية والتفاصيل"),
         "candidateProfileTitle":
-            MessageLookupByLibrary.simpleMessage("الملف الشخصي للمرشح"),
+            MessageLookupByLibrary.simpleMessage("الملف الشخصي "),
         "candidateVideoTitle":
             MessageLookupByLibrary.simpleMessage("الفيديو التعريفي للمرشح"),
         "companyCrField":
@@ -347,7 +347,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "statusApproved": MessageLookupByLibrary.simpleMessage("تمت الموافقة"),
         "statusCompleted": MessageLookupByLibrary.simpleMessage("مكتمل"),
         "statusPending": MessageLookupByLibrary.simpleMessage("قيد المراجعة"),
-        "statusRejected": MessageLookupByLibrary.simpleMessage("مرفوض"),
+        "statusRejected": MessageLookupByLibrary.simpleMessage("تم الرفض"),
         "step1Title": MessageLookupByLibrary.simpleMessage("إرسال البيانات"),
         "step2Title": MessageLookupByLibrary.simpleMessage("فحص المستندات"),
         "step3Title": MessageLookupByLibrary.simpleMessage("القرار النهائي"),

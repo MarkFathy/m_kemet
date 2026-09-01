@@ -34,6 +34,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       token: token,
       userId: user?.id,
       email: user?.email,
+      userType: user?.userType == UserType.employer ? 'employer' : 'job_seeker',
     );
 
     if (refreshToken != null && refreshToken.isNotEmpty) {

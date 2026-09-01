@@ -12,6 +12,10 @@ import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 
+import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
+import 'package:m_kemet/src/core/services/session_manager.dart';
+import 'package:m_kemet/src/features/onboarding/data/datasources/onboarding_local_data_source.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -29,9 +33,33 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _startTimer() {
-    _timer = Timer(const Duration(seconds: 3), () {
-      if (mounted) {
-        Go.offAllNamed(NamedRoutes.onboarding);
+    _timer = Timer(const Duration(seconds: 3), () async {
+      if (!mounted) return;
+
+      final isLoggedIn = await SessionManager.isLoggedIn();
+      if (isLoggedIn) {
+        final userType = await SessionManager.getUserType();
+        if (userType == 'employer') {
+          Go.offAllNamed(NamedRoutes.companyMain);
+        } else {
+          final isProfileCompleted = await SessionManager.isJobSeekerProfileCompleted();
+          if (isProfileCompleted) {
+            Go.offAllNamed(NamedRoutes.jobSeekerMain);
+          } else {
+            Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
+          }
+        }
+      } else {
+        bool isOnboardingCompleted = false;
+        try {
+          isOnboardingCompleted = await sl<OnboardingLocalDataSource>().isOnboardingCompleted();
+        } catch (_) {}
+
+        if (isOnboardingCompleted) {
+          Go.offAllNamed(NamedRoutes.userTypeSelection);
+        } else {
+          Go.offAllNamed(NamedRoutes.onboarding);
+        }
       }
     });
   }

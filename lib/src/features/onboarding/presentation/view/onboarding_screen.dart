@@ -10,6 +10,7 @@ import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
+import 'package:m_kemet/src/core/widgets/app_progress_indicator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
 import 'package:m_kemet/src/features/onboarding/presentation/cubit/onboarding_cubit.dart';
@@ -60,7 +61,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             return const AppScaffold(
               safeTop: true,
               safeBottom: true,
-              body: Center(child: CircularProgressIndicator()),
+              body: AppProgressIndicator.centered(),
             );
           }
 

@@ -1,5 +1,6 @@
 import 'package:m_kemet/src/config/res/app_sizes.dart';
 import 'package:m_kemet/src/core/extensions/context_extension.dart';
+import 'package:m_kemet/src/core/widgets/app_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -46,13 +47,10 @@ class CustomButton extends StatelessWidget {
         child: Container(
           alignment: Alignment.center,
           child: isLoading
-              ? SizedBox(
-                  width: 24.w,
-                  height: 24.h,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
-                    valueColor: AlwaysStoppedAnimation<Color>(context.colors.onPrimary),
-                  ),
+              ? AppProgressIndicator.small(
+                  size: 24.r,
+                  strokeWidth: 2.5,
+                  color: context.colors.onPrimary,
                 )
               : Text(
                   text,

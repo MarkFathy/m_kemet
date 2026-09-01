@@ -8,6 +8,7 @@ import 'package:m_kemet/src/features/auth/presentation/view/login_screen.dart';
 import 'package:m_kemet/src/features/auth/presentation/view/otp_verification_screen.dart';
 import 'package:m_kemet/src/features/auth/presentation/view/register_screen.dart';
 import 'package:m_kemet/src/features/auth/presentation/view/terms_and_conditions_screen.dart';
+import 'package:m_kemet/src/features/job_seeker/presentation/view/job_seeker_main_screen.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/view/job_seeker_profile_setup_screen.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/view/request_status_screen.dart';
 import 'package:m_kemet/src/features/onboarding/presentation/view/onboarding_screen.dart';
@@ -109,6 +110,14 @@ class RouterGenerator {
       ),
       NamedRoutes.jobSeekerProfileSetup => _pageRouter.build(
         const JobSeekerProfileSetupScreen(),
+        settings: actualSettings,
+        transition: transition,
+        options: options,
+      ),
+      NamedRoutes.jobSeekerMain => _pageRouter.build(
+        JobSeekerMainScreen(
+          initialIndex: realArguments is int ? realArguments : 0,
+        ),
         settings: actualSettings,
         transition: transition,
         options: options,

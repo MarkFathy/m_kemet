@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,6 +21,7 @@ import 'package:m_kemet/src/features/auth/domain/usecases/register_company_useca
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_state.dart';
 import 'package:m_kemet/src/features/auth/presentation/view/otp_verification_screen.dart';
+import 'package:m_kemet/src/features/auth/presentation/widgets/auth_widgets.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -49,9 +49,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   DateTime? _selectedDob;
   int? _selectedCountryId;
-  int? _selectedGenderId; // 1 for male, 2 for female
+  int? _selectedGenderId;
   bool _termsAccepted = false;
-
 
   @override
   void dispose() {
@@ -107,316 +106,49 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  void _showCountryBottomSheet(BuildContext context) {
-    final countries = context.read<AuthCubit>().state.countries;
-    final isLoading = context.read<AuthCubit>().state.countriesLoading;
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-      ),
-      backgroundColor: Colors.white,
-      builder: (context) {
-        String searchQuery = '';
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            final filtered = countries
-                .where((c) => c.name.toLowerCase().contains(searchQuery.toLowerCase()))
-                .toList();
-
-            return Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.7,
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                child: Column(
-                  children: [
-                    Container(
-                      width: 40.w,
-                      height: 4.h,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFCBD5E1),
-                        borderRadius: BorderRadius.circular(2.r),
-                      ),
-                    ),
-                    12.szH,
-                    Text(
-                      S.of(context).currentCountryLabel,
-                      style: getTextStyle().darkNavy.w700.s18,
-                    ),
-                    16.szH,
-
-                    // Search Field
-                    DefaultTextField(
-                      hint: S.of(context).searchCountryHint,
-                      prefixIcon: Icon(Icons.search_rounded, color: AppColors.greyColor, size: 20.sp),
-                      onChanged: (val) {
-                        setModalState(() {
-                          searchQuery = val ?? '';
-                        });
-                      },
-                    ),
-
-                    12.szH,
-
-                    if (isLoading)
-                      const Expanded(
-                        child: Center(child: CircularProgressIndicator()),
-                      )
-                    else
-                      Expanded(
-                        child: filtered.isEmpty
-                            ? Center(
-                                child: Text(
-                                  S.of(context).noCountryFound,
-                                  style: getTextStyle().greyColor.w400.s14,
-                                ),
-                              )
-                            : ListView.separated(
-                                physics: const BouncingScrollPhysics(),
-                                itemCount: filtered.length,
-                                separatorBuilder: (context, index) => const Divider(height: 1),
-                                itemBuilder: (context, index) {
-                                  final country = filtered[index];
-                                  final isSelected = _selectedCountryId == country.id;
-                                  return ListTile(
-                                    leading: country.flag != null
-                                        ? Text(
-                                            country.flag!,
-                                            style: TextStyle(fontSize: 24.sp),
-                                          )
-                                        : null,
-                                    title: Text(
-                                      country.name,
-                                      style: isSelected
-                                          ? getTextStyle().darkNavy.w700.s15
-                                          : getTextStyle().darkNavy.w500.s15,
-                                    ),
-                                    trailing: isSelected
-                                        ? const Icon(Icons.check_circle_rounded, color: AppColors.darkNavy)
-                                        : null,
-                                    onTap: () {
-                                      setState(() {
-                                        _selectedCountryId = country.id;
-                                        _countryController.text =
-                                            '${country.flag ?? ''} ${country.name}'.trim();
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                },
-                              ),
-                      ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
+  void _showCountrySheet(BuildContext context) {
+    final cubit = context.read<AuthCubit>();
+    CountrySelectionBottomSheet.show(
+      context,
+      countries: cubit.state.countries,
+      isLoading: cubit.state.countriesLoading,
+      selectedCountryId: _selectedCountryId,
+      onSelect: (country) {
+        setState(() {
+          _selectedCountryId = country.id;
+          _countryController.text = '${country.flag ?? ''} ${country.name}'.trim();
+        });
       },
     );
   }
 
-  void _showDatePickerBottomSheet() {
-    final maxDate = DateTime(DateTime.now().year - 14, 12, 31);
-    final defaultDate = DateTime(1996, 1, 1);
-    DateTime tempPickedDate = _selectedDob ?? defaultDate;
-
-    // Clamp to valid range
-    if (tempPickedDate.isAfter(maxDate)) {
-      tempPickedDate = maxDate;
-    }
-
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-      ),
-      backgroundColor: Colors.white,
-      builder: (context) {
-        return Container(
-          height: 320.h,
-          color: Colors.white,
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(
-                        S.of(context).skip,
-                        style: getTextStyle().greyColor.w600.s14,
-                      ),
-                    ),
-                    Text(
-                      S.of(context).dateOfBirthLabel,
-                      style: getTextStyle().darkNavy.w700.s16,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // Format as Y-m-d matching backend requirement
-                        final formatted =
-                            '${tempPickedDate.year}-${tempPickedDate.month.toString().padLeft(2, '0')}-${tempPickedDate.day.toString().padLeft(2, '0')}';
-                        setState(() {
-                          _selectedDob = tempPickedDate;
-                          _dobController.text = formatted;
-                        });
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        S.of(context).continueAction,
-                        style: getTextStyle().darkNavy.w700.s14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: CupertinoTheme(
-                  data: CupertinoThemeData(
-                    brightness: Brightness.light,
-                    primaryColor: AppColors.darkNavy,
-                    textTheme: CupertinoTextThemeData(
-                      dateTimePickerTextStyle: TextStyle(
-                        color: const Color(0xFF073B62),
-                        fontSize: 19.sp,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Cairo',
-                      ),
-                      pickerTextStyle: TextStyle(
-                        color: const Color(0xFF073B62),
-                        fontSize: 17.sp,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Cairo',
-                      ),
-                    ),
-                  ),
-                  child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.date,
-                    initialDateTime: tempPickedDate,
-                    minimumYear: 1950,
-                    maximumYear: DateTime.now().year - 14,
-                    onDateTimeChanged: (newDate) {
-                      tempPickedDate = newDate;
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
+  void _showDateSheet() {
+    DatePickerBottomSheet.show(
+      context,
+      initialDate: _selectedDob,
+      onConfirm: (date) {
+        final formatted =
+            '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+        setState(() {
+          _selectedDob = date;
+          _dobController.text = formatted;
+        });
       },
     );
   }
 
-  void _showGenderBottomSheet(BuildContext context) {
-    final genders = context.read<AuthCubit>().state.genders;
-    final isGendersLoading = context.read<AuthCubit>().state.gendersLoading;
-
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-      ),
-      backgroundColor: Colors.white,
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.all(20.w),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFCBD5E1),
-                  borderRadius: BorderRadius.circular(2.r),
-                ),
-              ),
-              16.szH,
-              Text(
-                S.of(context).genderLabel,
-                style: getTextStyle().darkNavy.w700.s18,
-              ),
-              20.szH,
-              if (isGendersLoading)
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  child: CircularProgressIndicator(),
-                )
-              else
-                Row(
-                  children: [
-                    for (int i = 0; i < genders.length; i++) ...[
-                      Expanded(
-                        child: Builder(
-                          builder: (ctx) {
-                            final gender = genders[i];
-                            final isMale = gender.name.contains('ذكر') || gender.id == 1;
-                            final isSelected = _selectedGenderId == gender.id;
-                            final activeColor = isMale ? AppColors.darkNavy : const Color(0xFFDB2777);
-                            final activeBg = isMale ? const Color(0xFFD0E8FF) : const Color(0xFFFCE7F3);
-
-                            return InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _selectedGenderId = gender.id;
-                                  _genderController.text = gender.name;
-                                });
-                                Navigator.pop(context);
-                              },
-                              borderRadius: BorderRadius.circular(14.r),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 16.h),
-                                decoration: BoxDecoration(
-                                  color: isSelected ? activeBg : const Color(0xFFF8FAFC),
-                                  borderRadius: BorderRadius.circular(14.r),
-                                  border: Border.all(
-                                    color: isSelected ? activeColor : const Color(0xFFE2E8F0),
-                                    width: 1.5.w,
-                                  ),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      isMale ? Icons.male_rounded : Icons.female_rounded,
-                                      size: 32.sp,
-                                      color: activeColor,
-                                    ),
-                                    6.szH,
-                                    Text(
-                                      gender.name,
-                                      style: getTextStyle().w700.s16.copyWith(
-                                        color: activeColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      if (i < genders.length - 1) SizedBox(width: 16.w),
-                    ],
-                  ],
-                ),
-              20.szH,
-            ],
-          ),
-        );
+  void _showGenderSheet(BuildContext context) {
+    final cubit = context.read<AuthCubit>();
+    GenderSelectionBottomSheet.show(
+      context,
+      genders: cubit.state.genders,
+      isLoading: cubit.state.gendersLoading,
+      selectedGenderId: _selectedGenderId,
+      onSelect: (gender) {
+        setState(() {
+          _selectedGenderId = gender.id;
+          _genderController.text = gender.name;
+        });
       },
     );
   }
@@ -464,50 +196,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Top Bar with Custom iOS Back Button & Role Badge
+                    // Top Bar
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const CustomBackButton(),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
-                          decoration: BoxDecoration(
-                            color: isEmployer ? const Color(0xFFE2F3EC) : const Color(0xFFD0E8FF),
-                            borderRadius: BorderRadius.circular(20.r),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                isEmployer ? Icons.business_rounded : Icons.person_search_rounded,
-                                size: 16.sp,
-                                color: isEmployer ? const Color(0xFF0F7D59) : AppColors.darkNavy,
-                              ),
-                              6.szW,
-                              Text(
-                                isEmployer ? S.of(context).employerTitle : S.of(context).jobSeekerTitle,
-                                style: getTextStyle().darkNavy.w600.s12,
-                              ),
-                            ],
-                          ),
-                        ),
+                        AuthRoleBadge(isEmployer: isEmployer),
                       ],
                     ),
 
                     20.szH,
 
-                    // Title
-                    Text(
-                      S.of(context).registerTitle,
-                      style: getTextStyle().darkNavy.w700.s28,
-                    ),
-
-                    8.szH,
-
-                    // Subtitle
-                    Text(
-                      S.of(context).registerSubtitle,
-                      style: getTextStyle().greyColor.w400.s14.copyWith(height: 1.5),
+                    // Header
+                    AuthHeader(
+                      title: S.of(context).registerTitle,
+                      subtitle: S.of(context).registerSubtitle,
                     ),
 
                     28.szH,
@@ -560,63 +263,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
 
-                    // Fields specific to Job Seeker
-                    if (!isEmployer) ...[
-                      16.szH,
-
-                      // 4. Current Country (Searchable Bottom Sheet Selection)
-                      DefaultTextField(
-                        controller: _countryController,
-                        label: S.of(context).currentCountryLabel,
-                        hint: S.of(context).currentCountryHint,
-                        readOnly: true,
-                        onTap: () => _showCountryBottomSheet(context),
-                        prefixIcon: Icon(Icons.public_rounded, color: AppColors.greyColor, size: 20.sp),
-                        suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkNavy, size: 24.sp),
-                        validator: (value) => Validators.validateEmpty(
-                          value,
-                          message: S.of(context).currentCountryHint,
-                        ),
+                    // Specific to Job Seeker
+                    if (!isEmployer)
+                      CandidateRegisterFields(
+                        countryController: _countryController,
+                        dobController: _dobController,
+                        genderController: _genderController,
+                        onCountryTap: () => _showCountrySheet(context),
+                        onDobTap: _showDateSheet,
+                        onGenderTap: () => _showGenderSheet(context),
                       ),
-
-                      16.szH,
-
-                      // 5. Date of Birth (Cupertino Sheet Selection)
-                      DefaultTextField(
-                        controller: _dobController,
-                        label: S.of(context).dateOfBirthLabel,
-                        hint: S.of(context).dateOfBirthHint,
-                        readOnly: true,
-                        onTap: _showDatePickerBottomSheet,
-                        prefixIcon: Icon(Icons.calendar_today_rounded, color: AppColors.greyColor, size: 20.sp),
-                        suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkNavy, size: 24.sp),
-                        validator: (value) => Validators.validateEmpty(
-                          value,
-                          message: S.of(context).dateOfBirthHint,
-                        ),
-                      ),
-
-                      16.szH,
-
-                      // 6. Gender Selection (Male / Female Sheet Selection)
-                      DefaultTextField(
-                        controller: _genderController,
-                        label: S.of(context).genderLabel,
-                        hint: S.of(context).genderHint,
-                        readOnly: true,
-                        onTap: () => _showGenderBottomSheet(context),
-                        prefixIcon: Icon(Icons.wc_rounded, color: AppColors.greyColor, size: 20.sp),
-                        suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkNavy, size: 24.sp),
-                        validator: (value) => Validators.validateEmpty(
-                          value,
-                          message: S.of(context).genderHint,
-                        ),
-                      ),
-                    ],
 
                     16.szH,
 
-                    // 7. Password Input
+                    // Password Input
                     DefaultTextField(
                       controller: _passwordController,
                       label: S.of(context).passwordLabel,
@@ -633,7 +293,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                     16.szH,
 
-                    // 8. Confirm Password Input
+                    // Confirm Password Input
                     DefaultTextField(
                       controller: _confirmPasswordController,
                       label: S.of(context).confirmPasswordLabel,
@@ -650,46 +310,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                     16.szH,
 
-                    // 9. Terms & Conditions Checkbox Row
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: _termsAccepted,
-                          activeColor: AppColors.darkNavy,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.r)),
-                          onChanged: (val) {
-                            setState(() {
-                              _termsAccepted = val ?? false;
-                            });
-                          },
-                        ),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () async {
-                              final result = await Go.toNamed(NamedRoutes.termsAndConditions);
-                              if (result == true) {
-                                setState(() {
-                                  _termsAccepted = true;
-                                });
-                              }
-                            },
-                            child: Text.rich(
-                              TextSpan(
-                                text: S.of(context).agreeToTermsPrefix,
-                                style: getTextStyle().greyColor.w400.s13,
-                                children: [
-                                  TextSpan(
-                                    text: S.of(context).termsAndConditions,
-                                    style: getTextStyle().darkNavy.w700.s13.copyWith(
-                                          decoration: TextDecoration.underline,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                    // Terms & Conditions Checkbox Row
+                    TermsAndPrivacyRow(
+                      value: _termsAccepted,
+                      onChanged: (val) => setState(() => _termsAccepted = val ?? false),
                     ),
 
                     20.szH,
@@ -706,23 +330,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     32.szH,
 
                     // Login Toggle Prompt
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          S.of(context).alreadyHaveAccount,
-                          style: getTextStyle().greyColor.w400.s14,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Go.offNamed(NamedRoutes.login, arguments: selectedType);
-                          },
-                          child: Text(
-                            S.of(context).signInNow,
-                            style: getTextStyle().darkNavy.w700.s14,
-                          ),
-                        ),
-                      ],
+                    AuthSwitchPrompt(
+                      promptText: S.of(context).alreadyHaveAccount,
+                      actionText: S.of(context).signInNow,
+                      onAction: () => Go.offNamed(NamedRoutes.login, arguments: selectedType),
                     ),
 
                     16.szH,

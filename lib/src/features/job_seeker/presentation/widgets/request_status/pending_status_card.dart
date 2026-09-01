@@ -186,11 +186,14 @@ class PendingStatusCard extends StatelessWidget {
       children: [
         Icon(icon, size: 18.sp, color: AppColors.darkNavy),
         8.szW,
-        Text(
-          label,
-          style: getTextStyle().darkNavy.w600.s13,
+        Expanded(
+          child: Text(
+            label,
+            style: getTextStyle().darkNavy.w600.s13,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
-        const Spacer(),
+        8.szW,
         Text(
           value,
           style: getTextStyle().darkNavy.w700.s13,

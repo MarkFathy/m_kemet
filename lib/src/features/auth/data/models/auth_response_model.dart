@@ -14,8 +14,10 @@ class AuthResponseModel extends AuthEntity {
     // Nested data extraction if response is wrapped in 'data'
     final data = json['data'] is Map<String, dynamic> ? json['data'] as Map<String, dynamic> : json;
 
-    final token = data['token']?.toString() ??
+    final token = data['auth_token']?.toString() ??
+        data['token']?.toString() ??
         data['access_token']?.toString() ??
+        json['auth_token']?.toString() ??
         json['token']?.toString() ??
         json['access_token']?.toString();
 
@@ -47,6 +49,7 @@ class AuthResponseModel extends AuthEntity {
 
   Map<String, dynamic> toJson() {
     return {
+      'auth_token': accessToken,
       'access_token': accessToken,
       'refresh_token': refreshToken,
       'token_type': tokenType,

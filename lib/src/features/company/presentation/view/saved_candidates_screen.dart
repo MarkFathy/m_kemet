@@ -7,6 +7,7 @@ import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
+import 'package:m_kemet/src/core/widgets/app_progress_indicator.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
@@ -56,9 +57,7 @@ class SavedCandidatesScreen extends StatelessWidget {
                   if (state.status == CandidateSearchStatus.loading) {
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 60.h),
-                      child: const Center(
-                        child: CircularProgressIndicator(color: AppColors.darkNavy),
-                      ),
+                      child: const AppProgressIndicator.centered(),
                     );
                   }
 

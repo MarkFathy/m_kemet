@@ -8,6 +8,7 @@ enum NamedRoutes {
   forgotPassword('/forgotPassword'),
   termsAndConditions('/termsAndConditions'),
   jobSeekerProfileSetup('/jobSeekerProfileSetup'),
+  jobSeekerMain('/jobSeekerMain'),
   requestStatus('/requestStatus'),
   companyMain('/companyMain'),
   candidateDetail('/candidateDetail'),

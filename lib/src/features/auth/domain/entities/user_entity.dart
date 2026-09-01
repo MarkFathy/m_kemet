@@ -11,6 +11,8 @@ class UserEntity extends Equatable {
   final String? status;
   final int? countryId;
   final String? countryName;
+  final String? countryCode;
+  final String? countryFlag;
   final String? birthDate;
   final int? genderId;
   final String? gender;
@@ -26,6 +28,8 @@ class UserEntity extends Equatable {
     this.status,
     this.countryId,
     this.countryName,
+    this.countryCode,
+    this.countryFlag,
     this.birthDate,
     this.genderId,
     this.gender,
@@ -43,6 +47,8 @@ class UserEntity extends Equatable {
         status,
         countryId,
         countryName,
+        countryCode,
+        countryFlag,
         birthDate,
         genderId,
         gender,

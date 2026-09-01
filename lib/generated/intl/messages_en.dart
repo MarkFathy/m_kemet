@@ -354,7 +354,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Your gateway to international job opportunities & an exceptional travel experience"),
         "statusApproved": MessageLookupByLibrary.simpleMessage("Approved"),
         "statusCompleted": MessageLookupByLibrary.simpleMessage("Completed"),
-        "statusPending": MessageLookupByLibrary.simpleMessage("Pending Review"),
+        "statusPending": MessageLookupByLibrary.simpleMessage("Under Review"),
         "statusRejected": MessageLookupByLibrary.simpleMessage("Rejected"),
         "step1Title": MessageLookupByLibrary.simpleMessage("Submitted"),
         "step2Title": MessageLookupByLibrary.simpleMessage("Verification"),

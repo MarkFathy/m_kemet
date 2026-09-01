@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:m_kemet/generated/l10n.dart';
 import 'package:m_kemet/src/config/res/app_sizes.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
@@ -8,6 +7,7 @@ import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_back_button.dart';
+import 'package:m_kemet/src/features/notifications/presentation/widgets/notifications_empty_card.dart';
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});
@@ -40,31 +40,7 @@ class NotificationsScreen extends StatelessWidget {
 
             20.szH,
 
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-              decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                borderRadius: BorderRadius.circular(20.r),
-                border: Border.all(color: AppColors.borderGrey),
-              ),
-              child: Column(
-                children: [
-                  Icon(Icons.notifications_none_rounded, size: 54.sp, color: AppColors.greyColor),
-                  16.szH,
-                  Text(
-                    S.of(context).noNotificationsTitle,
-                    style: getTextStyle().darkNavy.w700.s16,
-                  ),
-                  8.szH,
-                  Text(
-                    S.of(context).noNotificationsSub,
-                    textAlign: TextAlign.center,
-                    style: getTextStyle().greyColor.w400.s13.copyWith(height: 1.5),
-                  ),
-                ],
-              ),
-            ),
+            const NotificationsEmptyCard(),
 
             20.szH,
           ],

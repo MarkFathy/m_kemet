@@ -1140,10 +1140,10 @@ class S {
     );
   }
 
-  /// `مرفوض`
+  /// `تم الرفض`
   String get statusRejected {
     return Intl.message(
-      'مرفوض',
+      'تم الرفض',
       name: 'statusRejected',
       desc: '',
       args: [],
@@ -1590,10 +1590,10 @@ class S {
     );
   }
 
-  /// `الملف الشخصي للمرشح`
+  /// `الملف الشخصي `
   String get candidateProfileTitle {
     return Intl.message(
-      'الملف الشخصي للمرشح',
+      'الملف الشخصي ',
       name: 'candidateProfileTitle',
       desc: '',
       args: [],

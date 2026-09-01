@@ -8,6 +8,7 @@ import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
+import 'package:m_kemet/src/core/widgets/buttons/custom_back_button.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/request_status/approved_status_card.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/request_status/pending_status_card.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/request_status/rejected_status_card.dart';
@@ -21,7 +22,7 @@ class RequestStatusScreen extends StatefulWidget {
   const RequestStatusScreen({
     super.key,
     this.initialStatus = RequestApprovalStatus.pending,
-    this.showTestTabs = false,
+    this.showTestTabs = true,
   });
 
   @override
@@ -72,15 +73,24 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Screen Main Title
-              Text(
-                S.of(context).requestStatusScreenTitle,
-                style: getTextStyle().darkNavy.w700.s22,
+              // Screen Header with Back Button
+              Row(
+                children: [
+                  const CustomBackButton(),
+                  10.szW,
+                  Expanded(
+                    child: Text(
+                      S.of(context).requestStatusScreenTitle,
+                      style: getTextStyle().darkNavy.w700.s20,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
 
-              14.szH,
+              16.szH,
 
-              // Interactive Status Selector Tabs for testing
+              // Interactive Status Selector Tabs
               if (widget.showTestTabs) ...[
                 Container(
                   padding: EdgeInsets.all(4.w),
@@ -99,6 +109,7 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
                           activeBgColor: AppColors.warningBg,
                         ),
                       ),
+                      4.szW,
                       Expanded(
                         child: _buildStatusTab(
                           status: RequestApprovalStatus.approved,
@@ -108,6 +119,7 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
                           activeBgColor: AppColors.successBg,
                         ),
                       ),
+                      4.szW,
                       Expanded(
                         child: _buildStatusTab(
                           status: RequestApprovalStatus.rejected,
@@ -153,7 +165,7 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(vertical: 10.h),
+        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 4.w),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.whiteColor : Colors.transparent,
           borderRadius: BorderRadius.circular(10.r),
@@ -172,15 +184,19 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
           children: [
             Icon(
               icon,
-              size: 16.sp,
+              size: 14.sp,
               color: isSelected ? activeColor : AppColors.greyColor,
             ),
-            6.szW,
-            Text(
-              title,
-              style: isSelected
-                  ? getTextStyle().darkNavy.w700.s13.copyWith(color: activeColor)
-                  : getTextStyle().greyColor.w500.s13,
+            4.szW,
+            Flexible(
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: isSelected
+                    ? getTextStyle().darkNavy.w700.s11.copyWith(color: activeColor)
+                    : getTextStyle().greyColor.w500.s11,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),

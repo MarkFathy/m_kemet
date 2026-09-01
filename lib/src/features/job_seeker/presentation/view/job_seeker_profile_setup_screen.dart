@@ -7,8 +7,10 @@ import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
+import 'package:m_kemet/src/core/services/session_manager.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/buttons/language_switcher_button.dart';
+import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/documents_upload_section.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/important_info_notice_card.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/intro_video_upload_card.dart';
@@ -50,8 +52,14 @@ class _JobSeekerProfileSetupScreenState extends State<JobSeekerProfileSetupScree
     super.dispose();
   }
 
-  void _onContinuePressed() {
-    Go.offAllNamed(NamedRoutes.requestStatus);
+  Future<void> _onContinuePressed() async {
+    await SessionManager.setJobSeekerProfileCompleted(true);
+    if (!mounted) return;
+    CustomSnackBar.showSuccess(
+      context,
+      message: 'تم حفظ وإرسال بيانات طلب التوظيف بنجاح',
+    );
+    Go.offAllNamed(NamedRoutes.jobSeekerMain);
   }
 
   @override

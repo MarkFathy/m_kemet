@@ -255,9 +255,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     if (response.data is Map<String, dynamic>) {
       final map = response.data as Map<String, dynamic>;
-      final userMap = map['data'] is Map<String, dynamic>
-          ? map['data'] as Map<String, dynamic>
-          : (map['user'] is Map<String, dynamic> ? map['user'] as Map<String, dynamic> : map);
+      final data = map['data'];
+      final Map<String, dynamic> userMap;
+      if (data is Map<String, dynamic>) {
+        if (data['user'] is Map<String, dynamic>) {
+          userMap = data['user'] as Map<String, dynamic>;
+        } else {
+          userMap = data;
+        }
+      } else if (map['user'] is Map<String, dynamic>) {
+        userMap = map['user'] as Map<String, dynamic>;
+      } else {
+        userMap = map;
+      }
       return UserModel.fromJson(userMap);
     }
     throw const ServerException(500, 'Invalid response from server', null);

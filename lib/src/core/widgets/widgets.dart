@@ -1,4 +1,5 @@
 export 'app_loading_overlay.dart';
+export 'app_progress_indicator.dart';
 export 'app_scaffold.dart';
 export 'app_upgrader.dart';
 export 'buttons/custom_back_button.dart';

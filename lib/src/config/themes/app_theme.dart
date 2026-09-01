@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:m_kemet/src/config/res/app_sizes.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
+import 'package:m_kemet/src/config/themes/status_bar_and_orientations_theme.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
-import 'package:flutter/material.dart';
 
 class AppTheme {
   BuildContext context = Go.navigatorKey.currentContext!;
@@ -21,8 +22,9 @@ class AppTheme {
       selectionHandleColor: AppColors.skyBlue,
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: AppColors.skyBlue,
+      backgroundColor: Colors.transparent,
       elevation: 0,
+      systemOverlayStyle: AppStatusBarAndOrientationsTheme.systemUiOverlayStyle,
       centerTitle: true,
       iconTheme: const IconThemeData(color: AppColors.whiteColor),
       titleTextStyle: getTextStyle().whiteColor.w700.s20,

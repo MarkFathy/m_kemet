@@ -19,6 +19,7 @@ import 'package:m_kemet/src/core/widgets/text_fields/default_text_field.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_state.dart';
 import 'package:m_kemet/src/features/auth/presentation/view/otp_verification_screen.dart';
+import 'package:m_kemet/src/features/auth/presentation/widgets/auth_widgets.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -158,23 +159,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     24.szH,
 
                     // Remember Password Prompt
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          S.of(context).rememberedPassword,
-                          style: getTextStyle().greyColor.w400.s14,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Go.offNamed(NamedRoutes.login, arguments: selectedType);
-                          },
-                          child: Text(
-                            S.of(context).signInNow,
-                            style: getTextStyle().darkNavy.w700.s14,
-                          ),
-                        ),
-                      ],
+                    AuthSwitchPrompt(
+                      promptText: S.of(context).rememberedPassword,
+                      actionText: S.of(context).signInNow,
+                      onAction: () => Go.offNamed(NamedRoutes.login, arguments: selectedType),
                     ),
 
                     16.szH,

@@ -98,7 +98,7 @@ class ApprovedStatusCard extends StatelessWidget {
           CustomButton(
             text: S.of(context).goToHome,
             onPressed: () {
-              Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
+              Go.offAllNamed(NamedRoutes.jobSeekerMain);
             },
             backgroundColor: AppColors.darkNavy,
             textStyle: getTextStyle().whiteColor.w700.s16,
