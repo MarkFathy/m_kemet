@@ -22,7 +22,7 @@ import 'package:m_kemet/src/features/auth/presentation/view/otp_verification_scr
 import 'package:m_kemet/src/features/auth/presentation/widgets/auth_widgets.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
+class ForgotPasswordScreen extends StatelessWidget {
   final UserType? userType;
 
   const ForgotPasswordScreen({
@@ -31,10 +31,26 @@ class ForgotPasswordScreen extends StatefulWidget {
   });
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  Widget build(BuildContext context) {
+    final selectedType = userType ?? UserType.jobSeeker;
+
+    return BlocProvider<AuthCubit>(
+      create: (context) => sl<AuthCubit>()..setUserType(selectedType),
+      child: _ForgotPasswordView(userType: selectedType),
+    );
+  }
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+class _ForgotPasswordView extends StatefulWidget {
+  final UserType userType;
+
+  const _ForgotPasswordView({required this.userType});
+
+  @override
+  State<_ForgotPasswordView> createState() => _ForgotPasswordViewState();
+}
+
+class _ForgotPasswordViewState extends State<_ForgotPasswordView> {
   final _formKey = GlobalKey<FormState>();
   final _accountController = TextEditingController();
 
@@ -44,7 +60,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
-  void _onSendResetCodePressed(BuildContext context) {
+  void _onSendResetCodePressed() {
     if (_formKey.currentState?.validate() ?? false) {
       context.read<AuthCubit>().forgotPassword(_accountController.text.trim());
     }
@@ -52,127 +68,106 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedType = widget.userType ?? UserType.jobSeeker;
+    final isEmployer = widget.userType == UserType.employer;
 
-    return BlocProvider<AuthCubit>(
-      create: (context) => sl<AuthCubit>()..setUserType(selectedType),
-      child: BlocConsumer<AuthCubit, AuthState>(
-        listener: (context, state) {
-          if (state.status == AuthStatus.error && state.errorMessage != null) {
-            CustomSnackBar.showError(context, message: state.errorMessage!);
-          } else if (state.status == AuthStatus.otpSent) {
-            Go.toNamed(
-              NamedRoutes.otpVerification,
-              arguments: OtpScreenArgs(
-                email: _accountController.text.trim(),
-                userType: selectedType,
-                isPasswordReset: true,
-              ),
-            );
-          }
-        },
-        builder: (context, state) {
-          final isLoading = state.isLoading;
-
-          return AppScaffold(
-            safeTop: true,
-            safeBottom: true,
-            backgroundColor: AppColors.pageBg,
-            body: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: EdgeInsets.symmetric(
-                horizontal: AppPadding.pW12,
-                vertical: AppPadding.pH12,
-              ),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Top Bar with Back Button
-                    const CustomBackButton(),
-
-                    20.szH,
-
-                    // Lock Icon Badge
-                    Center(
-                      child: Container(
-                        width: 72.w,
-                        height: 72.w,
-                        decoration: const BoxDecoration(
-                          color: AppColors.softBlueBg,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.lock_reset_rounded,
-                          color: AppColors.darkNavy,
-                          size: 36.sp,
-                        ),
-                      ),
-                    ),
-
-                    20.szH,
-
-                    // Title
-                    Text(
-                      S.of(context).forgotPasswordTitle,
-                      textAlign: TextAlign.center,
-                      style: getTextStyle().darkNavy.w700.s24,
-                    ),
-
-                    8.szH,
-
-                    // Subtitle
-                    Text(
-                      S.of(context).forgotPasswordSub,
-                      textAlign: TextAlign.center,
-                      style: getTextStyle().greyColor.w400.s14.copyWith(height: 1.5),
-                    ),
-
-                    28.szH,
-
-                    // Email / Phone Field Input
-                    DefaultTextField(
-                      controller: _accountController,
-                      label: S.of(context).emailLabel,
-                      hint: S.of(context).emailHint,
-                      inputType: TextInputType.emailAddress,
-                      prefixIcon: Icon(Icons.email_outlined, color: AppColors.greyColor, size: 20.sp),
-                      validator: (value) => Validators.validateEmail(
-                        value,
-                        emptyMessage: S.of(context).emailHint,
-                        invalidMessage: S.of(context).emailValidationMessage,
-                      ),
-                    ),
-
-                    24.szH,
-
-                    // Send Action Button
-                    CustomButton(
-                      text: S.of(context).sendResetCode,
-                      isLoading: isLoading,
-                      onPressed: () => _onSendResetCodePressed(context),
-                      backgroundColor: AppColors.darkNavy,
-                      textStyle: getTextStyle().whiteColor.w700.s16,
-                    ),
-
-                    24.szH,
-
-                    // Remember Password Prompt
-                    AuthSwitchPrompt(
-                      promptText: S.of(context).rememberedPassword,
-                      actionText: S.of(context).signInNow,
-                      onAction: () => Go.offNamed(NamedRoutes.login, arguments: selectedType),
-                    ),
-
-                    16.szH,
-                  ],
-                ),
-              ),
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state.status == AuthStatus.error && state.errorMessage != null) {
+          CustomSnackBar.showError(context, message: state.errorMessage!);
+        } else if (state.status == AuthStatus.otpSent) {
+          Go.toNamed(
+            NamedRoutes.otpVerification,
+            arguments: OtpScreenArgs(
+              email: _accountController.text.trim(),
+              userType: widget.userType,
+              isPasswordReset: true,
             ),
           );
-        },
-      ),
+        }
+      },
+      builder: (context, state) {
+        final isLoading = state.isLoading;
+
+        return AppScaffold(
+          safeTop: true,
+          safeBottom: true,
+          backgroundColor: const Color(0xFFF7F9FC),
+          body: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppPadding.pW20,
+              vertical: AppPadding.pH16,
+            ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Top Bar
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const CustomBackButton(),
+                      AuthRoleBadge(isEmployer: isEmployer),
+                    ],
+                  ),
+
+                  32.szH,
+
+                  // Header
+                  AuthHeader(
+                    title: S.of(context).forgotPasswordTitle,
+                    subtitle: S.of(context).forgotPasswordSub,
+                  ),
+
+                  36.szH,
+
+                  // Email Input
+                  DefaultTextField(
+                    controller: _accountController,
+                    label: S.of(context).emailLabel,
+                    hint: S.of(context).emailHint,
+                    inputType: TextInputType.emailAddress,
+                    prefixIcon: Icon(Icons.email_outlined, color: AppColors.greyColor, size: 20.sp),
+                    validator: (value) => Validators.validateEmail(
+                      value,
+                      emptyMessage: S.of(context).emailHint,
+                      invalidMessage: S.of(context).emailValidationMessage,
+                    ),
+                  ),
+
+                  28.szH,
+
+                  // Submit Button
+                  CustomButton(
+                    text: S.of(context).sendResetCode,
+                    isLoading: isLoading,
+                    onPressed: _onSendResetCodePressed,
+                    backgroundColor: AppColors.darkNavy,
+                    textStyle: getTextStyle().whiteColor.w700.s18,
+                  ),
+
+                  32.szH,
+
+                  // Return to Login Link
+                  Center(
+                    child: TextButton.icon(
+                      onPressed: () => Go.back(),
+                      icon: Icon(Icons.arrow_back_rounded, color: AppColors.darkNavy, size: 18.sp),
+                      label: Text(
+                        S.of(context).signInNow,
+                        style: getTextStyle().darkNavy.w600.s14,
+                      ),
+                    ),
+                  ),
+
+                  16.szH,
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

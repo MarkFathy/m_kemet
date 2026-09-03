@@ -9,11 +9,15 @@ import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
 
 class ProfileCompletionGaugeCard extends StatelessWidget {
   final double completionPercentage;
+  final bool isLoading;
+  final bool isEnabled;
   final VoidCallback onContinuePressed;
 
   const ProfileCompletionGaugeCard({
     super.key,
     this.completionPercentage = 0.40,
+    this.isLoading = false,
+    this.isEnabled = true,
     required this.onContinuePressed,
   });
 
@@ -57,10 +61,32 @@ class ProfileCompletionGaugeCard extends StatelessWidget {
           16.szH,
           CustomButton(
             text: S.of(context).continueAction,
-            onPressed: onContinuePressed,
-            backgroundColor: AppColors.darkNavy,
-            textStyle: getTextStyle().whiteColor.w700.s16,
+            isLoading: isLoading,
+            onPressed: (!isEnabled || isLoading) ? null : onContinuePressed,
+            backgroundColor: isEnabled ? AppColors.darkNavy : const Color(0xFF94A3B8),
+            textStyle: getTextStyle().whiteColor.w700.s16.copyWith(
+              color: isEnabled ? Colors.white : Colors.white70,
+            ),
           ),
+          if (!isEnabled && !isLoading) ...[
+            10.szH,
+            Row(
+              children: [
+                Icon(
+                  Icons.info_outline_rounded,
+                  size: 14.sp,
+                  color: AppColors.greyColor,
+                ),
+                6.szW,
+                Expanded(
+                  child: Text(
+                    S.of(context).completeAllFieldsHint,
+                    style: getTextStyle().greyColor.w500.s12,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );

@@ -36,6 +36,16 @@ class AuthResponseModel extends AuthEntity {
       user = UserModel.fromJson(data['candidate'] as Map<String, dynamic>);
     } else if (data['company'] is Map<String, dynamic>) {
       user = UserModel.fromJson(data['company'] as Map<String, dynamic>);
+    } else if (data.containsKey('user_type') ||
+        data.containsKey('role') ||
+        data.containsKey('company_name') ||
+        (data.containsKey('email') && data.containsKey('name'))) {
+      user = UserModel.fromJson(data);
+    } else if (json.containsKey('user_type') ||
+        json.containsKey('role') ||
+        json.containsKey('company_name') ||
+        (json.containsKey('email') && json.containsKey('name'))) {
+      user = UserModel.fromJson(json);
     }
 
     return AuthResponseModel(

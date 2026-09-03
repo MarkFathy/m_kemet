@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:m_kemet/src/config/res/app_sizes.dart';
+import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/core/extensions/context_extension.dart';
 import 'package:m_kemet/src/core/helpers/validators.dart';
 import 'package:flutter/material.dart';
@@ -236,10 +237,11 @@ class DefaultTextFieldState extends State<DefaultTextField> with SingleTickerPro
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
                   ),
+              errorMaxLines: 3,
               errorStyle: TextStyle(
-                color: context.colors.error,
+                color: AppColors.errorRed,
                 fontSize: 12.sp,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
               ),
 
               prefixIcon: widget.prefixIcon,
@@ -275,12 +277,12 @@ class DefaultTextFieldState extends State<DefaultTextField> with SingleTickerPro
 
               errorBorder: OutlineInputBorder(
                 borderRadius: radius,
-                borderSide: BorderSide(color: context.colors.error, width: 1.w),
+                borderSide: BorderSide(color: AppColors.errorRed, width: 1.w),
               ),
 
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: radius,
-                borderSide: BorderSide(color: context.colors.error, width: 1.5.w),
+                borderSide: BorderSide(color: AppColors.errorRed, width: 1.5.w),
               ),
             ),
           ),

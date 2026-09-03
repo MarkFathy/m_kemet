@@ -1,331 +1,541 @@
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:m_kemet/generated/l10n.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
+import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_cubit.dart';
+import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_state.dart';
+
+import 'package:m_kemet/src/core/widgets/crop_image_modal.dart';
+import 'package:m_kemet/src/core/widgets/image_preview_modal.dart';
+import 'package:m_kemet/src/core/widgets/image_source_selection_bottom_sheet.dart';
 
 class DocumentsUploadSection extends StatelessWidget {
   const DocumentsUploadSection({super.key});
 
+  Future<void> _pickAndUploadImage({
+    required BuildContext context,
+    required Future<void> Function(File file) uploadFn,
+    String? title,
+    double? initialAspectRatio,
+  }) async {
+    ImageSourceSelectionBottomSheet.show(
+      context,
+      title: title ?? S.of(context).cropPhoto,
+      cameraLabel: 'الكاميرا',
+      galleryLabel: 'المعرض',
+      onSourceSelected: (source) async {
+        final picker = ImagePicker();
+        final picked = await picker.pickImage(
+          source: source,
+          imageQuality: 90,
+        );
+        if (picked != null) {
+          final originalFile = File(picked.path);
+          if (!context.mounted) return;
+          File fileToUpload = originalFile;
+          try {
+            final cropped = await CropImageModal.show(
+              context,
+              imageFile: originalFile,
+              title: title ?? S.of(context).cropPhoto,
+              initialAspectRatio: initialAspectRatio,
+            );
+            if (cropped == null) {
+              return;
+            }
+            fileToUpload = cropped;
+          } catch (_) {
+            fileToUpload = originalFile;
+          }
+          await uploadFn(fileToUpload);
+        }
+      },
+    );
+  }
+
+  Future<void> _pickAndUploadPdf({
+    required BuildContext context,
+    required Future<void> Function(File file) uploadFn,
+  }) async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'doc', 'docx'],
+    );
+    if (result != null && result.files.single.path != null) {
+      final file = File(result.files.single.path!);
+      await uploadFn(file);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          S.of(context).documentsSectionTitle,
-          style: getTextStyle().darkNavy.w700.s20,
+    return BlocBuilder<JobSeekerProfileCubit, JobSeekerProfileState>(
+      builder: (context, state) {
+        final cubit = context.read<JobSeekerProfileCubit>();
+
+        final isPersonalPhotoUploaded = state.uploadedPersonalPhoto != null ||
+            state.personalPhotoStatus == DocumentUploadStatus.success;
+        final isPersonalPhotoUploading =
+            state.personalPhotoStatus == DocumentUploadStatus.uploading;
+
+        final isNationalIdUploaded = state.uploadedNationalId != null ||
+            state.nationalIdStatus == DocumentUploadStatus.success;
+        final isNationalIdUploading =
+            state.nationalIdStatus == DocumentUploadStatus.uploading;
+
+        final isPassportUploaded = state.uploadedPassport != null ||
+            state.passportStatus == DocumentUploadStatus.success;
+        final isPassportUploading =
+            state.passportStatus == DocumentUploadStatus.uploading;
+
+        final isCvUploaded = state.uploadedCv != null ||
+            state.cvStatus == DocumentUploadStatus.success;
+        final isCvUploading =
+            state.cvStatus == DocumentUploadStatus.uploading;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              S.of(context).documentsSectionTitle,
+              style: getTextStyle().darkNavy.w700.s20,
+            ),
+
+            12.szH,
+
+            // Item 1: Personal Photo
+            _buildDocumentCard(
+              context: context,
+              title: S.of(context).personalPhotoTitle,
+              subtitle: 'صورة شخصية حديثة بخلفية بيضاء',
+              icon: Icons.add_a_photo_outlined,
+              iconBgColor: AppColors.softBlueBg,
+              isUploaded: isPersonalPhotoUploaded,
+              isUploading: isPersonalPhotoUploading,
+              fileName: state.uploadedPersonalPhoto?.originalName ??
+                  state.localPersonalPhotoPath?.split(Platform.pathSeparator).last,
+              onUploadTap: () => _pickAndUploadImage(
+                context: context,
+                uploadFn: cubit.uploadPersonalPhoto,
+                title: S.of(context).personalPhotoTitle,
+                initialAspectRatio: 1.0,
+              ),
+              onPreviewTap: () {
+                final file = state.localPersonalPhotoPath != null
+                    ? File(state.localPersonalPhotoPath!)
+                    : null;
+                final url = state.uploadedPersonalPhoto?.fileUrl ??
+                    state.uploadedPersonalPhoto?.filePath;
+                ImagePreviewModal.show(
+                  context,
+                  file: file,
+                  imageUrl: url,
+                  title: S.of(context).personalPhotoTitle,
+                  onChange: () => _pickAndUploadImage(
+                    context: context,
+                    uploadFn: cubit.uploadPersonalPhoto,
+                    title: S.of(context).personalPhotoTitle,
+                    initialAspectRatio: 1.0,
+                  ),
+                );
+              },
+            ),
+
+            12.szH,
+
+            // Item 2: National ID Card
+            _buildDocumentCard(
+              context: context,
+              title: S.of(context).idCardTitle,
+              subtitle: 'صورة وجهي البطاقة الشخصية',
+              icon: Icons.credit_card_rounded,
+              iconBgColor: AppColors.softBlueBg,
+              isUploaded: isNationalIdUploaded,
+              isUploading: isNationalIdUploading,
+              fileName: state.uploadedNationalId?.originalName ??
+                  state.localNationalIdPath?.split(Platform.pathSeparator).last,
+              onUploadTap: () => _pickAndUploadImage(
+                context: context,
+                uploadFn: cubit.uploadNationalId,
+                title: S.of(context).idCardTitle,
+                initialAspectRatio: 4 / 3,
+              ),
+              onPreviewTap: () {
+                final file = state.localNationalIdPath != null
+                    ? File(state.localNationalIdPath!)
+                    : null;
+                final url = state.uploadedNationalId?.fileUrl ??
+                    state.uploadedNationalId?.filePath;
+                ImagePreviewModal.show(
+                  context,
+                  file: file,
+                  imageUrl: url,
+                  title: S.of(context).idCardTitle,
+                  onChange: () => _pickAndUploadImage(
+                    context: context,
+                    uploadFn: cubit.uploadNationalId,
+                    title: S.of(context).idCardTitle,
+                    initialAspectRatio: 4 / 3,
+                  ),
+                );
+              },
+            ),
+
+            12.szH,
+
+            // Item 3: Passport Copy Card
+            _buildDocumentCard(
+              context: context,
+              title: S.of(context).passportCopyTitle,
+              subtitle: S.of(context).passportCopyDesc,
+              icon: Icons.badge_outlined,
+              iconBgColor: AppColors.softBlueBg,
+              isUploaded: isPassportUploaded,
+              isUploading: isPassportUploading,
+              fileName: state.uploadedPassport?.originalName ??
+                  state.localPassportPath?.split(Platform.pathSeparator).last,
+              onUploadTap: () => _pickAndUploadImage(
+                context: context,
+                uploadFn: cubit.uploadPassport,
+                title: S.of(context).passportCopyTitle,
+                initialAspectRatio: null,
+              ),
+              onPreviewTap: () {
+                final file = state.localPassportPath != null
+                    ? File(state.localPassportPath!)
+                    : null;
+                final url = state.uploadedPassport?.fileUrl ??
+                    state.uploadedPassport?.filePath;
+                ImagePreviewModal.show(
+                  context,
+                  file: file,
+                  imageUrl: url,
+                  title: S.of(context).passportCopyTitle,
+                  onChange: () => _pickAndUploadImage(
+                    context: context,
+                    uploadFn: cubit.uploadPassport,
+                    title: S.of(context).passportCopyTitle,
+                    initialAspectRatio: null,
+                  ),
+                );
+              },
+            ),
+
+            12.szH,
+
+            // Item 4: CV Upload Dropzone
+            _buildCvUploadCard(
+              context: context,
+              isUploaded: isCvUploaded,
+              isUploading: isCvUploading,
+              fileName: state.uploadedCv?.originalName ??
+                  state.localCvPath?.split(Platform.pathSeparator).last,
+              onUploadTap: () => _pickAndUploadPdf(
+                context: context,
+                uploadFn: cubit.uploadCv,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildDocumentCard({
+    required BuildContext context,
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required Color iconBgColor,
+    required bool isUploaded,
+    required bool isUploading,
+    String? fileName,
+    required VoidCallback onUploadTap,
+    VoidCallback? onPreviewTap,
+  }) {
+    return InkWell(
+      onTap: isUploaded ? onPreviewTap : onUploadTap,
+      borderRadius: BorderRadius.circular(16.r),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: isUploaded ? AppColors.successGreen : AppColors.borderGrey,
+            width: isUploaded ? 1.5.w : 1.w,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 10.r,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-
-        12.szH,
-
-        // Item 1: Personal Photo
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-          decoration: BoxDecoration(
-            color: AppColors.whiteColor,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.borderGrey),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 10.r,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 24.r,
-                backgroundColor: AppColors.softBlueBg,
-                child: Icon(Icons.add_a_photo_outlined, color: AppColors.darkNavy, size: 20.sp),
-              ),
-              12.szW,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      S.of(context).personalPhotoTitle,
-                      style: getTextStyle().darkNavy.w700.s16,
-                    ),
-                    4.szH,
-                    Text(
-                      'صورة شخصية حديثة بخلفية بيضاء',
-                      style: getTextStyle().greyColor.w400.s12,
-                    ),
-                  ],
-                ),
-              ),
-              OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.darkNavy,
-                  side: const BorderSide(color: AppColors.darkNavy),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-                ),
-                child: Text(
-                  'رفع',
-                  style: getTextStyle().darkNavy.w600.s13,
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        12.szH,
-
-        // Item 2: National ID / Passport Card
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-          decoration: BoxDecoration(
-            color: AppColors.whiteColor,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.borderGrey),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 10.r,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(10.w),
-                decoration: BoxDecoration(
-                  color: AppColors.successBg,
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Icon(Icons.credit_card_rounded, color: AppColors.successGreen, size: 22.sp),
-              ),
-              12.szW,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      S.of(context).idCardTitle,
-                      style: getTextStyle().darkNavy.w700.s16,
-                    ),
-                    4.szH,
-                    Text(
-                      'صورة وجهي البطاقة الشخصية',
-                      style: getTextStyle().greyColor.w400.s12,
-                    ),
-                  ],
-                ),
-              ),
-              OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.darkNavy,
-                  side: const BorderSide(color: AppColors.darkNavy),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-                ),
-                child: Text(
-                  'رفع',
-                  style: getTextStyle().darkNavy.w600.s13,
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        12.szH,
-
-        // Item 3: Passport Copy Card
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-          decoration: BoxDecoration(
-            color: AppColors.whiteColor,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.borderGrey),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 10.r,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(10.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.softBlueBg,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Icon(
-                      Icons.badge_outlined,
-                      color: AppColors.darkNavy,
-                      size: 22.sp,
-                    ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 22.r,
+                  backgroundColor: isUploaded ? AppColors.successBg : iconBgColor,
+                  child: Icon(
+                    isUploaded ? Icons.check_circle_outline_rounded : icon,
+                    color: isUploaded ? AppColors.successGreen : AppColors.darkNavy,
+                    size: 20.sp,
                   ),
-                  12.szW,
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          S.of(context).passportCopyTitle,
-                          style: getTextStyle().darkNavy.w700.s16,
-                        ),
-                        4.szH,
-                        Text(
-                          S.of(context).passportCopyDesc,
-                          style: getTextStyle().greyColor.w400.s12,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                    decoration: BoxDecoration(
-                      color: AppColors.successBg,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Text(
-                      S.of(context).uploadedBadge,
-                      style: getTextStyle().w600.s11.copyWith(
-                            color: AppColors.successGreen,
-                          ),
-                    ),
-                  ),
-                ],
-              ),
-
-              12.szH,
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('100%', style: getTextStyle().greyColor.w600.s12),
-                  Row(
-                    children: [
-                      Text('passport_scan_v2.pdf', style: getTextStyle().darkNavy.w600.s13),
-                      6.szW,
-                      Icon(Icons.check_circle_rounded, color: AppColors.successGreen, size: 16.sp),
-                    ],
-                  ),
-                ],
-              ),
-              6.szH,
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4.r),
-                child: LinearProgressIndicator(
-                  value: 1.0,
-                  minHeight: 6.h,
-                  backgroundColor: AppColors.borderGrey,
-                  valueColor: const AlwaysStoppedAnimation<Color>(AppColors.successGreen),
                 ),
-              ),
-            ],
-          ),
-        ),
-
-        12.szH,
-
-        // Item 4: CV Upload Dropzone
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-          decoration: BoxDecoration(
-            color: AppColors.whiteColor,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.borderGrey),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 10.r,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(10.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.borderGrey,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Icon(Icons.description_outlined, color: AppColors.darkNavy, size: 22.sp),
-                  ),
-                  12.szW,
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          S.of(context).cvTitle,
-                          style: getTextStyle().darkNavy.w700.s16,
-                        ),
-                        4.szH,
-                        Text(
-                          S.of(context).cvDesc,
-                          style: getTextStyle().greyColor.w400.s12,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                    decoration: BoxDecoration(
-                      color: AppColors.errorBg,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Text(
-                      S.of(context).requiredBadge,
-                      style: getTextStyle().w600.s11.copyWith(color: AppColors.errorRed),
-                    ),
-                  ),
-                ],
-              ),
-
-              14.szH,
-
-              InkWell(
-                onTap: () {},
-                borderRadius: BorderRadius.circular(12.r),
-                child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 14.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.pageBg,
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(
-                      color: AppColors.darkNavy.withValues(alpha: 0.3),
-                      width: 1.5.w,
-                    ),
-                  ),
+                12.szW,
+                Expanded(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.cloud_upload_outlined, size: 28.sp, color: AppColors.darkNavy),
-                      8.szH,
                       Text(
-                        S.of(context).dragAndDropHint,
-                        textAlign: TextAlign.center,
-                        style: getTextStyle().darkNavy.w600.s13,
+                        title,
+                        style: getTextStyle().darkNavy.w700.s16,
+                      ),
+                      4.szH,
+                      Text(
+                        subtitle,
+                        style: getTextStyle().greyColor.w400.s12,
                       ),
                     ],
                   ),
                 ),
+                if (isUploading)
+                  SizedBox(
+                    width: 24.w,
+                    height: 24.w,
+                    child: const CircularProgressIndicator(strokeWidth: 2),
+                  )
+                else if (isUploaded)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (onPreviewTap != null)
+                        InkWell(
+                          onTap: onPreviewTap,
+                          borderRadius: BorderRadius.circular(8.r),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+                            decoration: BoxDecoration(
+                              color: AppColors.softBlueBg,
+                              borderRadius: BorderRadius.circular(8.r),
+                              border: Border.all(color: AppColors.darkNavy.withValues(alpha: 0.2)),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.visibility_outlined, color: AppColors.darkNavy, size: 16.sp),
+                                4.szW,
+                                Text(
+                                  S.of(context).viewPhoto,
+                                  style: getTextStyle().darkNavy.w600.s12,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      6.szW,
+                      InkWell(
+                        onTap: onUploadTap,
+                        borderRadius: BorderRadius.circular(8.r),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF1F5F9),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.refresh_rounded, color: AppColors.greyColor, size: 16.sp),
+                              4.szW,
+                              Text(
+                                S.of(context).changeMedia,
+                                style: getTextStyle().greyColor.w600.s12,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  OutlinedButton(
+                    onPressed: onUploadTap,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.darkNavy,
+                      side: const BorderSide(color: AppColors.darkNavy),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                    ),
+                    child: Text(
+                      S.of(context).uploadAction,
+                      style: getTextStyle().darkNavy.w600.s13,
+                    ),
+                  ),
+              ],
+            ),
+            if (isUploaded && fileName != null) ...[
+              8.szH,
+              Row(
+                children: [
+                  Icon(Icons.attachment_rounded, size: 14.sp, color: AppColors.greyColor),
+                  4.szW,
+                  Expanded(
+                    child: Text(
+                      fileName,
+                      style: getTextStyle().greyColor.w500.s12,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
             ],
-          ),
+          ],
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget _buildCvUploadCard({
+    required BuildContext context,
+    required bool isUploaded,
+    required bool isUploading,
+    String? fileName,
+    required VoidCallback onUploadTap,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: isUploaded ? AppColors.successGreen : AppColors.borderGrey,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 10.r,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(10.w),
+                decoration: BoxDecoration(
+                  color: isUploaded ? AppColors.successBg : AppColors.borderGrey,
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(
+                  Icons.description_outlined,
+                  color: isUploaded ? AppColors.successGreen : AppColors.darkNavy,
+                  size: 22.sp,
+                ),
+              ),
+              12.szW,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      S.of(context).cvTitle,
+                      style: getTextStyle().darkNavy.w700.s16,
+                    ),
+                    4.szH,
+                    Text(
+                      S.of(context).cvDesc,
+                      style: getTextStyle().greyColor.w400.s12,
+                    ),
+                  ],
+                ),
+              ),
+              if (isUploaded)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.successBg,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Text(
+                    S.of(context).uploadedBadge,
+                    style: getTextStyle().w600.s11.copyWith(color: AppColors.successGreen),
+                  ),
+                )
+              else
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.errorBg,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Text(
+                    S.of(context).requiredBadge,
+                    style: getTextStyle().w600.s11.copyWith(color: AppColors.errorRed),
+                  ),
+                ),
+            ],
+          ),
+
+          14.szH,
+
+          if (isUploading)
+            Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                child: const CircularProgressIndicator(),
+              ),
+            )
+          else
+            InkWell(
+              onTap: onUploadTap,
+              borderRadius: BorderRadius.circular(12.r),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 14.w),
+                decoration: BoxDecoration(
+                  color: isUploaded ? AppColors.successBg.withValues(alpha: 0.3) : AppColors.pageBg,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: isUploaded ? AppColors.successGreen : AppColors.darkNavy.withValues(alpha: 0.3),
+                    width: 1.5.w,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Icon(
+                      isUploaded ? Icons.check_circle_outline_rounded : Icons.cloud_upload_outlined,
+                      size: 28.sp,
+                      color: isUploaded ? AppColors.successGreen : AppColors.darkNavy,
+                    ),
+                    8.szH,
+                    Text(
+                      isUploaded && fileName != null ? fileName : S.of(context).dragAndDropHint,
+                      textAlign: TextAlign.center,
+                      style: isUploaded
+                          ? getTextStyle().darkNavy.w600.s13
+                          : getTextStyle().darkNavy.w600.s13,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

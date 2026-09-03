@@ -101,6 +101,10 @@ class _NewPasswordBottomSheetState extends State<NewPasswordBottomSheet> {
                 val,
                 emptyMessage: S.of(context).passwordHint,
                 minLengthMessage: S.of(context).passwordValidationMessage,
+                requireMixedCase: true,
+                requireSpecialChar: true,
+                mixedCaseMessage: 'يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير على الأقل.',
+                symbolMessage: 'يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل.',
               ),
             ),
 
@@ -115,7 +119,8 @@ class _NewPasswordBottomSheetState extends State<NewPasswordBottomSheet> {
               validator: (val) => Validators.validatePasswordConfirm(
                 val,
                 _passCtrl.text,
-                message: S.of(context).confirmPasswordMismatch,
+                emptyMessage: S.of(context).confirmPasswordHint,
+                mismatchMessage: S.of(context).confirmPasswordMismatch,
               ),
             ),
 

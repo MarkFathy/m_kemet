@@ -23,6 +23,8 @@ class JobSeekerDetailsCard extends StatelessWidget {
     required this.gender,
   });
 
+  static const Color _lightBlueBg = AppColors.softBlueBg;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -47,7 +49,7 @@ class JobSeekerDetailsCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(6.w),
                 decoration: BoxDecoration(
-                  color: AppColors.softBlueBg,
+                  color: _lightBlueBg,
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Icon(Icons.badge_outlined, color: AppColors.darkNavy, size: 16.sp),
@@ -60,7 +62,7 @@ class JobSeekerDetailsCard extends StatelessWidget {
           ProfileDetailRow(
             icon: Icons.person_outline_rounded,
             iconColor: AppColors.darkNavy,
-            bgColor: AppColors.softBlueBg,
+            bgColor: _lightBlueBg,
             label: S.of(context).fullNameLabel,
             value: name.isNotEmpty ? name : '—',
           ),
@@ -69,8 +71,8 @@ class JobSeekerDetailsCard extends StatelessWidget {
           12.szH,
           ProfileDetailRow(
             icon: Icons.phone_outlined,
-            iconColor: AppColors.successGreen,
-            bgColor: AppColors.successBg,
+            iconColor: AppColors.darkNavy,
+            bgColor: _lightBlueBg,
             label: S.of(context).phoneLabel,
             value: phone.isNotEmpty ? phone : '—',
           ),
@@ -79,8 +81,8 @@ class JobSeekerDetailsCard extends StatelessWidget {
           12.szH,
           ProfileDetailRow(
             icon: Icons.email_outlined,
-            iconColor: AppColors.steelBlue,
-            bgColor: AppColors.softBlueBg,
+            iconColor: AppColors.darkNavy,
+            bgColor: _lightBlueBg,
             label: S.of(context).emailLabel,
             value: email.isNotEmpty ? email : '—',
           ),
@@ -90,8 +92,8 @@ class JobSeekerDetailsCard extends StatelessWidget {
             12.szH,
             ProfileDetailRow(
               icon: Icons.public_rounded,
-              iconColor: AppColors.steelBlue,
-              bgColor: AppColors.softBlueBg,
+              iconColor: AppColors.darkNavy,
+              bgColor: _lightBlueBg,
               label: S.of(context).currentCountryLabel,
               value: countryDisplay,
             ),
@@ -102,8 +104,8 @@ class JobSeekerDetailsCard extends StatelessWidget {
             12.szH,
             ProfileDetailRow(
               icon: Icons.wc_rounded,
-              iconColor: const Color(0xFFDB2777),
-              bgColor: const Color(0xFFFCE7F3),
+              iconColor: AppColors.darkNavy,
+              bgColor: _lightBlueBg,
               label: S.of(context).genderLabel,
               value: gender,
             ),

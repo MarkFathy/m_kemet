@@ -58,6 +58,11 @@
   "dontHaveAccount": "ليس لديك حساب؟",
   "alreadyHaveAccount": "لديك حساب بالفعل؟",
   "signUpNow": "سجل الآن",
+  "userTypeMismatchCompanyError": "هذا الحساب مسجل كشركة، يرجى تسجيل الدخول من بوابة أصحاب الأعمال والشركات.",
+  "userTypeMismatchCandidateError": "هذا الحساب مسجل كباحث عن عمل، يرجى تسجيل الدخول من بوابة الباحثين عن عمل.",
+  "registrationSuccessMessage": "تم إنشاء الحساب بنجاح",
+  "loginSuccessMessage": "تم تسجيل الدخول بنجاح",
+  "otpVerifiedSuccessMessage": "تم التحقق بنجاح",
   "signInNow": "سجل الدخول",
   "otpTitle": "التحقق من رمز OTP",
   "otpSubtitle": "يرجى إدخال رمز التحقق المكون من 6 أرقام المرسل إليك",
@@ -216,5 +221,14 @@
   "forgotPasswordTitle": "استعادة كلمة المرور",
   "forgotPasswordSub": "أدخل البريد الإلكتروني أو رقم الهاتف المسجل بحسابك وسنرسل لك رمز التحقق لاستعادة الحساب.",
   "sendResetCode": "إرسال رمز التحقق",
-  "rememberedPassword": "تذكرت كلمة المرور؟"
+  "rememberedPassword": "تذكرت كلمة المرور؟",
+  "watchVideo": "مشاهدة الفيديو",
+  "viewPhoto": "عرض الصورة",
+  "changeMedia": "تغيير",
+  "uploadAction": "رفع",
+  "cropPhoto": "قص وتعديل الصورة",
+  "confirmCrop": "تأكيد وقص",
+  "seconds5Forward": "+5 ثواني",
+  "seconds5Backward": "-5 ثواني",
+  "completeAllFieldsHint": "يرجى استكمال جميع البيانات والمستندات والفيديو لتفعيل المتابعة"
 }

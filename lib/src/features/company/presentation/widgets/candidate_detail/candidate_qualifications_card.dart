@@ -22,9 +22,23 @@ class CandidateQualificationsCard extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 10.h),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: getTextStyle().greyColor.w500.s14),
-              Text(value, style: getTextStyle().darkNavy.w700.s14),
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 130.w),
+                child: Text(
+                  title,
+                  style: getTextStyle().greyColor.w500.s14,
+                ),
+              ),
+              12.szW,
+              Expanded(
+                child: Text(
+                  value,
+                  textAlign: TextAlign.end,
+                  style: getTextStyle().darkNavy.w700.s14,
+                ),
+              ),
             ],
           ),
         ),
@@ -35,6 +49,33 @@ class CandidateQualificationsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final rows = <MapEntry<String, String>>[
+      if (candidate.currentCountry.isNotEmpty)
+        MapEntry(
+          S.of(context).currentLocation,
+          candidate.currentCountryFlag.isNotEmpty
+              ? '${candidate.currentCountryFlag} ${candidate.currentCountry}'
+              : candidate.currentCountry,
+        ),
+      if (candidate.targetCountries.isNotEmpty)
+        MapEntry(S.of(context).requestedDestination, candidate.targetCountries),
+      if (candidate.passportStatusLabel.isNotEmpty || candidate.isValidPassport)
+        MapEntry(
+          S.of(context).passportStatusLabel,
+          candidate.passportStatusLabel.isNotEmpty
+              ? candidate.passportStatusLabel
+              : (candidate.isValidPassport
+                  ? S.of(context).validPassport
+                  : S.of(context).invalidPassport),
+        ),
+      if (candidate.gender.isNotEmpty)
+        MapEntry(S.of(context).genderLabel, candidate.gender),
+      if (candidate.age > 0)
+        MapEntry(S.of(context).ageLabel, '${candidate.age} سنة'),
+      if (candidate.expectedSalary.isNotEmpty)
+        MapEntry(S.of(context).expectedSalaryLabel, candidate.expectedSalary),
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -62,32 +103,31 @@ class CandidateQualificationsCard extends StatelessWidget {
         ],
 
         // Detailed Qualifications Table
-        Text(
-          S.of(context).candidateDetailsTitle,
-          style: getTextStyle().darkNavy.w700.s16,
-        ),
-        10.szH,
-        Container(
-          padding: EdgeInsets.all(16.w),
-          decoration: BoxDecoration(
-            color: AppColors.whiteColor,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.borderGrey),
+        if (rows.isNotEmpty) ...[
+          Text(
+            S.of(context).candidateDetailsTitle,
+            style: getTextStyle().darkNavy.w700.s16,
           ),
-          child: Column(
-            children: [
-              _buildDetailRow(S.of(context).currentLocation, candidate.currentCountry),
-              _buildDetailRow(S.of(context).requestedDestination, candidate.targetCountries),
-              _buildDetailRow(
-                S.of(context).passportStatusLabel,
-                candidate.isValidPassport ? S.of(context).validPassport : S.of(context).invalidPassport,
-              ),
-              _buildDetailRow(S.of(context).genderLabel, candidate.gender),
-              _buildDetailRow(S.of(context).ageLabel, '${candidate.age} سنة'),
-              _buildDetailRow(S.of(context).expectedSalaryLabel, candidate.expectedSalary, isLast: true),
-            ],
+          10.szH,
+          Container(
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: AppColors.whiteColor,
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(color: AppColors.borderGrey),
+            ),
+            child: Column(
+              children: List.generate(rows.length, (index) {
+                final row = rows[index];
+                return _buildDetailRow(
+                  row.key,
+                  row.value,
+                  isLast: index == rows.length - 1,
+                );
+              }),
+            ),
           ),
-        ),
+        ],
       ],
     );
   }

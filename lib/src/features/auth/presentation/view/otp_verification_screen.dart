@@ -33,7 +33,7 @@ class OtpScreenArgs {
   });
 }
 
-class OtpVerificationScreen extends StatefulWidget {
+class OtpVerificationScreen extends StatelessWidget {
   final OtpScreenArgs? args;
   final UserType? userType;
 
@@ -44,18 +44,42 @@ class OtpVerificationScreen extends StatefulWidget {
   });
 
   @override
-  State<OtpVerificationScreen> createState() => _OtpVerificationScreenState();
+  Widget build(BuildContext context) {
+    final email = args?.email ?? '';
+    final resolvedUserType = args?.userType ?? userType ?? UserType.jobSeeker;
+
+    return BlocProvider<AuthCubit>(
+      create: (context) => sl<AuthCubit>()
+        ..setUserType(resolvedUserType)
+        ..setPendingEmail(email),
+      child: _OtpVerificationView(
+        args: args,
+        userType: resolvedUserType,
+      ),
+    );
+  }
 }
 
-class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
+class _OtpVerificationView extends StatefulWidget {
+  final OtpScreenArgs? args;
+  final UserType userType;
+
+  const _OtpVerificationView({
+    this.args,
+    required this.userType,
+  });
+
+  @override
+  State<_OtpVerificationView> createState() => _OtpVerificationViewState();
+}
+
+class _OtpVerificationViewState extends State<_OtpVerificationView> {
   final _pinController = TextEditingController();
   late Timer _timer;
   int _secondsRemaining = 60;
 
   String get _email => widget.args?.email ?? '';
   bool get _isPasswordReset => widget.args?.isPasswordReset ?? false;
-  UserType get _resolvedUserType =>
-      widget.args?.userType ?? widget.userType ?? UserType.jobSeeker;
 
   @override
   void initState() {
@@ -81,7 +105,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     super.dispose();
   }
 
-  void _onVerifyPressed(BuildContext context) {
+  void _onVerifyPressed() {
     final code = _pinController.text.trim();
     if (code.length != 6) {
       CustomSnackBar.showError(context, message: 'يرجى إدخال رمز التحقق كاملاً (6 أرقام)');
@@ -98,12 +122,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       cubit.verifyOtp(
         email: _email,
         code: code,
-        userType: _resolvedUserType,
+        userType: widget.userType,
       );
     }
   }
 
-  void _showNewPasswordSheet(BuildContext context) {
+  void _showNewPasswordSheet() {
     NewPasswordBottomSheet.show(
       context,
       isLoading: context.read<AuthCubit>().state.isLoading,
@@ -122,110 +146,109 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedType = _resolvedUserType;
-    final isEmployer = selectedType == UserType.employer;
+    final isEmployer = widget.userType == UserType.employer;
 
-    return BlocProvider<AuthCubit>(
-      create: (context) => sl<AuthCubit>()
-        ..setUserType(selectedType)
-        ..setPendingEmail(_email),
-      child: BlocConsumer<AuthCubit, AuthState>(
-        listener: (context, state) {
-          if (state.status == AuthStatus.error && state.errorMessage != null) {
-            CustomSnackBar.showError(context, message: state.errorMessage!);
-          } else if (state.status == AuthStatus.otpResent) {
-            CustomSnackBar.showSuccess(
-              context,
-              message: state.successMessage ?? 'تم إعادة إرسال الرمز بنجاح',
-            );
-            _startTimer();
-          } else if (state.status == AuthStatus.otpVerified) {
-            final targetType = state.userType ?? selectedType;
-            if (targetType == UserType.jobSeeker) {
-              Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
-            } else {
-              Go.offAllNamed(NamedRoutes.companyMain);
-            }
-          } else if (state.status == AuthStatus.resetOtpVerified) {
-            _showNewPasswordSheet(context);
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state.status == AuthStatus.error && state.errorMessage != null) {
+          CustomSnackBar.showError(context, message: state.errorMessage!);
+        } else if (state.status == AuthStatus.otpResent) {
+          _startTimer();
+        } else if (state.status == AuthStatus.otpVerified) {
+          final targetType = state.userType ?? widget.userType;
+          if (targetType == UserType.jobSeeker) {
+            Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
+          } else {
+            Go.offAllNamed(NamedRoutes.companyMain);
           }
-        },
-        builder: (context, state) {
-          final isLoading = state.isLoading;
+        } else if (state.status == AuthStatus.resetOtpVerified) {
+          _showNewPasswordSheet();
+        }
+      },
+      builder: (context, state) {
+        final isLoading = state.isLoading;
 
-          return AppScaffold(
-            safeTop: true,
-            safeBottom: true,
-            backgroundColor: AppColors.pageBg,
-            body: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: EdgeInsets.symmetric(
-                horizontal: AppPadding.pW12,
-                vertical: AppPadding.pH12,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Top Bar
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const CustomBackButton(),
-                      AuthRoleBadge(isEmployer: isEmployer),
-                    ],
-                  ),
-
-                  20.szH,
-
-                  // Title & Subtitle
-                  Text(
-                    S.of(context).otpTitle,
-                    style: getTextStyle().darkNavy.w700.s26,
-                  ),
-                  6.szH,
-                  Text(
-                    '${S.of(context).otpSubtitle}\n$_email',
-                    style: getTextStyle().greyColor.w400.s14.copyWith(height: 1.4),
-                  ),
-
-                  32.szH,
-
-                  // 6-digit Pinput OTP Input Widget
-                  CustomPinInput(
-                    length: 6,
-                    controller: _pinController,
-                    onCompleted: (pin) {
-                      _onVerifyPressed(context);
-                    },
-                  ),
-
-                  28.szH,
-
-                  // Resend Code Countdown
-                  OtpTimerResendSection(
-                    isLoading: state.resendOtpLoading,
-                    secondsRemaining: _secondsRemaining,
-                    onResend: () => context.read<AuthCubit>().resendOtp(_email),
-                  ),
-
-                  32.szH,
-
-                  // Verify Action Button
-                  CustomButton(
-                    text: S.of(context).verifyAction,
-                    isLoading: isLoading,
-                    onPressed: () => _onVerifyPressed(context),
-                    backgroundColor: AppColors.darkNavy,
-                    textStyle: getTextStyle().whiteColor.w700.s18,
-                  ),
-
-                  16.szH,
-                ],
-              ),
+        return AppScaffold(
+          safeTop: true,
+          safeBottom: true,
+          backgroundColor: AppColors.pageBg,
+          body: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppPadding.pW12,
+              vertical: AppPadding.pH12,
             ),
-          );
-        },
-      ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Top Bar
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const CustomBackButton(),
+                    AuthRoleBadge(isEmployer: isEmployer),
+                  ],
+                ),
+
+                20.szH,
+
+                // Title & Subtitle
+                Text(
+                  S.of(context).otpTitle,
+                  style: getTextStyle().darkNavy.w700.s22,
+                ),
+
+                6.szH,
+
+                Text(
+                  S.of(context).otpSubtitle,
+                  style: getTextStyle().greyColor.w400.s14.copyWith(height: 1.4),
+                ),
+
+                if (_email.isNotEmpty) ...[
+                  4.szH,
+                  Text(
+                    _email,
+                    style: getTextStyle().darkNavy.w600.s15,
+                  ),
+                ],
+
+                28.szH,
+
+                // Custom 6-Digit PIN Box Input
+                CustomPinInput(
+                  controller: _pinController,
+                  onCompleted: (pin) => _onVerifyPressed(),
+                ),
+
+                24.szH,
+
+                // Resend Timer Row
+                OtpTimerResendSection(
+                  isLoading: state.resendOtpLoading,
+                  secondsRemaining: _secondsRemaining,
+                  onResend: () {
+                    context.read<AuthCubit>().resendOtp(_email);
+                  },
+                ),
+
+                32.szH,
+
+                // Verify Button
+                CustomButton(
+                  text: S.of(context).verifyAction,
+                  isLoading: isLoading,
+                  onPressed: _onVerifyPressed,
+                  backgroundColor: AppColors.darkNavy,
+                  textStyle: getTextStyle().whiteColor.w700.s18,
+                ),
+
+                16.szH,
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

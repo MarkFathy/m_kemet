@@ -11,6 +11,8 @@ import 'package:m_kemet/src/features/auth/domain/usecases/resend_otp_usecase.dar
 import 'package:m_kemet/src/features/auth/domain/usecases/reset_password_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/verify_reset_otp_usecase.dart';
+import 'package:m_kemet/generated/l10n.dart';
+import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_state.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 
@@ -43,6 +45,25 @@ class AuthCubit extends Cubit<AuthState> {
     required this.getCountriesUseCase,
   }) : super(const AuthState());
 
+  S get _l10n {
+    final context = Go.navigatorKey.currentContext;
+    if (context != null) {
+      final s = S.maybeOf(context);
+      if (s != null) return s;
+    }
+    try {
+      return S.current;
+    } catch (_) {
+      return S();
+    }
+  }
+
+  String _getMismatchErrorMessage(UserType expectedUserType) {
+    return expectedUserType == UserType.jobSeeker
+        ? _l10n.userTypeMismatchCompanyError
+        : _l10n.userTypeMismatchCandidateError;
+  }
+
   void setUserType(UserType userType) {
     emit(state.copyWith(userType: userType));
   }
@@ -68,7 +89,7 @@ class AuthCubit extends Cubit<AuthState> {
           user: authEntity.user,
           pendingEmail: params.email,
           userType: UserType.jobSeeker,
-          successMessage: authEntity.message ?? 'Registration successful',
+          successMessage: authEntity.message ?? _l10n.registrationSuccessMessage,
         ),
       ),
     );
@@ -91,7 +112,7 @@ class AuthCubit extends Cubit<AuthState> {
           user: authEntity.user,
           pendingEmail: params.email,
           userType: UserType.employer,
-          successMessage: authEntity.message ?? 'Registration successful',
+          successMessage: authEntity.message ?? _l10n.registrationSuccessMessage,
         ),
       ),
     );
@@ -103,7 +124,14 @@ class AuthCubit extends Cubit<AuthState> {
     UserType? fallbackUserType,
   }) async {
     emit(state.copyWith(status: AuthStatus.loading));
-    final result = await loginUseCase(LoginParams(email: email, password: password));
+    final expectedType = fallbackUserType ?? state.userType;
+    final result = await loginUseCase(
+      LoginParams(
+        email: email,
+        password: password,
+        expectedUserType: expectedType,
+      ),
+    );
     result.fold(
       (failure) => emit(
         state.copyWith(
@@ -111,15 +139,27 @@ class AuthCubit extends Cubit<AuthState> {
           errorMessage: failure.serverException.message,
         ),
       ),
-      (authEntity) {
-        final resolvedUserType = authEntity.user?.userType ?? fallbackUserType ?? state.userType ?? UserType.jobSeeker;
+      (authEntity) async {
+        final accountType = authEntity.user?.userType;
+        if (expectedType != null && accountType != null && accountType != expectedType) {
+          await logoutUseCase();
+          emit(
+            state.copyWith(
+              status: AuthStatus.error,
+              errorMessage: _getMismatchErrorMessage(expectedType),
+            ),
+          );
+          return;
+        }
+
+        final resolvedUserType = accountType ?? expectedType ?? UserType.jobSeeker;
         emit(
           state.copyWith(
             status: AuthStatus.loginSuccess,
             authEntity: authEntity,
             user: authEntity.user,
             userType: resolvedUserType,
-            successMessage: authEntity.message ?? 'Login successful',
+            successMessage: authEntity.message ?? _l10n.loginSuccessMessage,
           ),
         );
       },
@@ -132,7 +172,14 @@ class AuthCubit extends Cubit<AuthState> {
     UserType? userType,
   }) async {
     emit(state.copyWith(status: AuthStatus.loading));
-    final result = await verifyOtpUseCase(VerifyOtpParams(email: email, code: code));
+    final expectedType = userType ?? state.userType;
+    final result = await verifyOtpUseCase(
+      VerifyOtpParams(
+        email: email,
+        code: code,
+        expectedUserType: expectedType,
+      ),
+    );
     result.fold(
       (failure) => emit(
         state.copyWith(
@@ -140,15 +187,29 @@ class AuthCubit extends Cubit<AuthState> {
           errorMessage: failure.serverException.message,
         ),
       ),
-      (authEntity) => emit(
-        state.copyWith(
-          status: AuthStatus.otpVerified,
-          authEntity: authEntity,
-          user: authEntity.user,
-          userType: userType ?? authEntity.user?.userType ?? state.userType,
-          successMessage: authEntity.message ?? 'Verified successfully',
-        ),
-      ),
+      (authEntity) async {
+        final accountType = authEntity.user?.userType;
+        if (expectedType != null && accountType != null && accountType != expectedType) {
+          await logoutUseCase();
+          emit(
+            state.copyWith(
+              status: AuthStatus.error,
+              errorMessage: _getMismatchErrorMessage(expectedType),
+            ),
+          );
+          return;
+        }
+
+        emit(
+          state.copyWith(
+            status: AuthStatus.otpVerified,
+            authEntity: authEntity,
+            user: authEntity.user,
+            userType: accountType ?? expectedType ?? state.userType,
+            successMessage: authEntity.message ?? _l10n.otpVerifiedSuccessMessage,
+          ),
+        );
+      },
     );
   }
 

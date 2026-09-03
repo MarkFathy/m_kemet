@@ -24,7 +24,7 @@ import 'package:m_kemet/src/features/auth/presentation/view/otp_verification_scr
 import 'package:m_kemet/src/features/auth/presentation/widgets/auth_widgets.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 
-class RegisterScreen extends StatefulWidget {
+class RegisterScreen extends StatelessWidget {
   final UserType? userType;
 
   const RegisterScreen({
@@ -33,10 +33,29 @@ class RegisterScreen extends StatefulWidget {
   });
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  Widget build(BuildContext context) {
+    final selectedType = userType ?? UserType.jobSeeker;
+
+    return BlocProvider<AuthCubit>(
+      create: (context) => sl<AuthCubit>()
+        ..setUserType(selectedType)
+        ..fetchGenders()
+        ..fetchCountries(),
+      child: _RegisterView(userType: selectedType),
+    );
+  }
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterView extends StatefulWidget {
+  final UserType userType;
+
+  const _RegisterView({required this.userType});
+
+  @override
+  State<_RegisterView> createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<_RegisterView> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -51,6 +70,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   int? _selectedCountryId;
   int? _selectedGenderId;
   bool _termsAccepted = false;
+  bool _autoValidate = false;
 
   @override
   void dispose() {
@@ -65,8 +85,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  void _onRegisterPressed(BuildContext context) {
-    if (!(_formKey.currentState?.validate() ?? false)) return;
+  void _onRegisterPressed() {
+    setState(() {
+      _autoValidate = true;
+    });
+
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      return;
+    }
+
     if (!_termsAccepted) {
       CustomSnackBar.showError(
         context,
@@ -75,7 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    final isEmployer = (widget.userType ?? UserType.jobSeeker) == UserType.employer;
+    final isEmployer = widget.userType == UserType.employer;
     final cubit = context.read<AuthCubit>();
 
     if (isEmployer) {
@@ -106,7 +133,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  void _showCountrySheet(BuildContext context) {
+  void _showCountrySheet() {
     final cubit = context.read<AuthCubit>();
     CountrySelectionBottomSheet.show(
       context,
@@ -137,7 +164,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  void _showGenderSheet(BuildContext context) {
+  void _showGenderSheet() {
     final cubit = context.read<AuthCubit>();
     GenderSelectionBottomSheet.show(
       context,
@@ -155,195 +182,199 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedType = widget.userType ?? UserType.jobSeeker;
-    final isEmployer = selectedType == UserType.employer;
+    final isEmployer = widget.userType == UserType.employer;
 
-    return BlocProvider<AuthCubit>(
-      create: (context) => sl<AuthCubit>()
-        ..setUserType(selectedType)
-        ..fetchGenders()
-        ..fetchCountries(),
-      child: BlocConsumer<AuthCubit, AuthState>(
-        listener: (context, state) {
-          if (state.status == AuthStatus.error && state.errorMessage != null) {
-            CustomSnackBar.showError(context, message: state.errorMessage!);
-          } else if (state.status == AuthStatus.registerSuccess) {
-            Go.toNamed(
-              NamedRoutes.otpVerification,
-              arguments: OtpScreenArgs(
-                email: _emailController.text.trim(),
-                userType: selectedType,
-                isPasswordReset: false,
-              ),
-            );
-          }
-        },
-        builder: (context, state) {
-          final isLoading = state.isLoading;
-
-          return AppScaffold(
-            safeTop: true,
-            safeBottom: true,
-            backgroundColor: const Color(0xFFF7F9FC),
-            body: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: EdgeInsets.symmetric(
-                horizontal: AppPadding.pW20,
-                vertical: AppPadding.pH16,
-              ),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Top Bar
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const CustomBackButton(),
-                        AuthRoleBadge(isEmployer: isEmployer),
-                      ],
-                    ),
-
-                    20.szH,
-
-                    // Header
-                    AuthHeader(
-                      title: S.of(context).registerTitle,
-                      subtitle: S.of(context).registerSubtitle,
-                    ),
-
-                    28.szH,
-
-                    // 1. Name / Company Field
-                    DefaultTextField(
-                      controller: _nameController,
-                      label: isEmployer ? S.of(context).companyNameLabel : S.of(context).fullNameLabel,
-                      hint: isEmployer ? S.of(context).companyNameHint : S.of(context).fullNameHint,
-                      prefixIcon: Icon(
-                        isEmployer ? Icons.business_outlined : Icons.person_outline_rounded,
-                        color: AppColors.greyColor,
-                        size: 20.sp,
-                      ),
-                      validator: (value) => Validators.validateName(
-                        value,
-                        message: isEmployer ? S.of(context).companyNameHint : S.of(context).fullNameHint,
-                      ),
-                    ),
-
-                    16.szH,
-
-                    // 2. Phone Input
-                    DefaultTextField(
-                      controller: _phoneController,
-                      label: S.of(context).phoneLabel,
-                      hint: S.of(context).phoneHint,
-                      isPhone: true,
-                      prefixIcon: Icon(Icons.phone_outlined, color: AppColors.greyColor, size: 20.sp),
-                      validator: (value) => Validators.validatePhone(
-                        value,
-                        emptyMessage: S.of(context).phoneHint,
-                        invalidMessage: S.of(context).phoneValidationMessage,
-                      ),
-                    ),
-
-                    16.szH,
-
-                    // 3. Email Input
-                    DefaultTextField(
-                      controller: _emailController,
-                      label: S.of(context).emailLabel,
-                      hint: S.of(context).emailHint,
-                      inputType: TextInputType.emailAddress,
-                      prefixIcon: Icon(Icons.email_outlined, color: AppColors.greyColor, size: 20.sp),
-                      validator: (value) => Validators.validateEmail(
-                        value,
-                        emptyMessage: S.of(context).emailHint,
-                        invalidMessage: S.of(context).emailValidationMessage,
-                      ),
-                    ),
-
-                    // Specific to Job Seeker
-                    if (!isEmployer)
-                      CandidateRegisterFields(
-                        countryController: _countryController,
-                        dobController: _dobController,
-                        genderController: _genderController,
-                        onCountryTap: () => _showCountrySheet(context),
-                        onDobTap: _showDateSheet,
-                        onGenderTap: () => _showGenderSheet(context),
-                      ),
-
-                    16.szH,
-
-                    // Password Input
-                    DefaultTextField(
-                      controller: _passwordController,
-                      label: S.of(context).passwordLabel,
-                      hint: S.of(context).passwordHint,
-                      isPassword: true,
-                      action: TextInputAction.next,
-                      prefixIcon: Icon(Icons.lock_outline_rounded, color: AppColors.greyColor, size: 20.sp),
-                      validator: (value) => Validators.validatePassword(
-                        value,
-                        emptyMessage: S.of(context).passwordHint,
-                        minLengthMessage: S.of(context).passwordValidationMessage,
-                      ),
-                    ),
-
-                    16.szH,
-
-                    // Confirm Password Input
-                    DefaultTextField(
-                      controller: _confirmPasswordController,
-                      label: S.of(context).confirmPasswordLabel,
-                      hint: S.of(context).confirmPasswordHint,
-                      isPassword: true,
-                      action: TextInputAction.done,
-                      prefixIcon: Icon(Icons.lock_reset_rounded, color: AppColors.greyColor, size: 20.sp),
-                      validator: (value) => Validators.validatePasswordConfirm(
-                        value,
-                        _passwordController.text,
-                        message: S.of(context).confirmPasswordMismatch,
-                      ),
-                    ),
-
-                    16.szH,
-
-                    // Terms & Conditions Checkbox Row
-                    TermsAndPrivacyRow(
-                      value: _termsAccepted,
-                      onChanged: (val) => setState(() => _termsAccepted = val ?? false),
-                    ),
-
-                    20.szH,
-
-                    // Register Action Button
-                    CustomButton(
-                      text: S.of(context).registerAction,
-                      isLoading: isLoading,
-                      onPressed: () => _onRegisterPressed(context),
-                      backgroundColor: AppColors.darkNavy,
-                      textStyle: getTextStyle().whiteColor.w700.s18,
-                    ),
-
-                    32.szH,
-
-                    // Login Toggle Prompt
-                    AuthSwitchPrompt(
-                      promptText: S.of(context).alreadyHaveAccount,
-                      actionText: S.of(context).signInNow,
-                      onAction: () => Go.offNamed(NamedRoutes.login, arguments: selectedType),
-                    ),
-
-                    16.szH,
-                  ],
-                ),
-              ),
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state.status == AuthStatus.error && state.errorMessage != null) {
+          CustomSnackBar.showError(context, message: state.errorMessage!);
+        } else if (state.status == AuthStatus.registerSuccess) {
+          Go.toNamed(
+            NamedRoutes.otpVerification,
+            arguments: OtpScreenArgs(
+              email: _emailController.text.trim(),
+              userType: widget.userType,
+              isPasswordReset: false,
             ),
           );
-        },
-      ),
+        }
+      },
+      builder: (context, state) {
+        final isLoading = state.isLoading;
+
+        return AppScaffold(
+          safeTop: true,
+          safeBottom: true,
+          backgroundColor: const Color(0xFFF7F9FC),
+          body: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppPadding.pW20,
+              vertical: AppPadding.pH16,
+            ),
+            child: Form(
+              key: _formKey,
+              autovalidateMode: _autoValidate
+                  ? AutovalidateMode.onUserInteraction
+                  : AutovalidateMode.disabled,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Top Bar
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const CustomBackButton(),
+                      AuthRoleBadge(isEmployer: isEmployer),
+                    ],
+                  ),
+
+                  20.szH,
+
+                  // Header
+                  AuthHeader(
+                    title: S.of(context).registerTitle,
+                    subtitle: S.of(context).registerSubtitle,
+                  ),
+
+                  28.szH,
+
+                  // 1. Name / Company Field
+                  DefaultTextField(
+                    controller: _nameController,
+                    label: isEmployer ? S.of(context).companyNameLabel : S.of(context).fullNameLabel,
+                    hint: isEmployer ? S.of(context).companyNameHint : S.of(context).fullNameHint,
+                    prefixIcon: Icon(
+                      isEmployer ? Icons.business_outlined : Icons.person_outline_rounded,
+                      color: AppColors.greyColor,
+                      size: 20.sp,
+                    ),
+                    validator: (value) => Validators.validateName(
+                      value,
+                      emptyMessage: isEmployer ? S.of(context).companyNameHint : S.of(context).fullNameHint,
+                      minLengthMessage: isEmployer
+                          ? 'اسم الشركة يجب ألا يقل عن حرفين'
+                          : 'الاسم الكامل يجب ألا يقل عن حرفين',
+                    ),
+                  ),
+
+                  16.szH,
+
+                  // 2. Phone Input
+                  DefaultTextField(
+                    controller: _phoneController,
+                    label: S.of(context).phoneLabel,
+                    hint: S.of(context).phoneHint,
+                    isPhone: true,
+                    prefixIcon: Icon(Icons.phone_outlined, color: AppColors.greyColor, size: 20.sp),
+                    validator: (value) => Validators.validatePhone(
+                      value,
+                      emptyMessage: S.of(context).phoneHint,
+                      invalidMessage: S.of(context).phoneValidationMessage,
+                    ),
+                  ),
+
+                  16.szH,
+
+                  // 3. Email Input
+                  DefaultTextField(
+                    controller: _emailController,
+                    label: S.of(context).emailLabel,
+                    hint: S.of(context).emailHint,
+                    inputType: TextInputType.emailAddress,
+                    prefixIcon: Icon(Icons.email_outlined, color: AppColors.greyColor, size: 20.sp),
+                    validator: (value) => Validators.validateEmail(
+                      value,
+                      emptyMessage: S.of(context).emailHint,
+                      invalidMessage: S.of(context).emailValidationMessage,
+                    ),
+                  ),
+
+                  // Specific to Job Seeker
+                  if (!isEmployer)
+                    CandidateRegisterFields(
+                      countryController: _countryController,
+                      dobController: _dobController,
+                      genderController: _genderController,
+                      onCountryTap: _showCountrySheet,
+                      onDobTap: _showDateSheet,
+                      onGenderTap: _showGenderSheet,
+                    ),
+
+                  16.szH,
+
+                  // Password Input
+                  DefaultTextField(
+                    controller: _passwordController,
+                    label: S.of(context).passwordLabel,
+                    hint: S.of(context).passwordHint,
+                    isPassword: true,
+                    action: TextInputAction.next,
+                    prefixIcon: Icon(Icons.lock_outline_rounded, color: AppColors.greyColor, size: 20.sp),
+                    validator: (value) => Validators.validatePassword(
+                      value,
+                      emptyMessage: S.of(context).passwordHint,
+                      minLengthMessage: S.of(context).passwordValidationMessage,
+                      requireMixedCase: true,
+                      requireSpecialChar: true,
+                      mixedCaseMessage: 'يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير على الأقل.',
+                      symbolMessage: 'يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل.',
+                    ),
+                  ),
+
+                  16.szH,
+
+                  // Confirm Password Input
+                  DefaultTextField(
+                    controller: _confirmPasswordController,
+                    label: S.of(context).confirmPasswordLabel,
+                    hint: S.of(context).confirmPasswordHint,
+                    isPassword: true,
+                    action: TextInputAction.done,
+                    prefixIcon: Icon(Icons.lock_reset_rounded, color: AppColors.greyColor, size: 20.sp),
+                    validator: (value) => Validators.validatePasswordConfirm(
+                      value,
+                      _passwordController.text,
+                      emptyMessage: S.of(context).confirmPasswordHint,
+                      mismatchMessage: S.of(context).confirmPasswordMismatch,
+                    ),
+                  ),
+
+                  16.szH,
+
+                  // Terms & Conditions Checkbox Row
+                  TermsAndPrivacyRow(
+                    value: _termsAccepted,
+                    onChanged: (val) => setState(() => _termsAccepted = val ?? false),
+                  ),
+
+                  20.szH,
+
+                  // Register Action Button
+                  CustomButton(
+                    text: S.of(context).registerAction,
+                    isLoading: isLoading,
+                    onPressed: _onRegisterPressed,
+                    backgroundColor: AppColors.darkNavy,
+                    textStyle: getTextStyle().whiteColor.w700.s18,
+                  ),
+
+                  32.szH,
+
+                  // Login Toggle Prompt
+                  AuthSwitchPrompt(
+                    promptText: S.of(context).alreadyHaveAccount,
+                    actionText: S.of(context).signInNow,
+                    onAction: () => Go.offNamed(NamedRoutes.login, arguments: widget.userType),
+                  ),
+
+                  16.szH,
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

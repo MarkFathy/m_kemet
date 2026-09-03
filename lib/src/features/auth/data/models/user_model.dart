@@ -25,13 +25,28 @@ class UserModel extends UserEntity {
     // "company" -> UserType.employer
     // "candidate" / "job_seeker" -> UserType.jobSeeker
     UserType detectedType = UserType.jobSeeker;
-    final role = (json['user_type'] ?? json['role'] ?? json['type'] ?? '').toString().trim().toLowerCase();
+    final role = (json['user_type'] ?? json['role'] ?? json['type'] ?? json['account_type'] ?? '')
+        .toString()
+        .trim()
+        .toLowerCase();
 
-    if (role == 'company' || role == 'employer' || role.contains('company') || role.contains('employer')) {
+    if (role == 'company' ||
+        role == 'employer' ||
+        role.contains('company') ||
+        role.contains('employer') ||
+        role == '2') {
       detectedType = UserType.employer;
-    } else if (role == 'candidate' || role == 'job_seeker' || role.contains('candidate') || role.contains('seeker')) {
+    } else if (role == 'candidate' ||
+        role == 'job_seeker' ||
+        role == 'jobseeker' ||
+        role.contains('candidate') ||
+        role.contains('seeker') ||
+        role == '1') {
       detectedType = UserType.jobSeeker;
-    } else if (json.containsKey('company') || json.containsKey('company_name') || json.containsKey('cr_number')) {
+    } else if ((json.containsKey('company_name') && json['company_name'] != null && json['company_name'].toString().trim().isNotEmpty) ||
+        (json.containsKey('cr_number') && json['cr_number'] != null && json['cr_number'].toString().trim().isNotEmpty) ||
+        (json.containsKey('commercial_registration') && json['commercial_registration'] != null) ||
+        (json.containsKey('company') && json['company'] != null && json['company'] is Map && (json['company'] as Map).isNotEmpty)) {
       detectedType = UserType.employer;
     }
 

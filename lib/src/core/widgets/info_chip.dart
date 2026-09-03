@@ -41,12 +41,15 @@ class InfoChip extends StatelessWidget {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(icon, size: 13.sp, color: textColor),
           4.szW,
-          Text(
-            label,
-            style: getTextStyle().w500.s11.copyWith(color: textColor),
+          Flexible(
+            child: Text(
+              label,
+              style: getTextStyle().w500.s11.copyWith(color: textColor),
+            ),
           ),
         ],
       ),

@@ -28,22 +28,44 @@ class OtpTimerResendSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: isLoading
-          ? AppProgressIndicator.small(
-              size: 24.r,
-              strokeWidth: 2.5,
-              color: AppColors.darkNavy,
+          ? Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.h),
+              child: AppProgressIndicator.small(
+                size: 22.r,
+                strokeWidth: 2.5,
+                color: AppColors.darkNavy,
+              ),
             )
           : secondsRemaining > 0
-              ? Text(
-                  '${S.of(context).resendIn}${_formatTimer(secondsRemaining)}',
-                  style: getTextStyle().greyColor.w500.s14,
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      S.of(context).resendIn,
+                      style: getTextStyle().greyColor.w400.s14,
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      _formatTimer(secondsRemaining),
+                      style: getTextStyle().darkNavy.w700.s14,
+                    ),
+                  ],
                 )
-              : TextButton(
-                  onPressed: onResend,
-                  child: Text(
-                    S.of(context).resendCode,
-                    style: getTextStyle().darkNavy.w700.s14,
-                  ),
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'لم تصلك الرسالة؟',
+                      style: getTextStyle().greyColor.w400.s14,
+                    ),
+                    TextButton(
+                      onPressed: onResend,
+                      child: Text(
+                        S.of(context).resendCode,
+                        style: getTextStyle().darkNavy.w700.s14,
+                      ),
+                    ),
+                  ],
                 ),
     );
   }

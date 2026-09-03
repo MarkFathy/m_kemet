@@ -1,9 +1,33 @@
-import 'package:m_kemet/src/features/job_seeker/domain/entities/job_seeker_profile_entity.dart';
+import 'dart:io';
+import 'package:dartz/dartz.dart';
+import 'package:m_kemet/src/core/error/failure.dart';
+import 'package:m_kemet/src/features/auth/domain/entities/country_entity.dart';
+import 'package:m_kemet/src/features/auth/domain/entities/gender_entity.dart';
+import 'package:m_kemet/src/features/job_seeker/data/models/candidate_profile_update_request.dart';
+import 'package:m_kemet/src/features/job_seeker/domain/entities/candidate_document_entity.dart';
+import 'package:m_kemet/src/features/job_seeker/domain/entities/candidate_profile_detail_entity.dart';
+import 'package:m_kemet/src/features/job_seeker/domain/entities/experience_level_entity.dart';
+import 'package:m_kemet/src/features/job_seeker/domain/entities/profession_entity.dart';
+import 'package:m_kemet/src/features/job_seeker/domain/entities/qualification_entity.dart';
 
-/// Defines the contract for job seeker data operations.
-/// Implemented in the data layer.
 abstract class JobSeekerRepository {
-  Future<JobSeekerProfileEntity?> getProfile(String userId);
-  Future<void> saveProfile(JobSeekerProfileEntity profile);
-  Future<void> submitProfileForReview(String userId);
+  Future<Either<Failure, List<ProfessionEntity>>> getProfessions();
+  Future<Either<Failure, List<ExperienceLevelEntity>>> getExperienceLevels();
+  Future<Either<Failure, List<QualificationEntity>>> getQualifications();
+  Future<Either<Failure, List<CountryEntity>>> getCountries();
+  Future<Either<Failure, List<GenderEntity>>> getGenders();
+  Future<Either<Failure, CandidateProfileDetailEntity>> getCandidateProfile();
+  Future<Either<Failure, CandidateProfileDetailEntity>> updateCandidateProfile(
+    CandidateProfileUpdateRequest request,
+  );
+  Future<Either<Failure, CandidateDocumentEntity>> uploadDocument({
+    required String documentType,
+    required File file,
+    void Function(int sent, int total)? onSendProgress,
+  });
+  Future<Either<Failure, CandidateDocumentEntity>> uploadIntroVideo({
+    required File videoFile,
+    int? durationSeconds,
+    void Function(int sent, int total)? onSendProgress,
+  });
 }

@@ -58,6 +58,11 @@
   "dontHaveAccount": "Don't have an account?",
   "alreadyHaveAccount": "Already have an account?",
   "signUpNow": "Sign Up",
+  "userTypeMismatchCompanyError": "This account is registered as a company. Please log in as an employer.",
+  "userTypeMismatchCandidateError": "This account is registered as a job seeker. Please log in as a job seeker.",
+  "registrationSuccessMessage": "Registration successful",
+  "loginSuccessMessage": "Login successful",
+  "otpVerifiedSuccessMessage": "Verified successfully",
   "signInNow": "Sign In",
   "otpTitle": "OTP Verification",
   "otpSubtitle": "Please enter the 6-digit verification code sent to you",
@@ -216,5 +221,14 @@
   "forgotPasswordTitle": "Reset Password",
   "forgotPasswordSub": "Enter your registered email address or phone number and we will send you a verification code.",
   "sendResetCode": "Send Verification Code",
-  "rememberedPassword": "Remembered your password?"
+  "rememberedPassword": "Remembered your password?",
+  "watchVideo": "Watch Video",
+  "viewPhoto": "View Photo",
+  "changeMedia": "Change",
+  "uploadAction": "Upload",
+  "cropPhoto": "Crop Image",
+  "confirmCrop": "Confirm & Crop",
+  "seconds5Forward": "+5s",
+  "seconds5Backward": "-5s",
+  "completeAllFieldsHint": "Please complete all fields, documents, and video to proceed"
 }

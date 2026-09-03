@@ -6,6 +6,7 @@ import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/floating_bottom_nav_bar.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_cubit.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/tabs/job_seeker_profile_tab.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/tabs/job_seeker_settings_tab.dart';
 
@@ -32,8 +33,15 @@ class _JobSeekerMainScreenState extends State<JobSeekerMainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthCubit>(
-      create: (context) => sl<AuthCubit>()..getProfile(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthCubit>(
+          create: (context) => sl<AuthCubit>()..getProfile(),
+        ),
+        BlocProvider<JobSeekerProfileCubit>(
+          create: (context) => sl<JobSeekerProfileCubit>()..loadInitialData(),
+        ),
+      ],
       child: AppScaffold(
         safeTop: true,
         safeBottom: true,

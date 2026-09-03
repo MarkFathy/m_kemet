@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:m_kemet/generated/l10n.dart';
@@ -42,15 +43,26 @@ class CandidateCard extends StatelessWidget {
           // Row 1: Avatar, Name, Verification Badge & Save Toggle Button
           Row(
             children: [
-              CircleAvatar(
-                radius: 26.r,
-                backgroundColor: AppColors.softBlueBg,
-                backgroundImage: candidate.photoUrl.isNotEmpty
-                    ? NetworkImage(candidate.photoUrl)
-                    : null,
-                child: candidate.photoUrl.isEmpty
-                    ? Icon(Icons.person_rounded, size: 28.sp, color: AppColors.darkNavy)
-                    : null,
+              ClipOval(
+                child: Container(
+                  width: 52.r,
+                  height: 52.r,
+                  color: AppColors.softBlueBg,
+                  child: candidate.photoUrl.isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: candidate.photoUrl,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Center(
+                            child: Icon(Icons.person_rounded, size: 28.sp, color: AppColors.darkNavy),
+                          ),
+                          errorWidget: (context, url, error) => Center(
+                            child: Icon(Icons.person_rounded, size: 28.sp, color: AppColors.darkNavy),
+                          ),
+                        )
+                      : Center(
+                          child: Icon(Icons.person_rounded, size: 28.sp, color: AppColors.darkNavy),
+                        ),
+                ),
               ),
               12.szW,
               Expanded(
@@ -81,7 +93,9 @@ class CandidateCard extends StatelessWidget {
                                 Icon(Icons.verified_rounded, size: 12.sp, color: AppColors.successGreen),
                                 2.szW,
                                 Text(
-                                  S.of(context).verifiedBadge,
+                                  candidate.verificationBadge.isNotEmpty
+                                      ? candidate.verificationBadge
+                                      : S.of(context).verifiedBadge,
                                   style: getTextStyle().w700.s10.copyWith(color: AppColors.successGreen),
                                 ),
                               ],
@@ -91,11 +105,20 @@ class CandidateCard extends StatelessWidget {
                     ),
                     4.szH,
                     Text(
-                      '${candidate.profession} | ${candidate.experienceYears}',
-                      style: getTextStyle().greyColor.w500.s13,
+                      candidate.profession,
+                      style: getTextStyle().steelBlue.w600.s14,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    if (candidate.experienceYears.isNotEmpty && candidate.experienceYears != '0') ...[
+                      4.szH,
+                      Text(
+                        '${S.of(context).experienceLabel}: ${candidate.experienceYears}',
+                        style: getTextStyle().greyColor.w500.s12,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -119,23 +142,27 @@ class CandidateCard extends StatelessWidget {
             spacing: 8.w,
             runSpacing: 8.h,
             children: [
-              InfoChip(
-                icon: Icons.location_on_outlined,
-                label: '${S.of(context).currentLocation}: ${candidate.currentCountry}',
-                bgColor: AppColors.chipBg,
-                textColor: AppColors.darkNavy,
-              ),
-              InfoChip(
-                icon: Icons.flight_takeoff_rounded,
-                label: '${S.of(context).requestedDestination}: ${candidate.targetCountries}',
-                bgColor: AppColors.softBlueBg,
-                textColor: AppColors.darkNavy,
-              ),
+              if (candidate.currentCountry.isNotEmpty)
+                InfoChip(
+                  icon: Icons.location_on_outlined,
+                  label: '${S.of(context).currentLocation}: ${candidate.currentCountryFlag.isNotEmpty ? "${candidate.currentCountryFlag} " : ""}${candidate.currentCountry}',
+                  bgColor: AppColors.chipBg,
+                  textColor: AppColors.darkNavy,
+                ),
+              if (candidate.targetCountries.isNotEmpty)
+                InfoChip(
+                  icon: Icons.flight_takeoff_rounded,
+                  label: '${S.of(context).requestedDestination}: ${candidate.targetCountries}',
+                  bgColor: AppColors.softBlueBg,
+                  textColor: AppColors.darkNavy,
+                ),
               InfoChip(
                 icon: Icons.badge_outlined,
-                label: candidate.isValidPassport
-                    ? S.of(context).validPassport
-                    : S.of(context).invalidPassport,
+                label: candidate.passportStatusLabel.isNotEmpty
+                    ? candidate.passportStatusLabel
+                    : (candidate.isValidPassport
+                        ? S.of(context).validPassport
+                        : S.of(context).invalidPassport),
                 bgColor: candidate.isValidPassport ? AppColors.successBg : AppColors.errorBg,
                 textColor: candidate.isValidPassport ? AppColors.successGreen : AppColors.errorRed,
               ),

@@ -5,11 +5,24 @@ import 'package:m_kemet/src/core/helpers/cache_service.dart';
 import 'package:m_kemet/src/core/services/app_lock_service.dart';
 import 'package:m_kemet/src/core/services/notification_service.dart';
 import 'package:m_kemet/src/core/services/user_status_service.dart';
+import 'package:m_kemet/src/features/bookmarks/data/datasources/bookmarks_local_data_source.dart';
+import 'package:m_kemet/src/features/bookmarks/data/datasources/bookmarks_remote_data_source.dart';
+import 'package:m_kemet/src/features/bookmarks/data/repositories/bookmarks_repository_impl.dart';
+import 'package:m_kemet/src/features/bookmarks/domain/repositories/bookmarks_repository.dart';
+import 'package:m_kemet/src/features/bookmarks/domain/usecases/get_bookmarks_usecase.dart';
+import 'package:m_kemet/src/features/bookmarks/domain/usecases/toggle_bookmark_usecase.dart';
+import 'package:m_kemet/src/features/bookmarks/presentation/cubit/bookmarks_cubit.dart';
 import 'package:m_kemet/src/features/company/data/datasources/candidate_local_data_source.dart';
+import 'package:m_kemet/src/features/company/data/datasources/candidate_remote_data_source.dart';
 import 'package:m_kemet/src/features/company/data/repositories/candidate_repository_impl.dart';
 import 'package:m_kemet/src/features/company/domain/repositories/candidate_repository.dart';
+import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
+import 'package:m_kemet/src/features/company/domain/usecases/get_candidate_detail_usecase.dart';
 import 'package:m_kemet/src/features/company/domain/usecases/get_candidates_usecase.dart';
+import 'package:m_kemet/src/features/company/domain/usecases/get_saved_candidates_usecase.dart';
+import 'package:m_kemet/src/features/company/domain/usecases/send_contact_request_usecase.dart';
 import 'package:m_kemet/src/features/company/domain/usecases/toggle_save_candidate_usecase.dart';
+import 'package:m_kemet/src/features/company/presentation/cubit/candidate_detail_cubit.dart';
 import 'package:m_kemet/src/features/company/presentation/cubit/candidate_search_cubit.dart';
 import 'package:m_kemet/src/features/onboarding/data/datasources/onboarding_local_data_source.dart';
 import 'package:m_kemet/src/features/onboarding/data/repositories/onboarding_repository_impl.dart';
@@ -78,15 +91,56 @@ Future<void> setupServiceLocator() async {
     ..registerLazySingleton<CandidateLocalDataSource>(
       CandidateLocalDataSourceImpl.new,
     )
+    ..registerLazySingleton<CandidateRemoteDataSource>(
+      () => CandidateRemoteDataSourceImpl(sl()),
+    )
     ..registerLazySingleton<CandidateRepository>(
-      () => CandidateRepositoryImpl(localDataSource: sl()),
+      () => CandidateRepositoryImpl(
+        remoteDataSource: sl(),
+        localDataSource: sl(),
+      ),
     )
     ..registerLazySingleton(() => GetCandidatesUseCase(sl()))
+    ..registerLazySingleton(() => GetSavedCandidatesUseCase(sl()))
     ..registerLazySingleton(() => ToggleSaveCandidateUseCase(sl()))
+    ..registerLazySingleton(() => GetCandidateDetailUseCase(sl()))
+    ..registerLazySingleton(() => SendContactRequestUseCase(sl()))
     ..registerFactory(
       () => CandidateSearchCubit(
         getCandidatesUseCase: sl(),
         toggleSaveCandidateUseCase: sl(),
+        getSavedCandidatesUseCase: sl(),
+      ),
+    )
+    ..registerFactoryParam<CandidateDetailCubit, CandidateEntity, void>(
+      (candidate, _) => CandidateDetailCubit(
+        getCandidateDetailUseCase: sl(),
+        sendContactRequestUseCase: sl(),
+        toggleBookmarkUseCase: sl(),
+        initialCandidate: candidate,
+        initialIsBookmarked: sl<BookmarksCubit>().state.isBookmarked(candidate.id),
+      ),
+    )
+
+    // ─── Bookmarks Feature ──────────────────────────────────────────────────
+    ..registerLazySingleton<BookmarksLocalDataSource>(
+      BookmarksLocalDataSourceImpl.new,
+    )
+    ..registerLazySingleton<BookmarksRemoteDataSource>(
+      () => BookmarksRemoteDataSourceImpl(sl()),
+    )
+    ..registerLazySingleton<BookmarksRepository>(
+      () => BookmarksRepositoryImpl(
+        remoteDataSource: sl(),
+        localDataSource: sl(),
+      ),
+    )
+    ..registerLazySingleton(() => GetBookmarksUseCase(sl()))
+    ..registerLazySingleton(() => ToggleBookmarkUseCase(sl()))
+    ..registerLazySingleton(
+      () => BookmarksCubit(
+        getBookmarksUseCase: sl(),
+        toggleBookmarkUseCase: sl(),
       ),
     );
 }

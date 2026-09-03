@@ -16,7 +16,7 @@ import 'package:m_kemet/src/features/splash/presentation/splash_screen.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
 import 'package:m_kemet/src/features/company/presentation/view/candidate_detail_screen.dart';
 import 'package:m_kemet/src/features/company/presentation/view/company_main_screen.dart';
-import 'package:m_kemet/src/features/company/presentation/view/saved_candidates_screen.dart';
+import 'package:m_kemet/src/features/bookmarks/presentation/view/saved_candidates_screen.dart';
 import 'package:m_kemet/src/features/notifications/presentation/view/notifications_screen.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 import 'package:m_kemet/src/features/user_type_selection/presentation/view/user_type_selection_screen.dart';

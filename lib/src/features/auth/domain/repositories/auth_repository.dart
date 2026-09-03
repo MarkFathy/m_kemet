@@ -4,6 +4,7 @@ import 'package:m_kemet/src/features/auth/domain/entities/auth_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/country_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/gender_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/user_entity.dart';
+import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, AuthEntity>> registerCandidate({
@@ -28,11 +29,13 @@ abstract class AuthRepository {
   Future<Either<Failure, AuthEntity>> login({
     required String email,
     required String password,
+    UserType? expectedUserType,
   });
 
   Future<Either<Failure, AuthEntity>> verifyOtp({
     required String email,
     required String code,
+    UserType? expectedUserType,
   });
 
   Future<Either<Failure, String>> resendOtp({

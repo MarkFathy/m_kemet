@@ -8,4 +8,6 @@ abstract class CandidateRepository {
   Future<Either<Failure, List<CandidateEntity>>> filterCandidates(CandidateFilterEntity filter);
   Future<Either<Failure, List<CandidateEntity>>> getSavedCandidates();
   Future<Either<Failure, CandidateEntity>> toggleSaveCandidate(String candidateId);
+  Future<Either<Failure, CandidateEntity>> getCandidateDetail(String candidateId);
+  Future<Either<Failure, Map<String, dynamic>>> sendContactRequest(String candidateId);
 }

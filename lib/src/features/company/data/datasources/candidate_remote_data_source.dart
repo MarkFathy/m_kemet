@@ -1,60 +1,152 @@
+import 'package:m_kemet/src/core/error/exceptions.dart';
+import 'package:m_kemet/src/core/network/api_endpoints.dart';
+import 'package:m_kemet/src/core/network/dio_client.dart';
 import 'package:m_kemet/src/features/company/data/models/candidate_model.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_filter_entity.dart';
 
-/// Contract for the remote (API) candidate data source.
-///
-/// Replace [CandidateRemoteDataSourceImpl] with a real implementation
-/// once the backend endpoints are ready. The [CandidateRepositoryImpl]
-/// will automatically use the remote source without any other changes.
 abstract class CandidateRemoteDataSource {
-  Future<List<CandidateModel>> getCandidates();
+  Future<List<CandidateModel>> getCandidates({String? search});
   Future<List<CandidateModel>> filterCandidates(CandidateFilterEntity filter);
   Future<List<CandidateModel>> getSavedCandidates();
   Future<CandidateModel> toggleSaveCandidate(String candidateId);
+  Future<CandidateModel> getCandidateDetail(String candidateId);
+  Future<Map<String, dynamic>> sendContactRequest(String candidateId);
 }
 
-/// Stub implementation — throws [UnimplementedError] on every call.
-///
-/// TODO: Replace this with the real HTTP implementation using [DioClient]
-/// when the backend is ready. Example:
-///
-/// ```dart
-/// class CandidateRemoteDataSourceImpl implements CandidateRemoteDataSource {
-///   final DioClient dioClient;
-///   CandidateRemoteDataSourceImpl(this.dioClient);
-///
-///   @override
-///   Future<List<CandidateModel>> getCandidates() async {
-///     final response = await dioClient.dio.get('/candidates');
-///     return (response.data['data'] as List)
-///         .map((json) => CandidateModel.fromJson(json as Map<String, dynamic>))
-///         .toList();
-///   }
-///   // ... other methods
-/// }
-/// ```
 class CandidateRemoteDataSourceImpl implements CandidateRemoteDataSource {
-  // TODO: Inject DioClient here when backend is ready.
-  // final DioClient dioClient;
-  // CandidateRemoteDataSourceImpl(this.dioClient);
+  final DioClient _dioClient;
+
+  CandidateRemoteDataSourceImpl(this._dioClient);
 
   @override
-  Future<List<CandidateModel>> getCandidates() {
-    throw UnimplementedError('CandidateRemoteDataSource: backend not wired yet.');
+  Future<List<CandidateModel>> getCandidates({String? search}) async {
+    final response = await _dioClient.dio.get(
+      ApiEndpoints.jobSeekers,
+      queryParameters: search != null && search.trim().isNotEmpty
+          ? {'search': search.trim()}
+          : null,
+    );
+
+    if (response.data is Map<String, dynamic>) {
+      final rawData = response.data['data'];
+      if (rawData is List) {
+        final models = rawData
+            .map((item) => CandidateModel.fromJson(item as Map<String, dynamic>))
+            .toList();
+
+        // If candidate list response lacks experience_level and has 0 years,
+        // enrich from detail endpoint in parallel so list card matches profile exactly
+        return await Future.wait(
+          models.map((model) async {
+            if (model.experienceYears.isEmpty) {
+              try {
+                final detail = await getCandidateDetail(model.id);
+                if (detail.experienceYears.isNotEmpty) {
+                  return CandidateModel.fromEntity(
+                    model.copyWith(
+                      experienceYears: detail.experienceYears,
+                      bio: detail.bio.isNotEmpty ? detail.bio : model.bio,
+                    ),
+                  );
+                }
+              } catch (_) {}
+            }
+            return model;
+          }),
+        );
+      }
+    }
+    throw const ServerException(500, 'Invalid response from server', null);
   }
 
   @override
-  Future<List<CandidateModel>> filterCandidates(CandidateFilterEntity filter) {
-    throw UnimplementedError('CandidateRemoteDataSource: backend not wired yet.');
+  Future<CandidateModel> getCandidateDetail(String candidateId) async {
+    final response = await _dioClient.dio.get('${ApiEndpoints.jobSeekers}/$candidateId');
+    if (response.data is Map<String, dynamic>) {
+      final data = response.data['data'];
+      if (data is Map<String, dynamic>) {
+        final candidateJson = data['candidate'] is Map<String, dynamic>
+            ? data['candidate'] as Map<String, dynamic>
+            : data;
+        return CandidateModel.fromJson(candidateJson);
+      }
+    }
+    throw const ServerException(500, 'Invalid response from server', null);
   }
 
   @override
-  Future<List<CandidateModel>> getSavedCandidates() {
-    throw UnimplementedError('CandidateRemoteDataSource: backend not wired yet.');
+  Future<List<CandidateModel>> filterCandidates(CandidateFilterEntity filter) async {
+    return getCandidates(search: filter.searchQuery);
   }
 
   @override
-  Future<CandidateModel> toggleSaveCandidate(String candidateId) {
-    throw UnimplementedError('CandidateRemoteDataSource: backend not wired yet.');
+  Future<List<CandidateModel>> getSavedCandidates() async {
+    final response = await _dioClient.dio.get(ApiEndpoints.bookmarks);
+    if (response.data is Map<String, dynamic>) {
+      final rawData = response.data['data'];
+      if (rawData is List) {
+        final models = rawData.map((item) {
+          final map = Map<String, dynamic>.from(item as Map);
+          map['is_bookmarked'] = true;
+          return CandidateModel.fromJson(map);
+        }).toList();
+
+        return await Future.wait(
+          models.map((model) async {
+            if (model.experienceYears.isEmpty) {
+              try {
+                final detail = await getCandidateDetail(model.id);
+                if (detail.experienceYears.isNotEmpty) {
+                  return CandidateModel.fromEntity(
+                    model.copyWith(
+                      experienceYears: detail.experienceYears,
+                      bio: detail.bio.isNotEmpty ? detail.bio : model.bio,
+                      isSaved: true,
+                    ),
+                  );
+                }
+              } catch (_) {}
+            }
+            return CandidateModel.fromEntity(model.copyWith(isSaved: true));
+          }),
+        );
+      }
+    }
+    throw const ServerException(500, 'Invalid response from server', null);
+  }
+
+  @override
+  Future<CandidateModel> toggleSaveCandidate(String candidateId) async {
+    final response = await _dioClient.dio.post(
+      ApiEndpoints.jobSeekerBookmark(candidateId),
+    );
+
+    bool isBookmarked = false;
+    if (response.data is Map<String, dynamic>) {
+      final data = response.data['data'];
+      if (data is Map<String, dynamic> && data['is_bookmarked'] is bool) {
+        isBookmarked = data['is_bookmarked'] as bool;
+      } else if (response.data['message']?.toString().toLowerCase().contains('added') == true) {
+        isBookmarked = true;
+      }
+    }
+
+    return CandidateModel(
+      id: candidateId,
+      name: '',
+      profession: '',
+      isSaved: isBookmarked,
+    );
+  }
+
+  @override
+  Future<Map<String, dynamic>> sendContactRequest(String candidateId) async {
+    final response = await _dioClient.dio.post(
+      ApiEndpoints.jobSeekerContactRequest(candidateId),
+    );
+    if (response.data is Map<String, dynamic>) {
+      return response.data as Map<String, dynamic>;
+    }
+    throw const ServerException(500, 'Invalid response from server', null);
   }
 }

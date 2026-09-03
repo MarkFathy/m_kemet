@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:m_kemet/generated/l10n.dart';
@@ -26,15 +27,26 @@ class CandidateDetailSummaryCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 36.r,
-            backgroundColor: AppColors.softBlueBg,
-            backgroundImage: candidate.photoUrl.isNotEmpty
-                ? NetworkImage(candidate.photoUrl)
-                : null,
-            child: candidate.photoUrl.isEmpty
-                ? Icon(Icons.person_rounded, size: 36.sp, color: AppColors.darkNavy)
-                : null,
+          ClipOval(
+            child: Container(
+              width: 72.r,
+              height: 72.r,
+              color: AppColors.softBlueBg,
+              child: candidate.photoUrl.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: candidate.photoUrl,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Center(
+                        child: Icon(Icons.person_rounded, size: 36.sp, color: AppColors.darkNavy),
+                      ),
+                      errorWidget: (context, url, error) => Center(
+                        child: Icon(Icons.person_rounded, size: 36.sp, color: AppColors.darkNavy),
+                      ),
+                    )
+                  : Center(
+                      child: Icon(Icons.person_rounded, size: 36.sp, color: AppColors.darkNavy),
+                    ),
+            ),
           ),
           16.szW,
           Expanded(
@@ -47,23 +59,32 @@ class CandidateDetailSummaryCard extends StatelessWidget {
                       child: Text(
                         candidate.name,
                         style: getTextStyle().darkNavy.w700.s18,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    6.szW,
-                    if (candidate.isVerified)
+                    if (candidate.isVerified) ...[
+                      6.szW,
                       Icon(Icons.verified_rounded, size: 16.sp, color: AppColors.successGreen),
+                    ],
                   ],
                 ),
                 4.szH,
                 Text(
                   candidate.profession,
                   style: getTextStyle().steelBlue.w600.s14,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                6.szH,
-                Text(
-                  '${S.of(context).experienceLabel}: ${candidate.experienceYears}',
-                  style: getTextStyle().greyColor.w500.s13,
-                ),
+                if (candidate.experienceYears.isNotEmpty) ...[
+                  6.szH,
+                  Text(
+                    '${S.of(context).experienceLabel}: ${candidate.experienceYears}',
+                    style: getTextStyle().greyColor.w500.s13,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ],
             ),
           ),

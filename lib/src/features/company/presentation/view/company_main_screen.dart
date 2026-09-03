@@ -7,6 +7,7 @@ import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/floating_bottom_nav_bar.dart';
+import 'package:m_kemet/src/features/bookmarks/presentation/cubit/bookmarks_cubit.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
 import 'package:m_kemet/src/features/company/presentation/cubit/candidate_search_cubit.dart';
 import 'package:m_kemet/src/features/company/presentation/widgets/tabs/profile_tab.dart';
@@ -37,8 +38,16 @@ class _CompanyMainScreenState extends State<CompanyMainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CandidateSearchCubit>(
-      create: (context) => sl<CandidateSearchCubit>()..fetchCandidates(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<CandidateSearchCubit>(
+          create: (context) => sl<CandidateSearchCubit>()..fetchCandidates(),
+        ),
+        // Expose the global BookmarksCubit singleton — same instance reused in all routes
+        BlocProvider<BookmarksCubit>.value(
+          value: sl<BookmarksCubit>()..fetchBookmarks(),
+        ),
+      ],
       child: AppScaffold(
         safeTop: true,
         safeBottom: true,

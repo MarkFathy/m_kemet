@@ -18,4 +18,21 @@ class ApiEndpoints {
   // Lookup endpoints
   static const String genders = '/api/genders';
   static const String countries = '/api/countries';
+  static const String professions = '/api/professions';
+  static const String experienceLevels = '/api/experience-levels';
+  static const String qualifications = '/api/qualifications';
+
+  // Candidate endpoints
+  static const String candidateMyDocument = '/api/candidate/my-document';
+  static const String candidateUpdateDocument = '/api/candidate/update-document';
+  static const String candidateDocuments = '/api/candidate/documents';
+  static const String candidateVideo = '/api/candidate/video';
+  static String candidateDocumentFile(int id) => '/api/candidate/documents/$id/file';
+
+  // Company / Job Seekers endpoints
+  static const String jobSeekers = '/api/job-seekers';
+  static const String bookmarks = '/api/bookmarks';
+  static String jobSeekerDetail(dynamic id) => '/api/job-seekers/$id';
+  static String jobSeekerContactRequest(dynamic id) => '/api/job-seekers/$id/contact-request';
+  static String jobSeekerBookmark(dynamic id) => '/api/job-seekers/$id/bookmark';
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
@@ -8,15 +10,26 @@ import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 class JobSeekerHeroCard extends StatelessWidget {
   final String name;
   final String? avatar;
+  final File? localAvatarFile;
+  final String? professionTitle;
 
   const JobSeekerHeroCard({
     super.key,
     required this.name,
     this.avatar,
+    this.localAvatarFile,
+    this.professionTitle,
   });
 
   @override
   Widget build(BuildContext context) {
+    ImageProvider? imageProvider;
+    if (localAvatarFile != null && localAvatarFile!.existsSync()) {
+      imageProvider = FileImage(localAvatarFile!);
+    } else if (avatar != null && avatar!.isNotEmpty) {
+      imageProvider = CachedNetworkImageProvider(avatar!);
+    }
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       decoration: BoxDecoration(
@@ -36,10 +49,8 @@ class JobSeekerHeroCard extends StatelessWidget {
           CircleAvatar(
             radius: 34.r,
             backgroundColor: AppColors.softBlueBg,
-            backgroundImage: avatar != null && avatar!.isNotEmpty
-                ? NetworkImage(avatar!)
-                : null,
-            child: (avatar == null || avatar!.isEmpty)
+            backgroundImage: imageProvider,
+            child: imageProvider == null
                 ? Icon(Icons.person_rounded, color: AppColors.darkNavy, size: 36.sp)
                 : null,
           ),
@@ -61,7 +72,9 @@ class JobSeekerHeroCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6.r),
                   ),
                   child: Text(
-                    'مرشح / باحث عن عمل',
+                    professionTitle?.isNotEmpty == true
+                        ? professionTitle!
+                        : 'مرشح / باحث عن عمل',
                     style: getTextStyle().darkNavy.w700.s11,
                   ),
                 ),

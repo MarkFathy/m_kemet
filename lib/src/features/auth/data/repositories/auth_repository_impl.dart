@@ -8,8 +8,12 @@ import 'package:m_kemet/src/features/auth/data/models/user_model.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/auth_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/country_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/gender_entity.dart';
+import 'package:m_kemet/generated/l10n.dart';
+import 'package:m_kemet/src/core/navigation/navigator.dart';
+import 'package:m_kemet/src/features/auth/data/models/auth_response_model.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/user_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/repositories/auth_repository.dart';
+import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -112,10 +116,27 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  String _getMismatchErrorMessage(UserType expectedUserType) {
+    final isLookingForJobSeeker = expectedUserType == UserType.jobSeeker;
+    final context = Go.navigatorKey.currentContext;
+    if (context != null) {
+      final s = S.maybeOf(context);
+      if (s != null) {
+        return isLookingForJobSeeker
+            ? s.userTypeMismatchCompanyError
+            : s.userTypeMismatchCandidateError;
+      }
+    }
+    return isLookingForJobSeeker
+        ? 'هذا الحساب مسجل كشركة، يرجى تسجيل الدخول من بوابة أصحاب الأعمال والشركات.'
+        : 'هذا الحساب مسجل كباحث عن عمل، يرجى تسجيل الدخول من بوابة الباحثين عن عمل.';
+  }
+
   @override
   Future<Either<Failure, AuthEntity>> login({
     required String email,
     required String password,
+    UserType? expectedUserType,
   }) async {
     try {
       final result = await remoteDataSource.login(
@@ -123,15 +144,39 @@ class AuthRepositoryImpl implements AuthRepository {
         password: password,
       );
 
+      UserModel? user = result.user as UserModel?;
+
+      if (user == null && result.accessToken != null && result.accessToken!.isNotEmpty) {
+        try {
+          user = await remoteDataSource.getProfile();
+        } catch (_) {}
+      }
+
+      if (expectedUserType != null && user != null && user.userType != expectedUserType) {
+        return Left(
+          ServerFailure(
+            ServerException(403, _getMismatchErrorMessage(expectedUserType), null),
+          ),
+        );
+      }
+
       if (result.accessToken != null && result.accessToken!.isNotEmpty) {
         await localDataSource.saveAuthSession(
           token: result.accessToken!,
           refreshToken: result.refreshToken,
-          user: result.user as UserModel?,
+          user: user ?? (result.user as UserModel?),
         );
       }
 
-      return Right(result);
+      return Right(
+        AuthResponseModel(
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+          tokenType: result.tokenType,
+          user: user ?? result.user,
+          message: result.message,
+        ),
+      );
     } on ServerException catch (e) {
       return Left(ServerFailure(e));
     } on DioException catch (e) {
@@ -153,6 +198,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, AuthEntity>> verifyOtp({
     required String email,
     required String code,
+    UserType? expectedUserType,
   }) async {
     try {
       final result = await remoteDataSource.verifyOtp(
@@ -160,15 +206,39 @@ class AuthRepositoryImpl implements AuthRepository {
         code: code,
       );
 
+      UserModel? user = result.user as UserModel?;
+
+      if (user == null && result.accessToken != null && result.accessToken!.isNotEmpty) {
+        try {
+          user = await remoteDataSource.getProfile();
+        } catch (_) {}
+      }
+
+      if (expectedUserType != null && user != null && user.userType != expectedUserType) {
+        return Left(
+          ServerFailure(
+            ServerException(403, _getMismatchErrorMessage(expectedUserType), null),
+          ),
+        );
+      }
+
       if (result.accessToken != null && result.accessToken!.isNotEmpty) {
         await localDataSource.saveAuthSession(
           token: result.accessToken!,
           refreshToken: result.refreshToken,
-          user: result.user as UserModel?,
+          user: user ?? (result.user as UserModel?),
         );
       }
 
-      return Right(result);
+      return Right(
+        AuthResponseModel(
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+          tokenType: result.tokenType,
+          user: user ?? result.user,
+          message: result.message,
+        ),
+      );
     } on ServerException catch (e) {
       return Left(ServerFailure(e));
     } on DioException catch (e) {

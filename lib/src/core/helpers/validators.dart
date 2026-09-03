@@ -6,11 +6,16 @@ class Validators {
     return null;
   }
 
-  static String? validateName(String? value, {String? message}) {
+  static String? validateName(
+    String? value, {
+    String? message,
+    String? emptyMessage,
+    String? minLengthMessage,
+  }) {
     if (value?.trim().isEmpty ?? true) {
-      return message ?? 'LocaleKeys.fillField';
-    } else if (value!.length < 2) {
-      return message ?? 'LocaleKeys.nameValidation';
+      return emptyMessage ?? message ?? 'LocaleKeys.fillField';
+    } else if (value!.trim().length < 2) {
+      return minLengthMessage ?? message ?? 'LocaleKeys.nameValidation';
     }
     return null;
   }
@@ -29,12 +34,29 @@ class Validators {
     int minLength = 8,
     String? emptyMessage,
     String? minLengthMessage,
+    String? mixedCaseMessage,
+    String? symbolMessage,
+    bool requireMixedCase = false,
+    bool requireSpecialChar = false,
   }) {
     if (value == null || value.trim().isEmpty) {
       return emptyMessage ?? 'Password is required';
     }
     if (value.length < minLength) {
       return minLengthMessage ?? 'Password must be at least $minLength characters';
+    }
+    if (requireMixedCase) {
+      final hasUpper = RegExp(r'[A-Z]').hasMatch(value);
+      final hasLower = RegExp(r'[a-z]').hasMatch(value);
+      if (!hasUpper || !hasLower) {
+        return mixedCaseMessage ?? 'يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير على الأقل.';
+      }
+    }
+    if (requireSpecialChar) {
+      final hasSymbol = RegExp(r'[!@#$%^&*(),.?":{}|<>\-_+=\[\]\\\/~`؛،؟]').hasMatch(value);
+      if (!hasSymbol) {
+        return symbolMessage ?? 'يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل.';
+      }
     }
     return null;
   }
@@ -94,12 +116,14 @@ class Validators {
   static String? validatePasswordConfirm(
     String? value,
     String? pass, {
+    String? emptyMessage,
+    String? mismatchMessage,
     String? message,
   }) {
     if (value?.trim().isEmpty ?? true) {
-      return message ?? 'LocaleKeys.fillField';
+      return emptyMessage ?? message ?? 'LocaleKeys.fillField';
     } else if (value != pass) {
-      return message ?? 'LocaleKeys.confirmValidation';
+      return mismatchMessage ?? message ?? 'LocaleKeys.confirmValidation';
     }
     return null;
   }

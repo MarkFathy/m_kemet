@@ -28,87 +28,106 @@ class SearchTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.symmetric(
-        horizontal: AppPadding.pW12,
-        vertical: AppPadding.pH12,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            S.of(context).employerSearchTitle,
-            style: getTextStyle().darkNavy.w700.s24,
-          ),
+    return RefreshIndicator(
+      onRefresh: () => context.read<CandidateSearchCubit>().fetchCandidates(),
+      color: AppColors.darkNavy,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppPadding.pW12,
+          vertical: AppPadding.pH12,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              S.of(context).employerSearchTitle,
+              style: getTextStyle().darkNavy.w700.s24,
+            ),
 
-          14.szH,
+            14.szH,
 
-          // Search Bar & Filter Action Button Row
-          Row(
-            children: [
-              Expanded(
-                child: DefaultTextField(
-                  controller: searchController,
-                  hint: S.of(context).searchCandidateHint,
-                  prefixIcon: Icon(Icons.search_rounded, color: AppColors.greyColor, size: 20.sp),
-                  onChanged: (val) {
-                    context.read<CandidateSearchCubit>().updateSearchQuery(val ?? '');
-                  },
+            // Search Bar & Filter Action Button Row
+            Row(
+              children: [
+                Expanded(
+                  child: DefaultTextField(
+                    controller: searchController,
+                    hint: S.of(context).searchCandidateHint,
+                    prefixIcon: Icon(Icons.search_rounded, color: AppColors.greyColor, size: 20.sp),
+                    onChanged: (val) {
+                      context.read<CandidateSearchCubit>().updateSearchQuery(val ?? '');
+                    },
+                  ),
                 ),
-              ),
-              10.szW,
-              InkWell(
-                onTap: () {
-                  final cubit = context.read<CandidateSearchCubit>();
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: AppColors.transparentColor,
-                    builder: (_) => CandidateFilterBottomSheet(
-                      initialFilter: cubit.state.activeFilter,
-                      onApplyFilter: (newFilter) {
-                        cubit.applyFilter(newFilter);
-                      },
+                10.szW,
+                InkWell(
+                  onTap: () {
+                    final cubit = context.read<CandidateSearchCubit>();
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: AppColors.transparentColor,
+                      builder: (_) => CandidateFilterBottomSheet(
+                        initialFilter: cubit.state.activeFilter,
+                        onApplyFilter: (newFilter) {
+                          cubit.applyFilter(newFilter);
+                        },
+                      ),
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: Container(
+                    padding: EdgeInsets.all(14.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.darkNavy,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Icon(
+                      Icons.tune_rounded,
+                      color: AppColors.whiteColor,
+                      size: 22.sp,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            20.szH,
+
+            // Dynamic Search Results
+            BlocBuilder<CandidateSearchCubit, CandidateSearchState>(
+              builder: (context, state) {
+                if (state.status == CandidateSearchStatus.loading) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 40.h),
+                    child: const AppProgressIndicator.centered(),
+                  );
+                }
+
+                if (state.status == CandidateSearchStatus.failure) {
+                  return EmptyState(
+                    icon: Icons.error_outline_rounded,
+                    title: state.errorMessage ?? 'حدث خطأ أثناء تحميل البيانات',
+                    action: ElevatedButton.icon(
+                      onPressed: () => context.read<CandidateSearchCubit>().fetchCandidates(),
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: Text(S.of(context).continueAction),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.darkNavy,
+                        foregroundColor: AppColors.whiteColor,
+                      ),
                     ),
                   );
-                },
-                borderRadius: BorderRadius.circular(12.r),
-                child: Container(
-                  padding: EdgeInsets.all(14.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.darkNavy,
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Icon(
-                    Icons.tune_rounded,
-                    color: AppColors.whiteColor,
-                    size: 22.sp,
-                  ),
-                ),
-              ),
-            ],
-          ),
+                }
 
-          20.szH,
-
-          // Dynamic Search Results
-          BlocBuilder<CandidateSearchCubit, CandidateSearchState>(
-            builder: (context, state) {
-              if (state.status == CandidateSearchStatus.loading) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 40.h),
-                  child: const AppProgressIndicator.centered(),
-                );
-              }
-
-              if (state.candidates.isEmpty) {
-                return EmptyState(
-                  icon: Icons.search_off_rounded,
-                  title: S.of(context).noSearchResultsTitle,
-                  subtitle: S.of(context).noSearchResultsSub,
-                );
-              }
+                if (state.candidates.isEmpty) {
+                  return EmptyState(
+                    icon: Icons.search_off_rounded,
+                    title: S.of(context).noSearchResultsTitle,
+                    subtitle: S.of(context).noSearchResultsSub,
+                  );
+                }
 
               return ListView.separated(
                 shrinkWrap: true,
@@ -129,8 +148,9 @@ class SearchTab extends StatelessWidget {
             },
           ),
 
-          20.szH,
-        ],
+            20.szH,
+          ],
+        ),
       ),
     );
   }

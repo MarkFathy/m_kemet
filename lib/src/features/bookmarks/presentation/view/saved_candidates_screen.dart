@@ -7,14 +7,14 @@ import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
-import 'package:m_kemet/src/core/widgets/app_progress_indicator.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
+import 'package:m_kemet/src/core/widgets/app_progress_indicator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_back_button.dart';
-import 'package:m_kemet/src/features/company/presentation/cubit/candidate_search_cubit.dart';
-import 'package:m_kemet/src/features/company/presentation/cubit/candidate_search_state.dart';
+import 'package:m_kemet/src/features/bookmarks/presentation/cubit/bookmarks_cubit.dart';
+import 'package:m_kemet/src/features/bookmarks/presentation/cubit/bookmarks_state.dart';
 import 'package:m_kemet/src/features/company/presentation/widgets/candidate_card.dart';
 
 class SavedCandidatesScreen extends StatelessWidget {
@@ -22,8 +22,10 @@ class SavedCandidatesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CandidateSearchCubit>(
-      create: (context) => sl<CandidateSearchCubit>()..fetchCandidates(),
+    // Use the global singleton so state is shared with CandidateDetailScreen & CompanyMainScreen
+    final bookmarksCubit = sl<BookmarksCubit>()..fetchBookmarks();
+    return BlocProvider<BookmarksCubit>.value(
+      value: bookmarksCubit,
       child: AppScaffold(
         safeTop: true,
         safeBottom: true,
@@ -50,11 +52,11 @@ class SavedCandidatesScreen extends StatelessWidget {
 
               20.szH,
 
-              BlocBuilder<CandidateSearchCubit, CandidateSearchState>(
+              BlocBuilder<BookmarksCubit, BookmarksState>(
                 builder: (context, state) {
-                  final savedList = state.savedCandidates;
+                  final savedList = state.bookmarkedCandidates;
 
-                  if (state.status == CandidateSearchStatus.loading) {
+                  if (state.status == BookmarksStatus.loading) {
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 60.h),
                       child: const AppProgressIndicator.centered(),
@@ -73,7 +75,11 @@ class SavedCandidatesScreen extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          Icon(Icons.bookmark_border_rounded, size: 54.sp, color: AppColors.greyColor),
+                          Icon(
+                            Icons.bookmark_border_rounded,
+                            size: 54.sp,
+                            color: AppColors.greyColor,
+                          ),
                           16.szH,
                           Text(
                             S.of(context).noSavedCandidates,
@@ -98,12 +104,12 @@ class SavedCandidatesScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final candidate = savedList[index];
                       return CandidateCard(
-                        candidate: candidate,
+                        candidate: candidate.copyWith(isSaved: true),
                         onViewProfile: () {
                           Go.toNamed(NamedRoutes.candidateDetail, arguments: candidate);
                         },
                         onToggleSave: () {
-                          context.read<CandidateSearchCubit>().toggleSaveCandidate(candidate.id);
+                          context.read<BookmarksCubit>().toggleBookmark(candidate);
                         },
                       );
                     },
