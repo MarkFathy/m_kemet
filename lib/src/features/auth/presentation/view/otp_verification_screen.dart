@@ -78,6 +78,7 @@ class _OtpVerificationViewState extends State<_OtpVerificationView> {
   final _pinController = TextEditingController();
   late Timer _timer;
   int _secondsRemaining = 60;
+  bool _isCheckingProfile = false;
 
   String get _email => widget.args?.email ?? '';
   bool get _isPasswordReset => widget.args?.isPasswordReset ?? false;
@@ -158,11 +159,15 @@ class _OtpVerificationViewState extends State<_OtpVerificationView> {
         } else if (state.status == AuthStatus.otpVerified) {
           final targetType = state.userType ?? widget.userType;
           if (targetType == UserType.jobSeeker) {
+            setState(() => _isCheckingProfile = true);
             SessionManager.checkAndSyncJobSeekerProfileCompleted().then((isCompleted) {
-              if (isCompleted) {
-                Go.offAllNamed(NamedRoutes.jobSeekerMain);
-              } else {
-                Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
+              if (mounted) {
+                setState(() => _isCheckingProfile = false);
+                if (isCompleted) {
+                  Go.offAllNamed(NamedRoutes.jobSeekerMain);
+                } else {
+                  Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
+                }
               }
             });
           } else {
@@ -244,8 +249,8 @@ class _OtpVerificationViewState extends State<_OtpVerificationView> {
                 // Verify Button
                 CustomButton(
                   text: S.of(context).verifyAction,
-                  isLoading: isLoading,
-                  onPressed: _onVerifyPressed,
+                  isLoading: isLoading || _isCheckingProfile,
+                  onPressed: _isCheckingProfile ? null : _onVerifyPressed,
                   backgroundColor: AppColors.darkNavy,
                   textStyle: getTextStyle().whiteColor.w700.s18,
                 ),

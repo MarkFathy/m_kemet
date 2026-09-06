@@ -40,6 +40,7 @@ class JobSeekerProfileState extends Equatable {
   final DocumentUploadStatus passportStatus;
   final DocumentUploadStatus cvStatus;
   final DocumentUploadStatus videoStatus;
+  final double videoUploadProgress;
 
   final CandidateDocumentEntity? uploadedPersonalPhoto;
   final CandidateDocumentEntity? uploadedNationalId;
@@ -82,6 +83,7 @@ class JobSeekerProfileState extends Equatable {
     this.passportStatus = DocumentUploadStatus.initial,
     this.cvStatus = DocumentUploadStatus.initial,
     this.videoStatus = DocumentUploadStatus.initial,
+    this.videoUploadProgress = 0.0,
     this.uploadedPersonalPhoto,
     this.uploadedNationalId,
     this.uploadedPassport,
@@ -96,6 +98,47 @@ class JobSeekerProfileState extends Equatable {
     this.errorMessage,
     this.successMessage,
   });
+
+  bool get isPersonalPhotoUploaded =>
+      uploadedPersonalPhoto != null &&
+      personalPhotoStatus != DocumentUploadStatus.uploading &&
+      personalPhotoStatus != DocumentUploadStatus.failure;
+
+  bool get isNationalIdUploaded =>
+      uploadedNationalId != null &&
+      nationalIdStatus != DocumentUploadStatus.uploading &&
+      nationalIdStatus != DocumentUploadStatus.failure;
+
+  bool get isPassportUploaded =>
+      uploadedPassport != null &&
+      passportStatus != DocumentUploadStatus.uploading &&
+      passportStatus != DocumentUploadStatus.failure;
+
+  bool get isCvUploaded =>
+      uploadedCv != null &&
+      cvStatus != DocumentUploadStatus.uploading &&
+      cvStatus != DocumentUploadStatus.failure;
+
+  bool get isVideoUploaded =>
+      ((uploadedVideo != null) ||
+          (profileDetail?.videoUrl != null && profileDetail!.videoUrl!.isNotEmpty)) &&
+      videoStatus != DocumentUploadStatus.uploading &&
+      videoStatus != DocumentUploadStatus.failure;
+
+  bool get isAnyDocumentUploading =>
+      personalPhotoStatus == DocumentUploadStatus.uploading ||
+      nationalIdStatus == DocumentUploadStatus.uploading ||
+      passportStatus == DocumentUploadStatus.uploading ||
+      cvStatus == DocumentUploadStatus.uploading ||
+      videoStatus == DocumentUploadStatus.uploading;
+
+  bool get areAllDocumentsUploaded =>
+      isPersonalPhotoUploaded &&
+      isNationalIdUploaded &&
+      isPassportUploaded &&
+      isCvUploaded &&
+      isVideoUploaded &&
+      !isAnyDocumentUploading;
 
   double get completionPercentage {
     int totalPoints = 0;
@@ -112,11 +155,11 @@ class JobSeekerProfileState extends Equatable {
 
     // Document uploads (worth 5 points)
     totalPoints += 5;
-    if (uploadedPersonalPhoto != null || localPersonalPhotoPath != null) earnedPoints++;
-    if (uploadedNationalId != null || localNationalIdPath != null) earnedPoints++;
-    if (uploadedPassport != null || localPassportPath != null) earnedPoints++;
-    if (uploadedCv != null || localCvPath != null) earnedPoints++;
-    if (uploadedVideo != null || localVideoPath != null) earnedPoints++;
+    if (isPersonalPhotoUploaded) earnedPoints++;
+    if (isNationalIdUploaded) earnedPoints++;
+    if (isPassportUploaded) earnedPoints++;
+    if (isCvUploaded) earnedPoints++;
+    if (isVideoUploaded) earnedPoints++;
 
     return totalPoints == 0 ? 0.0 : (earnedPoints / totalPoints).clamp(0.0, 1.0);
   }
@@ -143,6 +186,7 @@ class JobSeekerProfileState extends Equatable {
     DocumentUploadStatus? passportStatus,
     DocumentUploadStatus? cvStatus,
     DocumentUploadStatus? videoStatus,
+    double? videoUploadProgress,
     CandidateDocumentEntity? Function()? uploadedPersonalPhoto,
     CandidateDocumentEntity? Function()? uploadedNationalId,
     CandidateDocumentEntity? Function()? uploadedPassport,
@@ -179,6 +223,7 @@ class JobSeekerProfileState extends Equatable {
       passportStatus: passportStatus ?? this.passportStatus,
       cvStatus: cvStatus ?? this.cvStatus,
       videoStatus: videoStatus ?? this.videoStatus,
+      videoUploadProgress: videoUploadProgress ?? this.videoUploadProgress,
       uploadedPersonalPhoto: uploadedPersonalPhoto != null ? uploadedPersonalPhoto() : this.uploadedPersonalPhoto,
       uploadedNationalId: uploadedNationalId != null ? uploadedNationalId() : this.uploadedNationalId,
       uploadedPassport: uploadedPassport != null ? uploadedPassport() : this.uploadedPassport,
@@ -218,6 +263,7 @@ class JobSeekerProfileState extends Equatable {
         passportStatus,
         cvStatus,
         videoStatus,
+        videoUploadProgress,
         uploadedPersonalPhoto,
         uploadedNationalId,
         uploadedPassport,

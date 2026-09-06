@@ -167,6 +167,10 @@ class JobSeekerRemoteDataSourceImpl implements JobSeekerRemoteDataSource {
     final response = await _dioClient.dio.post(
       ApiEndpoints.candidateDocuments,
       data: formData,
+      options: Options(
+        sendTimeout: const Duration(minutes: 5),
+        receiveTimeout: const Duration(minutes: 5),
+      ),
       onSendProgress: onSendProgress,
     );
 
@@ -200,6 +204,10 @@ class JobSeekerRemoteDataSourceImpl implements JobSeekerRemoteDataSource {
     final response = await _dioClient.dio.post(
       ApiEndpoints.candidateVideo,
       data: formData,
+      options: Options(
+        sendTimeout: const Duration(minutes: 10),
+        receiveTimeout: const Duration(minutes: 10),
+      ),
       onSendProgress: onSendProgress,
     );
 

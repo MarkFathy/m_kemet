@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m_kemet/generated/l10n.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
+import 'package:m_kemet/src/core/network/connectivity_cubit.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/floating_bottom_nav_bar.dart';
@@ -42,7 +43,17 @@ class _JobSeekerMainScreenState extends State<JobSeekerMainScreen> {
           create: (context) => sl<JobSeekerProfileCubit>()..loadInitialData(),
         ),
       ],
-      child: AppScaffold(
+      child: BlocListener<ConnectivityCubit, ConnectivityState>(
+        listenWhen: (previous, current) =>
+            current.isConnected &&
+            (previous.isDisconnected ||
+                previous.status == ConnectivityStatus.unknown ||
+                current.reconnectCounter > previous.reconnectCounter),
+        listener: (context, state) {
+          context.read<AuthCubit>().getProfile();
+          context.read<JobSeekerProfileCubit>().loadInitialData();
+        },
+        child: AppScaffold(
         safeTop: true,
         safeBottom: true,
         extendBody: true,
@@ -69,6 +80,7 @@ class _JobSeekerMainScreenState extends State<JobSeekerMainScreen> {
               label: S.of(context).navSettings,
             ),
           ],
+        ),
         ),
       ),
     );

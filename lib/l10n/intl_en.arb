@@ -236,5 +236,20 @@
   "confirmCrop": "Confirm & Crop",
   "seconds5Forward": "+5s",
   "seconds5Backward": "-5s",
-  "completeAllFieldsHint": "Please complete all fields, documents, and video to proceed"
+  "completeAllFieldsHint": "Please complete all fields, documents, and video to proceed",
+  "uploadingMediaHint": "Uploading files and media, please wait...",
+  "noInternetTitle": "No Internet Connection",
+  "noInternetSubtitle": "Check your internet or Wi-Fi connection and try again",
+  "noInternetRetry": "Retry",
+  "noInternetBannerMsg": "No internet connection",
+  "internetRestoredMsg": "Internet connection restored",
+  "networkErrorTitle": "Connection Failed",
+  "networkErrorSubtitle": "Check your internet connection or try again later",
+  "hostUnreachableTitle": "Server Unavailable",
+  "hostUnreachableSubtitle": "Could not reach the server. Check your connection or try later",
+  "timeoutErrorTitle": "Connection Timed Out",
+  "timeoutErrorSubtitle": "The request took too long. Please try again",
+  "serverErrorTitle": "Server Error",
+  "serverErrorSubtitle": "An unexpected error occurred. Please try again later",
+  "retryAction": "Try Again"
 }

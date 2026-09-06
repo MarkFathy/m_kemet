@@ -2189,6 +2189,156 @@ class S {
       args: [],
     );
   }
+
+  /// `جارٍ رفع الملفات والوسائط، يرجى الانتظار...`
+  String get uploadingMediaHint {
+    return Intl.message(
+      'جارٍ رفع الملفات والوسائط، يرجى الانتظار...',
+      name: 'uploadingMediaHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا يوجد اتصال بالإنترنت`
+  String get noInternetTitle {
+    return Intl.message(
+      'لا يوجد اتصال بالإنترنت',
+      name: 'noInternetTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تحقق من اتصالك بالإنترنت أو شبكة Wi-Fi وحاول مرة أخرى`
+  String get noInternetSubtitle {
+    return Intl.message(
+      'تحقق من اتصالك بالإنترنت أو شبكة Wi-Fi وحاول مرة أخرى',
+      name: 'noInternetSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إعادة المحاولة`
+  String get noInternetRetry {
+    return Intl.message(
+      'إعادة المحاولة',
+      name: 'noInternetRetry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `انقطع الاتصال بالإنترنت`
+  String get noInternetBannerMsg {
+    return Intl.message(
+      'انقطع الاتصال بالإنترنت',
+      name: 'noInternetBannerMsg',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم استعادة الاتصال بالإنترنت`
+  String get internetRestoredMsg {
+    return Intl.message(
+      'تم استعادة الاتصال بالإنترنت',
+      name: 'internetRestoredMsg',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تعذّر الاتصال بالخادم`
+  String get networkErrorTitle {
+    return Intl.message(
+      'تعذّر الاتصال بالخادم',
+      name: 'networkErrorTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تأكد من اتصالك بالإنترنت أو حاول مرة أخرى لاحقاً`
+  String get networkErrorSubtitle {
+    return Intl.message(
+      'تأكد من اتصالك بالإنترنت أو حاول مرة أخرى لاحقاً',
+      name: 'networkErrorSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الخادم غير متاح`
+  String get hostUnreachableTitle {
+    return Intl.message(
+      'الخادم غير متاح',
+      name: 'hostUnreachableTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تعذّر الوصول إلى الخادم. تحقق من اتصالك أو حاول لاحقاً`
+  String get hostUnreachableSubtitle {
+    return Intl.message(
+      'تعذّر الوصول إلى الخادم. تحقق من اتصالك أو حاول لاحقاً',
+      name: 'hostUnreachableSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `انتهت مهلة الاتصال`
+  String get timeoutErrorTitle {
+    return Intl.message(
+      'انتهت مهلة الاتصال',
+      name: 'timeoutErrorTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `استغرق الطلب وقتاً أطول من المتوقع. حاول مرة أخرى`
+  String get timeoutErrorSubtitle {
+    return Intl.message(
+      'استغرق الطلب وقتاً أطول من المتوقع. حاول مرة أخرى',
+      name: 'timeoutErrorSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `خطأ في الخادم`
+  String get serverErrorTitle {
+    return Intl.message(
+      'خطأ في الخادم',
+      name: 'serverErrorTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حدث خطأ غير متوقع. يرجى المحاولة لاحقاً`
+  String get serverErrorSubtitle {
+    return Intl.message(
+      'حدث خطأ غير متوقع. يرجى المحاولة لاحقاً',
+      name: 'serverErrorSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حاول مرة أخرى`
+  String get retryAction {
+    return Intl.message(
+      'حاول مرة أخرى',
+      name: 'retryAction',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

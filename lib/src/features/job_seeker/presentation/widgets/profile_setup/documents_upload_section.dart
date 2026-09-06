@@ -80,23 +80,19 @@ class DocumentsUploadSection extends StatelessWidget {
       builder: (context, state) {
         final cubit = context.read<JobSeekerProfileCubit>();
 
-        final isPersonalPhotoUploaded = state.uploadedPersonalPhoto != null ||
-            state.personalPhotoStatus == DocumentUploadStatus.success;
+        final isPersonalPhotoUploaded = state.isPersonalPhotoUploaded;
         final isPersonalPhotoUploading =
             state.personalPhotoStatus == DocumentUploadStatus.uploading;
 
-        final isNationalIdUploaded = state.uploadedNationalId != null ||
-            state.nationalIdStatus == DocumentUploadStatus.success;
+        final isNationalIdUploaded = state.isNationalIdUploaded;
         final isNationalIdUploading =
             state.nationalIdStatus == DocumentUploadStatus.uploading;
 
-        final isPassportUploaded = state.uploadedPassport != null ||
-            state.passportStatus == DocumentUploadStatus.success;
+        final isPassportUploaded = state.isPassportUploaded;
         final isPassportUploading =
             state.passportStatus == DocumentUploadStatus.uploading;
 
-        final isCvUploaded = state.uploadedCv != null ||
-            state.cvStatus == DocumentUploadStatus.success;
+        final isCvUploaded = state.isCvUploaded;
         final isCvUploading =
             state.cvStatus == DocumentUploadStatus.uploading;
 

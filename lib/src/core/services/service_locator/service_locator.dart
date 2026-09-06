@@ -2,6 +2,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:m_kemet/src/core/app_cubit/app_cubit.dart';
 import 'package:m_kemet/src/core/helpers/cache_service.dart';
+import 'package:m_kemet/src/core/network/connectivity_cubit.dart';
 import 'package:m_kemet/src/core/network/dio_client.dart';
 import 'package:m_kemet/src/core/services/app_lock_service.dart';
 import 'package:m_kemet/src/core/services/notification_service.dart';
@@ -83,6 +84,7 @@ Future<void> setupServiceLocator() async {
   //   • ErrorInterceptor  — maps HTTP errors → typed ServerException
   //   • PrettyDioLogger   — request/response logging (debug builds only)
   sl.registerLazySingleton(DioClient.new);
+  sl.registerFactory(ConnectivityCubit.new);
 
   // ─── App Cubit ───────────────────────────────────────────────────────────
   sl

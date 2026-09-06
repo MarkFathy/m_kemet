@@ -566,12 +566,17 @@ class ProfessionalDataSection extends StatelessWidget {
                 hint: 'مثال: العربية، الإنجليزية',
                 prefixIcon: Icon(Icons.translate_rounded, color: AppColors.greyColor, size: 20.sp),
                 onChanged: (val) {
-                  if (val != null) {
-                    final cubit = context.read<JobSeekerProfileCubit>();
-                    final langs = val.split(RegExp(r'[,،]')).map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
-                    for (final l in langs) {
-                      cubit.addLanguage(l);
-                    }
+                  final cubit = context.read<JobSeekerProfileCubit>();
+                  if (val == null || val.trim().isEmpty) {
+                    cubit.setLanguages([]);
+                  } else {
+                    final langs = val
+                        .split(RegExp(r'[,،\n]'))
+                        .map((e) => e.trim())
+                        .where((e) => e.isNotEmpty)
+                        .toSet()
+                        .toList();
+                    cubit.setLanguages(langs);
                   }
                 },
               ),
@@ -585,12 +590,17 @@ class ProfessionalDataSection extends StatelessWidget {
                 hint: 'مثال: قيادة، كهرباء، صيانة',
                 prefixIcon: Icon(Icons.star_outline_rounded, color: AppColors.greyColor, size: 20.sp),
                 onChanged: (val) {
-                  if (val != null) {
-                    final cubit = context.read<JobSeekerProfileCubit>();
-                    final skills = val.split(RegExp(r'[,،]')).map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
-                    for (final s in skills) {
-                      cubit.addSkill(s);
-                    }
+                  final cubit = context.read<JobSeekerProfileCubit>();
+                  if (val == null || val.trim().isEmpty) {
+                    cubit.setSkills([]);
+                  } else {
+                    final skills = val
+                        .split(RegExp(r'[,،\n]'))
+                        .map((e) => e.trim())
+                        .where((e) => e.isNotEmpty)
+                        .toSet()
+                        .toList();
+                    cubit.setSkills(skills);
                   }
                 },
               ),

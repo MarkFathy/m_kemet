@@ -200,6 +200,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "genderLabel": MessageLookupByLibrary.simpleMessage("الجنس"),
     "getStarted": MessageLookupByLibrary.simpleMessage("ابدأ الآن"),
     "goToHome": MessageLookupByLibrary.simpleMessage("الانتقال إلى الرئيسية"),
+    "hostUnreachableSubtitle": MessageLookupByLibrary.simpleMessage(
+      "تعذّر الوصول إلى الخادم. تحقق من اتصالك أو حاول لاحقاً",
+    ),
+    "hostUnreachableTitle": MessageLookupByLibrary.simpleMessage(
+      "الخادم غير متاح",
+    ),
     "idCardTitle": MessageLookupByLibrary.simpleMessage(
       "صورة بطاقة الهوية / الرقم القومي",
     ),
@@ -207,6 +213,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "تأكد من وضوح جميع المستندات وسريان مفعول جواز السفر لمدة لا تقل عن 6 أشهر وتصوير الفيديو بشكل واضح لتسريع ترشيحك للشركات.",
     ),
     "importantInfoTitle": MessageLookupByLibrary.simpleMessage("معلومات هامة"),
+    "internetRestoredMsg": MessageLookupByLibrary.simpleMessage(
+      "تم استعادة الاتصال بالإنترنت",
+    ),
     "introVideoDesc": MessageLookupByLibrary.simpleMessage(
       "مقطع فيديو تعريفي قصير (لمدة 1 دقيقة) تشرح فيه اسمك، مهنتك، خبراتك والدول التي ترغب بالسفر إليها",
     ),
@@ -267,9 +276,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "البحث عن عمالة",
     ),
     "navSettings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
+    "networkErrorSubtitle": MessageLookupByLibrary.simpleMessage(
+      "تأكد من اتصالك بالإنترنت أو حاول مرة أخرى لاحقاً",
+    ),
+    "networkErrorTitle": MessageLookupByLibrary.simpleMessage(
+      "تعذّر الاتصال بالخادم",
+    ),
     "next": MessageLookupByLibrary.simpleMessage("التالي"),
     "noCountryFound": MessageLookupByLibrary.simpleMessage(
       "لا توجد نتائج مطابقة",
+    ),
+    "noInternetBannerMsg": MessageLookupByLibrary.simpleMessage(
+      "انقطع الاتصال بالإنترنت",
+    ),
+    "noInternetRetry": MessageLookupByLibrary.simpleMessage("إعادة المحاولة"),
+    "noInternetSubtitle": MessageLookupByLibrary.simpleMessage(
+      "تحقق من اتصالك بالإنترنت أو شبكة Wi-Fi وحاول مرة أخرى",
+    ),
+    "noInternetTitle": MessageLookupByLibrary.simpleMessage(
+      "لا يوجد اتصال بالإنترنت",
     ),
     "noNotificationsSub": MessageLookupByLibrary.simpleMessage(
       "سيصلك تنبيه فور قيام الإدارة بالموافقة على طلب التواصل أو تحديث حالته.",
@@ -437,6 +462,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "resubmitRequest": MessageLookupByLibrary.simpleMessage(
       "تعديل وإعادة تقديم الطلب",
     ),
+    "retryAction": MessageLookupByLibrary.simpleMessage("حاول مرة أخرى"),
     "savedCandidatesEmptySub": MessageLookupByLibrary.simpleMessage(
       "يمكنك حفظ المرشحين المميزين أثناء البحث للعودة إليهم لاحقاً بسهولة.",
     ),
@@ -458,6 +484,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "seconds5Backward": MessageLookupByLibrary.simpleMessage("-5 ثواني"),
     "seconds5Forward": MessageLookupByLibrary.simpleMessage("+5 ثواني"),
     "sendResetCode": MessageLookupByLibrary.simpleMessage("إرسال رمز التحقق"),
+    "serverErrorSubtitle": MessageLookupByLibrary.simpleMessage(
+      "حدث خطأ غير متوقع. يرجى المحاولة لاحقاً",
+    ),
+    "serverErrorTitle": MessageLookupByLibrary.simpleMessage("خطأ في الخادم"),
     "signInNow": MessageLookupByLibrary.simpleMessage("سجل الدخول"),
     "signUpNow": MessageLookupByLibrary.simpleMessage("سجل الآن"),
     "skillsHint": MessageLookupByLibrary.simpleMessage("أدخل مهاراتك الرئيسية"),
@@ -497,6 +527,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "termsScreenTitle": MessageLookupByLibrary.simpleMessage(
       "الشروط والأحكام وسياسة الخصوصية",
     ),
+    "timeoutErrorSubtitle": MessageLookupByLibrary.simpleMessage(
+      "استغرق الطلب وقتاً أطول من المتوقع. حاول مرة أخرى",
+    ),
+    "timeoutErrorTitle": MessageLookupByLibrary.simpleMessage(
+      "انتهت مهلة الاتصال",
+    ),
     "travelPossibilityHint": MessageLookupByLibrary.simpleMessage(
       "اختر إمكانية السفر",
     ),
@@ -507,6 +543,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "uploadAction": MessageLookupByLibrary.simpleMessage("رفع"),
     "uploadedBadge": MessageLookupByLibrary.simpleMessage("تم الرفع"),
     "uploadingBadge": MessageLookupByLibrary.simpleMessage("قيد الرفع"),
+    "uploadingMediaHint": MessageLookupByLibrary.simpleMessage(
+      "جارٍ رفع الملفات والوسائط، يرجى الانتظار...",
+    ),
     "userTypeMismatchCandidateError": MessageLookupByLibrary.simpleMessage(
       "هذا الحساب مسجل كباحث عن عمل، يرجى تسجيل الدخول من بوابة الباحثين عن عمل.",
     ),

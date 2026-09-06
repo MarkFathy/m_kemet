@@ -9,6 +9,7 @@ import 'package:m_kemet/src/core/app_cubit/app_state.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/navigation/route_generator.dart';
+import 'package:m_kemet/src/core/network/connectivity_cubit.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 
 class MyApp extends StatelessWidget {
@@ -16,8 +17,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AppCubit>(
-      create: (context) => sl<AppCubit>()..loadSettings(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AppCubit>(
+          create: (context) => sl<AppCubit>()..loadSettings(),
+        ),
+        BlocProvider<ConnectivityCubit>(
+          create: (context) => sl<ConnectivityCubit>(),
+        ),
+      ],
       child: BlocBuilder<AppCubit, AppState>(
         builder: (context, state) {
           return ScreenUtilInit(

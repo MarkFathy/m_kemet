@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m_kemet/src/config/res/app_sizes.dart';
@@ -32,7 +33,9 @@ class JobSeekerProfileTab extends StatelessWidget {
 
         final countryName = user?.countryName ?? '';
         final countryFlag = user?.countryFlag ?? '';
-        final countryDisplay = countryFlag.isNotEmpty ? '$countryName $countryFlag' : countryName;
+        final countryDisplay = countryFlag.isNotEmpty
+            ? '$countryName $countryFlag'
+            : countryName;
 
         final gender = user?.gender ?? '';
 
@@ -42,21 +45,25 @@ class JobSeekerProfileTab extends StatelessWidget {
             // 1. User avatar if provided by auth profile
             // 2. Personal photo uploaded in job form (uploadedPersonalPhoto)
             // 3. Document of type 'personal_photo' in profileDetail
-            final personalPhotoDoc = profileState.uploadedPersonalPhoto ??
+            final personalPhotoDoc =
+                profileState.uploadedPersonalPhoto ??
                 profileState.profileDetail?.documents
                     .where((d) => d.documentType == 'personal_photo')
                     .firstOrNull;
 
-            final remotePhotoUrl = (user?.avatar != null && user!.avatar!.isNotEmpty)
+            final remotePhotoUrl =
+                (user?.avatar != null && user!.avatar!.isNotEmpty)
                 ? user.avatar
                 : (personalPhotoDoc?.fileUrl ?? personalPhotoDoc?.filePath);
 
             final localPhotoPath = profileState.localPersonalPhotoPath;
-            final localPhotoFile = (localPhotoPath != null && localPhotoPath.isNotEmpty)
+            final localPhotoFile =
+                (localPhotoPath != null && localPhotoPath.isNotEmpty)
                 ? File(localPhotoPath)
                 : null;
 
-            final professionTitle = profileState.selectedProfession?.name ??
+            final professionTitle =
+                profileState.selectedProfession?.name ??
                 profileState.profileDetail?.subSpecialization;
 
             return RefreshIndicator(
@@ -68,7 +75,9 @@ class JobSeekerProfileTab extends StatelessWidget {
               },
               color: AppColors.darkNavy,
               child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics(),
+                ),
                 padding: EdgeInsets.symmetric(
                   horizontal: AppPadding.pW16,
                   vertical: AppPadding.pH12,

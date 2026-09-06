@@ -11,6 +11,7 @@ class ProfileCompletionGaugeCard extends StatelessWidget {
   final double completionPercentage;
   final bool isLoading;
   final bool isEnabled;
+  final bool isUploading;
   final VoidCallback onContinuePressed;
 
   const ProfileCompletionGaugeCard({
@@ -18,12 +19,14 @@ class ProfileCompletionGaugeCard extends StatelessWidget {
     this.completionPercentage = 0.40,
     this.isLoading = false,
     this.isEnabled = true,
+    this.isUploading = false,
     required this.onContinuePressed,
   });
 
   @override
   Widget build(BuildContext context) {
     final int percentInt = (completionPercentage * 100).toInt();
+    final bool canSubmit = isEnabled && !isUploading && !isLoading;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
@@ -62,26 +65,32 @@ class ProfileCompletionGaugeCard extends StatelessWidget {
           CustomButton(
             text: S.of(context).continueAction,
             isLoading: isLoading,
-            onPressed: (!isEnabled || isLoading) ? null : onContinuePressed,
-            backgroundColor: isEnabled ? AppColors.darkNavy : const Color(0xFF94A3B8),
+            onPressed: canSubmit ? onContinuePressed : null,
+            backgroundColor: canSubmit ? AppColors.darkNavy : const Color(0xFF94A3B8),
             textStyle: getTextStyle().whiteColor.w700.s16.copyWith(
-              color: isEnabled ? Colors.white : Colors.white70,
+              color: canSubmit ? Colors.white : Colors.white70,
             ),
           ),
-          if (!isEnabled && !isLoading) ...[
+          if ((!isEnabled || isUploading) && !isLoading) ...[
             10.szH,
             Row(
               children: [
                 Icon(
-                  Icons.info_outline_rounded,
+                  isUploading ? Icons.hourglass_top_rounded : Icons.info_outline_rounded,
                   size: 14.sp,
-                  color: AppColors.greyColor,
+                  color: isUploading ? AppColors.steelBlue : AppColors.greyColor,
                 ),
                 6.szW,
                 Expanded(
                   child: Text(
-                    S.of(context).completeAllFieldsHint,
-                    style: getTextStyle().greyColor.w500.s12,
+                    isUploading
+                        ? S.of(context).uploadingMediaHint
+                        : S.of(context).completeAllFieldsHint,
+                    style: (isUploading
+                            ? getTextStyle().steelBlue
+                            : getTextStyle().greyColor)
+                        .w500
+                        .s12,
                   ),
                 ),
               ],

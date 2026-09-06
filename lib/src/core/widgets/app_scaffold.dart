@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/themes/status_bar_and_orientations_theme.dart';
+import 'package:m_kemet/src/core/widgets/connectivity_wrapper.dart';
 
 class AppScaffold extends StatelessWidget {
   final Widget body;
@@ -14,6 +15,9 @@ class AppScaffold extends StatelessWidget {
   final bool safeBottom;
   final bool extendBody;
 
+  /// Set to false to opt out of the automatic connectivity banner (rarely needed).
+  final bool showConnectivityBanner;
+
   const AppScaffold({
     required this.body,
     super.key,
@@ -24,10 +28,15 @@ class AppScaffold extends StatelessWidget {
     this.safeTop = false,
     this.safeBottom = true,
     this.extendBody = false,
+    this.showConnectivityBanner = true,
   });
 
   @override
   Widget build(BuildContext context) {
+    final wrappedBody = showConnectivityBanner
+        ? ConnectivityWrapper(child: body)
+        : body;
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppStatusBarAndOrientationsTheme.systemUiOverlayStyle,
       child: Scaffold(
@@ -40,7 +49,7 @@ class AppScaffold extends StatelessWidget {
           child: SafeArea(
             top: safeTop,
             bottom: extendBody ? false : safeBottom,
-            child: body,
+            child: wrappedBody,
           ),
         ),
         bottomNavigationBar: bottomNavigationBar != null
@@ -53,4 +62,4 @@ class AppScaffold extends StatelessWidget {
       ),
     );
   }
-}
+}

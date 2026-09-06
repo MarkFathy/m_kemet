@@ -25,15 +25,7 @@ class CandidateRepositoryImpl implements CandidateRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(e));
     } on DioException catch (e) {
-      return Left(
-        ServerFailure(
-          ServerException(
-            e.response?.statusCode ?? 500,
-            e.response?.data?['message']?.toString() ?? e.message ?? 'Failed to load job seekers',
-            null,
-          ),
-        ),
-      );
+      return Left(_handleDioError(e, 'Failed to load job seekers'));
     } catch (e) {
       return Left(ServerFailure(ServerException(500, e.toString(), null)));
     }
@@ -47,15 +39,7 @@ class CandidateRepositoryImpl implements CandidateRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(e));
     } on DioException catch (e) {
-      return Left(
-        ServerFailure(
-          ServerException(
-            e.response?.statusCode ?? 500,
-            e.response?.data?['message']?.toString() ?? e.message ?? 'Failed to filter job seekers',
-            null,
-          ),
-        ),
-      );
+      return Left(_handleDioError(e, 'Failed to filter job seekers'));
     } catch (e) {
       return Left(ServerFailure(ServerException(500, e.toString(), null)));
     }
@@ -69,15 +53,7 @@ class CandidateRepositoryImpl implements CandidateRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(e));
     } on DioException catch (e) {
-      return Left(
-        ServerFailure(
-          ServerException(
-            e.response?.statusCode ?? 500,
-            e.response?.data?['message']?.toString() ?? e.message ?? 'Failed to load saved candidates',
-            null,
-          ),
-        ),
-      );
+      return Left(_handleDioError(e, 'Failed to load saved candidates'));
     } catch (e) {
       return Left(ServerFailure(ServerException(500, e.toString(), null)));
     }
@@ -91,15 +67,7 @@ class CandidateRepositoryImpl implements CandidateRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(e));
     } on DioException catch (e) {
-      return Left(
-        ServerFailure(
-          ServerException(
-            e.response?.statusCode ?? 500,
-            e.response?.data?['message']?.toString() ?? e.message ?? 'Failed to update bookmark',
-            null,
-          ),
-        ),
-      );
+      return Left(_handleDioError(e, 'Failed to update bookmark'));
     } catch (e) {
       return Left(ServerFailure(ServerException(500, e.toString(), null)));
     }
@@ -113,15 +81,7 @@ class CandidateRepositoryImpl implements CandidateRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(e));
     } on DioException catch (e) {
-      return Left(
-        ServerFailure(
-          ServerException(
-            e.response?.statusCode ?? 500,
-            e.response?.data?['message']?.toString() ?? e.message ?? 'Failed to load candidate details',
-            null,
-          ),
-        ),
-      );
+      return Left(_handleDioError(e, 'Failed to load candidate details'));
     } catch (e) {
       return Left(ServerFailure(ServerException(500, e.toString(), null)));
     }
@@ -135,17 +95,31 @@ class CandidateRepositoryImpl implements CandidateRepository {
     } on ServerException catch (e) {
       return Left(ServerFailure(e));
     } on DioException catch (e) {
-      return Left(
-        ServerFailure(
-          ServerException(
-            e.response?.statusCode ?? 500,
-            e.response?.data?['message']?.toString() ?? e.message ?? 'Failed to send contact request',
-            null,
-          ),
-        ),
-      );
+      return Left(_handleDioError(e, 'Failed to send contact request'));
     } catch (e) {
       return Left(ServerFailure(ServerException(500, e.toString(), null)));
     }
+  }
+
+  ServerFailure _handleDioError(DioException e, String fallbackMessage) {
+    if (e.error is ServerException) {
+      return ServerFailure(e.error as ServerException);
+    }
+    final rawMsg = e.response?.data?['message']?.toString() ?? e.message ?? fallbackMessage;
+    final lower = rawMsg.toLowerCase();
+    final cleanMsg = (lower.contains('failed host lookup') ||
+            lower.contains('connection errored') ||
+            lower.contains('socketexception') ||
+            lower.contains('network is unreachable') ||
+            lower.contains('cannot be solved by the library'))
+        ? 'لا يوجد اتصال بالإنترنت'
+        : rawMsg;
+    return ServerFailure(
+      ServerException(
+        e.response?.statusCode ?? 500,
+        cleanMsg,
+        null,
+      ),
+    );
   }
 }

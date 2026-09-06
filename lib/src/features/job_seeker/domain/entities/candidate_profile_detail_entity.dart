@@ -57,36 +57,45 @@ class CandidateProfileDetailEntity extends Equatable {
     if (documents.isNotEmpty) return true;
     if (videoUrl != null && videoUrl!.trim().isNotEmpty) return true;
     if (professionId != null || qualificationId != null) return true;
-    if (subSpecialization != null && subSpecialization!.trim().isNotEmpty) return true;
+    if (subSpecialization != null && subSpecialization!.trim().isNotEmpty) {
+      return true;
+    }
     if ((completionPercentage ?? 0) > 0) return true;
-    if (status != null && status!.trim().isNotEmpty) return true;
+    if (status != null &&
+        status!.trim().isNotEmpty &&
+        status != 'new' &&
+        status != 'active' &&
+        status != 'inactive' &&
+        status != 'unverified') {
+      return true;
+    }
     return false;
   }
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        email,
-        phone,
-        birthDate,
-        genderId,
-        currentCountryId,
-        qualificationId,
-        qualification,
-        subSpecialization,
-        experienceYears,
-        experienceLevelId,
-        expectedSalary,
-        willingToTravel,
-        languages,
-        skills,
-        summary,
-        professionId,
-        targetCountryIds,
-        documents,
-        videoUrl,
-        completionPercentage,
-        status,
-      ];
+    id,
+    name,
+    email,
+    phone,
+    birthDate,
+    genderId,
+    currentCountryId,
+    qualificationId,
+    qualification,
+    subSpecialization,
+    experienceYears,
+    experienceLevelId,
+    expectedSalary,
+    willingToTravel,
+    languages,
+    skills,
+    summary,
+    professionId,
+    targetCountryIds,
+    documents,
+    videoUrl,
+    completionPercentage,
+    status,
+  ];
 }

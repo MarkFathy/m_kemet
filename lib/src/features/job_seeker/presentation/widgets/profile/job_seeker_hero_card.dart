@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -51,7 +52,11 @@ class JobSeekerHeroCard extends StatelessWidget {
             backgroundColor: AppColors.softBlueBg,
             backgroundImage: imageProvider,
             child: imageProvider == null
-                ? Icon(Icons.person_rounded, color: AppColors.darkNavy, size: 36.sp)
+                ? Icon(
+                    Icons.person_rounded,
+                    color: AppColors.darkNavy,
+                    size: 36.sp,
+                  )
                 : null,
           ),
           14.szW,
@@ -66,7 +71,10 @@ class JobSeekerHeroCard extends StatelessWidget {
                 ),
                 6.szH,
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 4.h,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.softBlueBg,
                     borderRadius: BorderRadius.circular(6.r),

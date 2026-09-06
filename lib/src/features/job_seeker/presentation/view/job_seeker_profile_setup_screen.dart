@@ -20,6 +20,8 @@ import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_set
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/intro_video_upload_card.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/professional_data_section.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/profile_completion_gauge_card.dart';
+import 'package:m_kemet/src/core/widgets/network_error_widget.dart';
+import 'package:m_kemet/src/core/widgets/app_progress_indicator.dart';
 
 class JobSeekerProfileSetupScreen extends StatelessWidget {
   const JobSeekerProfileSetupScreen({super.key});
@@ -98,29 +100,17 @@ class _JobSeekerProfileSetupViewState extends State<_JobSeekerProfileSetupView> 
   }
 
   bool _isProfileComplete(JobSeekerProfileState state) {
-    // 1. All documents and media
-    final hasPersonalPhoto = state.uploadedPersonalPhoto != null ||
-        state.localPersonalPhotoPath != null;
-    final hasNationalId = state.uploadedNationalId != null ||
-        state.localNationalIdPath != null;
-    final hasPassport = state.uploadedPassport != null ||
-        state.localPassportPath != null;
-    final hasCv = state.uploadedCv != null ||
-        state.localCvPath != null;
-    final hasVideo = state.uploadedVideo != null ||
-        state.localVideoPath != null ||
-        (state.profileDetail?.videoUrl != null &&
-            state.profileDetail!.videoUrl!.isNotEmpty);
-
-    if (!hasPersonalPhoto ||
-        !hasNationalId ||
-        !hasPassport ||
-        !hasCv ||
-        !hasVideo) {
+    // 1. Any upload in progress prevents submission
+    if (state.isAnyDocumentUploading) {
       return false;
     }
 
-    // 2. All professional data
+    // 2. All documents and media must be fully and successfully uploaded
+    if (!state.areAllDocumentsUploaded) {
+      return false;
+    }
+
+    // 3. All professional data must be filled
     final hasProfession = state.selectedProfession != null ||
         _professionController.text.trim().isNotEmpty;
     final hasSpecialization = _specializationController.text.trim().isNotEmpty;
@@ -152,16 +142,12 @@ class _JobSeekerProfileSetupViewState extends State<_JobSeekerProfileSetupView> 
     const total = 14;
     int earned = 0;
 
-    // Media & Docs (5)
-    if (state.uploadedPersonalPhoto != null || state.localPersonalPhotoPath != null) earned++;
-    if (state.uploadedNationalId != null || state.localNationalIdPath != null) earned++;
-    if (state.uploadedPassport != null || state.localPassportPath != null) earned++;
-    if (state.uploadedCv != null || state.localCvPath != null) earned++;
-    if (state.uploadedVideo != null ||
-        state.localVideoPath != null ||
-        (state.profileDetail?.videoUrl != null && state.profileDetail!.videoUrl!.isNotEmpty)) {
-      earned++;
-    }
+    // Media & Docs (5) - must be fully and successfully uploaded
+    if (state.isPersonalPhotoUploaded) earned++;
+    if (state.isNationalIdUploaded) earned++;
+    if (state.isPassportUploaded) earned++;
+    if (state.isCvUploaded) earned++;
+    if (state.isVideoUploaded) earned++;
 
     // Data (9)
     if (state.selectedProfession != null || _professionController.text.trim().isNotEmpty) earned++;
@@ -223,9 +209,45 @@ class _JobSeekerProfileSetupViewState extends State<_JobSeekerProfileSetupView> 
 
   void _onContinuePressed(BuildContext context) {
     final cubit = context.read<JobSeekerProfileCubit>();
+    if (!_isProfileComplete(cubit.state) || cubit.state.isAnyDocumentUploading) {
+      return;
+    }
 
-    final salaryText = _expectedSalaryController.text.replaceAll(RegExp(r'[^0-9.]'), '');
-    final expectedSalary = num.tryParse(salaryText);
+    // Cleanly sync current languages and skills from text fields
+    final rawLangs = _languagesController.text
+        .split(RegExp(r'[,،\n]'))
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toSet()
+        .toList();
+    cubit.setLanguages(rawLangs);
+
+    final rawSkills = _skillsController.text
+        .split(RegExp(r'[,،\n]'))
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toSet()
+        .toList();
+    cubit.setSkills(rawSkills);
+
+    // Parse salary: handle ranges like "7000 - 12000" or single numbers
+    num? parseSalary(String text) {
+      final clean = text.trim();
+      if (clean.isEmpty) return null;
+      if (clean.contains('-')) {
+        final parts = clean.split('-');
+        if (parts.length >= 2) {
+          final p1 = num.tryParse(parts[0].replaceAll(RegExp(r'[^0-9.]'), ''));
+          if (p1 != null) return p1;
+          final p2 = num.tryParse(parts[1].replaceAll(RegExp(r'[^0-9.]'), ''));
+          if (p2 != null) return p2;
+        }
+      }
+      final digits = clean.replaceAll(RegExp(r'[^0-9.]'), '');
+      return num.tryParse(digits);
+    }
+
+    final expectedSalary = parseSalary(_expectedSalaryController.text);
 
     cubit.submitProfile(
       name: _nameController.text.isNotEmpty ? _nameController.text : null,
@@ -269,6 +291,30 @@ class _JobSeekerProfileSetupViewState extends State<_JobSeekerProfileSetupView> 
         }
       },
       builder: (context, state) {
+        // ── Show spinner while loading ───────────────────────────────────────
+        final isLoading =
+            state.lookupsStatus == LoadingStatus.loading ||
+            state.profileFetchStatus == LoadingStatus.loading;
+        if (isLoading) {
+          return const AppScaffold(
+            safeTop: true,
+            body: Center(child: AppProgressIndicator()),
+          );
+        }
+
+        // ── Show error widget on network/server failure ──────────────────────
+        final hasFailed =
+            state.lookupsStatus == LoadingStatus.failure ||
+            state.profileFetchStatus == LoadingStatus.failure;
+        if (hasFailed) {
+          return AppScaffold(
+            safeTop: true,
+            body: NetworkErrorWidget(
+              onRetry: () => context.read<JobSeekerProfileCubit>().loadInitialData(),
+            ),
+          );
+        }
+
         return AppScaffold(
           safeTop: true,
           safeBottom: true,
@@ -282,30 +328,22 @@ class _JobSeekerProfileSetupViewState extends State<_JobSeekerProfileSetupView> 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Top Header: Language Switcher Button
                 const Align(
                   alignment: AlignmentDirectional.centerStart,
                   child: LanguageSwitcherButton(),
                 ),
 
                 16.szH,
-
-                // Page Title & Subtitle
                 Text(
                   S.of(context).personalDocumentsTitle,
                   style: getTextStyle().darkNavy.w700.s22,
                 ),
-
                 6.szH,
-
                 Text(
                   S.of(context).personalDocumentsSubtitle,
                   style: getTextStyle().greyColor.w400.s14.copyWith(height: 1.4),
                 ),
-
                 20.szH,
-
-                // SECTION 1: Professional Data Fields
                 ProfessionalDataSection(
                   professionController: _professionController,
                   specializationController: _specializationController,
@@ -319,28 +357,19 @@ class _JobSeekerProfileSetupViewState extends State<_JobSeekerProfileSetupView> 
                 ),
 
                 20.szH,
-
-                // SECTION 2: Required Documents Uploads
                 const DocumentsUploadSection(),
-
                 12.szH,
-
-                // SECTION 3: Intro Video Upload Card
                 const IntroVideoUploadCard(),
-
                 20.szH,
-
-                // SECTION 4: Profile Completion Gauge & Action
                 ProfileCompletionGaugeCard(
                   completionPercentage: _calculateCompletionPercentage(state),
                   isLoading: state.submitStatus == SubmissionStatus.loading,
                   isEnabled: _isProfileComplete(state),
+                  isUploading: state.isAnyDocumentUploading,
                   onContinuePressed: () => _onContinuePressed(context),
                 ),
 
                 16.szH,
-
-                // SECTION 5: Important Information Notice Card
                 const ImportantInfoNoticeCard(),
 
                 16.szH,

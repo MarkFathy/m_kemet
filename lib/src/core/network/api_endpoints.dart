@@ -25,15 +25,19 @@ class ApiEndpoints {
 
   // Candidate endpoints
   static const String candidateMyDocument = '/api/candidate/my-document';
-  static const String candidateUpdateDocument = '/api/candidate/update-document';
+  static const String candidateUpdateDocument =
+      '/api/candidate/update-document';
   static const String candidateDocuments = '/api/candidate/documents';
   static const String candidateVideo = '/api/candidate/video';
-  static String candidateDocumentFile(int id) => '/api/candidate/documents/$id/file';
+  static String candidateDocumentFile(int id) =>
+      '/api/candidate/documents/$id/file';
 
   // Company / Job Seekers endpoints
   static const String jobSeekers = '/api/job-seekers';
   static const String bookmarks = '/api/bookmarks';
   static String jobSeekerDetail(dynamic id) => '/api/job-seekers/$id';
-  static String jobSeekerContactRequest(dynamic id) => '/api/job-seekers/$id/contact-request';
-  static String jobSeekerBookmark(dynamic id) => '/api/job-seekers/$id/bookmark';
+  static String jobSeekerContactRequest(dynamic id) =>
+      '/api/job-seekers/$id/contact-request';
+  static String jobSeekerBookmark(dynamic id) =>
+      '/api/job-seekers/$id/bookmark';
 }

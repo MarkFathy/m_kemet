@@ -160,26 +160,12 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
     emit(state.copyWith(selectedTargetCountries: updated));
   }
 
-  void addLanguage(String language) {
-    final trimmed = language.trim();
-    if (trimmed.isEmpty || state.languages.contains(trimmed)) return;
-    emit(state.copyWith(languages: [...state.languages, trimmed]));
+  void setLanguages(List<String> languages) {
+    emit(state.copyWith(languages: languages));
   }
 
-  void removeLanguage(String language) {
-    final updated = List<String>.from(state.languages)..remove(language);
-    emit(state.copyWith(languages: updated));
-  }
-
-  void addSkill(String skill) {
-    final trimmed = skill.trim();
-    if (trimmed.isEmpty || state.skills.contains(trimmed)) return;
-    emit(state.copyWith(skills: [...state.skills, trimmed]));
-  }
-
-  void removeSkill(String skill) {
-    final updated = List<String>.from(state.skills)..remove(skill);
-    emit(state.copyWith(skills: updated));
+  void setSkills(List<String> skills) {
+    emit(state.copyWith(skills: skills));
   }
 
   Future<void> uploadPersonalPhoto(File file) async {
@@ -197,6 +183,7 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
       (failure) {
         emit(state.copyWith(
           personalPhotoStatus: DocumentUploadStatus.failure,
+          uploadedPersonalPhoto: () => null,
           errorMessage: () => failure.serverException.message,
         ));
       },
@@ -225,6 +212,7 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
       (failure) {
         emit(state.copyWith(
           nationalIdStatus: DocumentUploadStatus.failure,
+          uploadedNationalId: () => null,
           errorMessage: () => failure.serverException.message,
         ));
       },
@@ -253,6 +241,7 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
       (failure) {
         emit(state.copyWith(
           passportStatus: DocumentUploadStatus.failure,
+          uploadedPassport: () => null,
           errorMessage: () => failure.serverException.message,
         ));
       },
@@ -281,6 +270,7 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
       (failure) {
         emit(state.copyWith(
           cvStatus: DocumentUploadStatus.failure,
+          uploadedCv: () => null,
           errorMessage: () => failure.serverException.message,
         ));
       },
@@ -297,24 +287,33 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
   Future<void> uploadIntroVideo(File file, {int? durationSeconds}) async {
     emit(state.copyWith(
       videoStatus: DocumentUploadStatus.uploading,
+      videoUploadProgress: 0.0,
       localVideoPath: () => file.path,
     ));
 
     final result = await uploadCandidateVideoUseCase(
       videoFile: file,
       durationSeconds: durationSeconds,
+      onSendProgress: (sent, total) {
+        if (total > 0) {
+          emit(state.copyWith(videoUploadProgress: sent / total));
+        }
+      },
     );
 
     result.fold(
       (failure) {
         emit(state.copyWith(
           videoStatus: DocumentUploadStatus.failure,
+          videoUploadProgress: 0.0,
+          uploadedVideo: () => null,
           errorMessage: () => failure.serverException.message,
         ));
       },
       (doc) {
         emit(state.copyWith(
           videoStatus: DocumentUploadStatus.success,
+          videoUploadProgress: 1.0,
           uploadedVideo: () => doc,
           successMessage: () => 'تم رفع الفيديو التعريفي بنجاح',
         ));
@@ -332,6 +331,13 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
     num? expectedSalary,
     String? summary,
   }) async {
+    if (state.isAnyDocumentUploading) {
+      emit(state.copyWith(
+        errorMessage: () => 'يرجى الانتظار حتى يكتمل رفع الملفات والوسائط بالكامل',
+      ));
+      return;
+    }
+
     emit(state.copyWith(
       submitStatus: SubmissionStatus.loading,
       errorMessage: () => null,

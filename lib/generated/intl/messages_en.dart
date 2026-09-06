@@ -212,6 +212,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "goToHome": MessageLookupByLibrary.simpleMessage(
       "Proceed to Home Dashboard",
     ),
+    "hostUnreachableSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Could not reach the server. Check your connection or try later",
+    ),
+    "hostUnreachableTitle": MessageLookupByLibrary.simpleMessage(
+      "Server Unavailable",
+    ),
     "idCardTitle": MessageLookupByLibrary.simpleMessage(
       "National ID / Passport Card",
     ),
@@ -220,6 +226,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "importantInfoTitle": MessageLookupByLibrary.simpleMessage(
       "Important Information",
+    ),
+    "internetRestoredMsg": MessageLookupByLibrary.simpleMessage(
+      "Internet connection restored",
     ),
     "introVideoDesc": MessageLookupByLibrary.simpleMessage(
       "Short 1-minute intro video presenting your name, profession, experience, and destination countries",
@@ -279,9 +288,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "Search Candidates",
     ),
     "navSettings": MessageLookupByLibrary.simpleMessage("Settings"),
+    "networkErrorSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Check your internet connection or try again later",
+    ),
+    "networkErrorTitle": MessageLookupByLibrary.simpleMessage(
+      "Connection Failed",
+    ),
     "next": MessageLookupByLibrary.simpleMessage("Next"),
     "noCountryFound": MessageLookupByLibrary.simpleMessage(
       "No matching countries found",
+    ),
+    "noInternetBannerMsg": MessageLookupByLibrary.simpleMessage(
+      "No internet connection",
+    ),
+    "noInternetRetry": MessageLookupByLibrary.simpleMessage("Retry"),
+    "noInternetSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Check your internet or Wi-Fi connection and try again",
+    ),
+    "noInternetTitle": MessageLookupByLibrary.simpleMessage(
+      "No Internet Connection",
     ),
     "noNotificationsSub": MessageLookupByLibrary.simpleMessage(
       "You will receive instant alerts when the admin approves your contact request.",
@@ -449,6 +474,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "resubmitRequest": MessageLookupByLibrary.simpleMessage(
       "Edit & Resubmit Application",
     ),
+    "retryAction": MessageLookupByLibrary.simpleMessage("Try Again"),
     "savedCandidatesEmptySub": MessageLookupByLibrary.simpleMessage(
       "Bookmark top candidates during search to easily access them later.",
     ),
@@ -472,6 +498,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "sendResetCode": MessageLookupByLibrary.simpleMessage(
       "Send Verification Code",
     ),
+    "serverErrorSubtitle": MessageLookupByLibrary.simpleMessage(
+      "An unexpected error occurred. Please try again later",
+    ),
+    "serverErrorTitle": MessageLookupByLibrary.simpleMessage("Server Error"),
     "signInNow": MessageLookupByLibrary.simpleMessage("Sign In"),
     "signUpNow": MessageLookupByLibrary.simpleMessage("Sign Up"),
     "skillsHint": MessageLookupByLibrary.simpleMessage("Enter key skills"),
@@ -511,6 +541,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "termsScreenTitle": MessageLookupByLibrary.simpleMessage(
       "Terms & Conditions",
     ),
+    "timeoutErrorSubtitle": MessageLookupByLibrary.simpleMessage(
+      "The request took too long. Please try again",
+    ),
+    "timeoutErrorTitle": MessageLookupByLibrary.simpleMessage(
+      "Connection Timed Out",
+    ),
     "travelPossibilityHint": MessageLookupByLibrary.simpleMessage(
       "Select travel availability",
     ),
@@ -521,6 +557,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "uploadAction": MessageLookupByLibrary.simpleMessage("Upload"),
     "uploadedBadge": MessageLookupByLibrary.simpleMessage("Uploaded"),
     "uploadingBadge": MessageLookupByLibrary.simpleMessage("Uploading"),
+    "uploadingMediaHint": MessageLookupByLibrary.simpleMessage(
+      "Uploading files and media, please wait...",
+    ),
     "userTypeMismatchCandidateError": MessageLookupByLibrary.simpleMessage(
       "This account is registered as a job seeker. Please log in as a job seeker.",
     ),

@@ -54,6 +54,7 @@ class _LoginViewState extends State<_LoginView> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isCheckingProfile = false;
 
   @override
   void dispose() {
@@ -63,6 +64,7 @@ class _LoginViewState extends State<_LoginView> {
   }
 
   void _onLoginPressed() {
+    if (_isCheckingProfile) return;
     if (_formKey.currentState?.validate() ?? false) {
       context.read<AuthCubit>().login(
             email: _emailController.text.trim(),
@@ -84,11 +86,15 @@ class _LoginViewState extends State<_LoginView> {
             state.status == AuthStatus.authenticated) {
           final targetType = state.userType ?? widget.userType;
           if (targetType == UserType.jobSeeker) {
+            setState(() => _isCheckingProfile = true);
             SessionManager.checkAndSyncJobSeekerProfileCompleted().then((isCompleted) {
-              if (isCompleted) {
-                Go.offAllNamed(NamedRoutes.jobSeekerMain);
-              } else {
-                Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
+              if (mounted) {
+                setState(() => _isCheckingProfile = false);
+                if (isCompleted) {
+                  Go.offAllNamed(NamedRoutes.jobSeekerMain);
+                } else {
+                  Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
+                }
               }
             });
           } else {
@@ -185,8 +191,8 @@ class _LoginViewState extends State<_LoginView> {
                   // Login Action Button
                   CustomButton(
                     text: S.of(context).loginAction,
-                    isLoading: isLoading,
-                    onPressed: _onLoginPressed,
+                    isLoading: isLoading || _isCheckingProfile,
+                    onPressed: _isCheckingProfile ? null : _onLoginPressed,
                     backgroundColor: AppColors.darkNavy,
                     textStyle: getTextStyle().whiteColor.w700.s18,
                   ),

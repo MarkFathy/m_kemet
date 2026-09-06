@@ -86,9 +86,7 @@ class IntroVideoUploadCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<JobSeekerProfileCubit, JobSeekerProfileState>(
       builder: (context, state) {
-        final isUploaded = state.uploadedVideo != null ||
-            state.videoStatus == DocumentUploadStatus.success ||
-            (state.profileDetail?.videoUrl != null && state.profileDetail!.videoUrl!.isNotEmpty);
+        final isUploaded = state.isVideoUploaded;
         final isUploading = state.videoStatus == DocumentUploadStatus.uploading;
         final fileName = state.uploadedVideo?.originalName ??
             state.localVideoPath?.split(Platform.pathSeparator).last;
@@ -200,19 +198,27 @@ class IntroVideoUploadCard extends StatelessWidget {
               14.szH,
 
               if (isUploading)
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                    child: Column(
-                      children: [
-                        const CircularProgressIndicator(),
-                        8.szH,
-                        Text(
-                          'جاري رفع الفيديو التعريفي...',
-                          style: getTextStyle().darkNavy.w500.s13,
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.h),
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(6.r),
+                        child: LinearProgressIndicator(
+                          value: state.videoUploadProgress > 0 ? state.videoUploadProgress : null,
+                          minHeight: 8.h,
+                          backgroundColor: AppColors.borderGrey,
+                          valueColor: const AlwaysStoppedAnimation<Color>(AppColors.darkNavy),
                         ),
-                      ],
-                    ),
+                      ),
+                      8.szH,
+                      Text(
+                        state.videoUploadProgress > 0
+                            ? 'جاري رفع الفيديو التعريفي... (${(state.videoUploadProgress * 100).toInt()}%)'
+                            : 'جاري رفع الفيديو التعريفي...',
+                        style: getTextStyle().darkNavy.w500.s13,
+                      ),
+                    ],
                   ),
                 )
               else if (isUploaded)

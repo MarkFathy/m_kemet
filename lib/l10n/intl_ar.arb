@@ -236,5 +236,20 @@
   "confirmCrop": "تأكيد وقص",
   "seconds5Forward": "+5 ثواني",
   "seconds5Backward": "-5 ثواني",
-  "completeAllFieldsHint": "يرجى استكمال جميع البيانات والمستندات والفيديو لتفعيل المتابعة"
+  "completeAllFieldsHint": "يرجى استكمال جميع البيانات والمستندات والفيديو لتفعيل المتابعة",
+  "uploadingMediaHint": "جارٍ رفع الملفات والوسائط، يرجى الانتظار...",
+  "noInternetTitle": "لا يوجد اتصال بالإنترنت",
+  "noInternetSubtitle": "تحقق من اتصالك بالإنترنت أو شبكة Wi-Fi وحاول مرة أخرى",
+  "noInternetRetry": "إعادة المحاولة",
+  "noInternetBannerMsg": "انقطع الاتصال بالإنترنت",
+  "internetRestoredMsg": "تم استعادة الاتصال بالإنترنت",
+  "networkErrorTitle": "تعذّر الاتصال بالخادم",
+  "networkErrorSubtitle": "تأكد من اتصالك بالإنترنت أو حاول مرة أخرى لاحقاً",
+  "hostUnreachableTitle": "الخادم غير متاح",
+  "hostUnreachableSubtitle": "تعذّر الوصول إلى الخادم. تحقق من اتصالك أو حاول لاحقاً",
+  "timeoutErrorTitle": "انتهت مهلة الاتصال",
+  "timeoutErrorSubtitle": "استغرق الطلب وقتاً أطول من المتوقع. حاول مرة أخرى",
+  "serverErrorTitle": "خطأ في الخادم",
+  "serverErrorSubtitle": "حدث خطأ غير متوقع. يرجى المحاولة لاحقاً",
+  "retryAction": "حاول مرة أخرى"
 }

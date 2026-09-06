@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,7 +59,11 @@ class ImagePreviewModal extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: Icon(Icons.close_rounded, color: Colors.white, size: 22.sp),
+                  icon: Icon(
+                    Icons.close_rounded,
+                    color: Colors.white,
+                    size: 22.sp,
+                  ),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),
@@ -77,10 +82,16 @@ class ImagePreviewModal extends StatelessWidget {
                       Navigator.pop(context);
                       onChange!();
                     },
-                    icon: Icon(Icons.refresh_rounded, color: AppColors.skyBlue, size: 18.sp),
+                    icon: Icon(
+                      Icons.refresh_rounded,
+                      color: AppColors.skyBlue,
+                      size: 18.sp,
+                    ),
                     label: Text(
                       'تغيير',
-                      style: getTextStyle().w600.s14.copyWith(color: AppColors.skyBlue),
+                      style: getTextStyle().w600.s14.copyWith(
+                        color: AppColors.skyBlue,
+                      ),
                     ),
                   ),
               ],
@@ -94,16 +105,18 @@ class ImagePreviewModal extends StatelessWidget {
               constraints: BoxConstraints(maxHeight: 0.65.sh),
               decoration: BoxDecoration(
                 color: const Color(0xFF0F172A),
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(16.r)),
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(16.r),
+                ),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(16.r)),
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(16.r),
+                ),
                 child: InteractiveViewer(
                   minScale: 0.8,
                   maxScale: 4.0,
-                  child: Center(
-                    child: _buildImage(),
-                  ),
+                  child: Center(child: _buildImage()),
                 ),
               ),
             ),
@@ -115,10 +128,7 @@ class ImagePreviewModal extends StatelessWidget {
 
   Widget _buildImage() {
     if (file != null && file!.existsSync()) {
-      return Image.file(
-        file!,
-        fit: BoxFit.contain,
-      );
+      return Image.file(file!, fit: BoxFit.contain);
     }
     if (imageUrl != null && imageUrl!.isNotEmpty) {
       return CachedNetworkImage(
@@ -130,7 +140,11 @@ class ImagePreviewModal extends StatelessWidget {
         errorWidget: (context, url, error) => Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.broken_image_rounded, color: Colors.white54, size: 48.sp),
+            Icon(
+              Icons.broken_image_rounded,
+              color: Colors.white54,
+              size: 48.sp,
+            ),
             SizedBox(height: 8.h),
             Text(
               'تعذر تحميل الصورة',

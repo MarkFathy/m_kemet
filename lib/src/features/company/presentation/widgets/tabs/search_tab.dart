@@ -104,17 +104,22 @@ class SearchTab extends StatelessWidget {
                 }
 
                 if (state.status == CandidateSearchStatus.failure) {
-                  return EmptyState(
-                    icon: Icons.error_outline_rounded,
-                    title: state.errorMessage ?? 'حدث خطأ أثناء تحميل البيانات',
-                    action: ElevatedButton.icon(
-                      onPressed: () => context.read<CandidateSearchCubit>().fetchCandidates(),
-                      icon: const Icon(Icons.refresh_rounded),
-                      label: Text(S.of(context).continueAction),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.darkNavy,
-                        foregroundColor: AppColors.whiteColor,
-                      ),
+                  final isNetworkError = state.errorMessage == null ||
+                      state.errorMessage!.contains('host lookup') ||
+                      state.errorMessage!.contains('connection') ||
+                      state.errorMessage!.contains('SocketException') ||
+                      state.errorMessage!.contains('اتصال') ||
+                      state.errorMessage!.contains('انترنت') ||
+                      state.errorMessage!.contains('Internet');
+
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => context.read<CandidateSearchCubit>().fetchCandidates(),
+                    child: EmptyState(
+                      icon: isNetworkError ? Icons.wifi_off_rounded : Icons.error_outline_rounded,
+                      title: isNetworkError
+                          ? S.of(context).noInternetTitle
+                          : (state.errorMessage ?? S.of(context).noInternetTitle),
                     ),
                   );
                 }

@@ -6,6 +6,7 @@ import 'package:m_kemet/src/core/app_cubit/app_cubit.dart';
 import 'package:m_kemet/src/core/app_cubit/app_state.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
+import 'package:m_kemet/src/core/network/connectivity_cubit.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/floating_bottom_nav_bar.dart';
@@ -14,6 +15,7 @@ import 'package:m_kemet/src/features/bookmarks/presentation/cubit/bookmarks_cubi
 import 'package:m_kemet/src/features/bookmarks/presentation/cubit/bookmarks_state.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
 import 'package:m_kemet/src/features/company/presentation/cubit/candidate_search_cubit.dart';
+import 'package:m_kemet/src/features/company/presentation/cubit/candidate_search_state.dart';
 import 'package:m_kemet/src/features/company/presentation/widgets/tabs/profile_tab.dart';
 import 'package:m_kemet/src/features/company/presentation/widgets/tabs/requests_tab.dart';
 import 'package:m_kemet/src/features/company/presentation/widgets/tabs/search_tab.dart';
@@ -73,6 +75,20 @@ class _CompanyMainScreenState extends State<CompanyMainScreen> {
             listenWhen: (previous, current) => previous.locale != current.locale,
             listener: (context, state) {
               // Immediately refresh candidates and saved lists when language changes
+              context.read<CandidateSearchCubit>().fetchCandidates();
+              context.read<BookmarksCubit>().fetchBookmarks();
+            },
+          ),
+          BlocListener<ConnectivityCubit, ConnectivityState>(
+            listenWhen: (previous, current) =>
+                current.isConnected &&
+                (previous.isDisconnected ||
+                    previous.status == ConnectivityStatus.unknown ||
+                    current.reconnectCounter > previous.reconnectCounter ||
+                    context.read<CandidateSearchCubit>().state.status ==
+                        CandidateSearchStatus.failure),
+            listener: (context, state) {
+              // Automatically reload screen data when internet connection is restored
               context.read<CandidateSearchCubit>().fetchCandidates();
               context.read<BookmarksCubit>().fetchBookmarks();
             },

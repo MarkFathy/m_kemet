@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:m_kemet/src/core/error/exceptions.dart';
 
@@ -6,6 +7,17 @@ import 'package:m_kemet/src/core/error/exceptions.dart';
 class ErrorInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
+    // ── Step 1: Check for connection-level errors FIRST ─────────────────────
+    // These happen when the device has WiFi but the server is unreachable
+    // (DNS failure, SSL error, connection refused) — connectivity_plus cannot
+    // detect these since the device still has a network interface.
+    final networkException = _toNetworkException(err);
+    if (networkException != null) {
+      handler.reject(err.copyWith(error: networkException), true);
+      return;
+    }
+
+    // ── Step 2: Map HTTP status codes to typed exceptions ───────────────────
     final response = err.response;
     final statusCode = response?.statusCode ?? 0;
     final message = _extractMessage(response) ?? err.message ?? 'Unknown error';
@@ -19,10 +31,36 @@ class ErrorInterceptor extends Interceptor {
       _ => FetchDataException(statusCode, message, validationIssues),
     };
 
-    handler.reject(
-      err.copyWith(error: appException),
-      true,
-    );
+    handler.reject(err.copyWith(error: appException), true);
+  }
+
+  /// Converts connection-level [DioException]s to [NetworkException].
+  /// Returns null for HTTP errors that should follow the normal path.
+  NetworkException? _toNetworkException(DioException err) {
+    switch (err.type) {
+      case DioExceptionType.connectionError:
+        // SocketException "Failed host lookup" falls here
+        final inner = err.error;
+        final isHostLookup =
+            inner is SocketException &&
+            (inner.message.toLowerCase().contains('failed host lookup') ||
+                inner.message.toLowerCase().contains('network is unreachable') ||
+                inner.message.toLowerCase().contains('connection refused') ||
+                inner.osError?.errorCode == 7 || // ENOENT / host not found
+                inner.osError?.errorCode == 101); // ENETUNREACH
+        return NetworkException(
+          isHostLookup ? NetworkErrorKind.hostUnreachable : NetworkErrorKind.unknown,
+          message: 'لا يوجد اتصال بالإنترنت',
+        );
+      case DioExceptionType.connectionTimeout:
+        return const NetworkException(NetworkErrorKind.connectionTimeout, message: 'انتهت مهلة الاتصال');
+      case DioExceptionType.receiveTimeout:
+        return const NetworkException(NetworkErrorKind.receiveTimeout, message: 'انتهت مهلة استجابة الخادم');
+      case DioExceptionType.sendTimeout:
+        return const NetworkException(NetworkErrorKind.sendTimeout, message: 'انتهت مهلة إرسال البيانات');
+      default:
+        return null;
+    }
   }
 
   /// Extracts a human-readable message from the response body.

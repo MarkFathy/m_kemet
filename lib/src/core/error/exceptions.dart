@@ -32,14 +32,35 @@ class ConflictException extends ServerException {
   const ConflictException(super.statusCode, super.message, super.validationIssues, {super.success});
 }
 
-// class InternalServerErrorException extends ServerException {
-//   InternalServerErrorException([statusCode, success, message])
-//     : super(500, false, LocaleKeys.checkInternet, [], null);
-// }
+/// Thrown when the device has a network interface but cannot reach the server.
+/// Causes: Failed host lookup (DNS), connection refused, SSL error, send/receive timeout.
+/// NOTE: This is different from [NoInternetException] — the user may have WiFi
+/// but the server is unreachable.
+class NetworkException extends ServerException {
+  final NetworkErrorKind kind;
 
-// class NoInternetConnectionException extends ServerException {
-//   NoInternetConnectionException([statusCode, success, message])
-//     : super(500, false, LocaleKeys.checkInternet.tr(), [], null);
-// }
+  const NetworkException(
+    this.kind, {
+    String message = '',
+  }) : super(0, message, null);
+
+  @override
+  List<Object?> get props => [statusCode, kind, message];
+}
+
+enum NetworkErrorKind {
+  /// Device has no network interface at all.
+  noInternet,
+  /// DNS / host-lookup failure ("Failed host lookup").
+  hostUnreachable,
+  /// Request timed out before connecting.
+  connectionTimeout,
+  /// Request was sent but response never arrived in time.
+  receiveTimeout,
+  /// Data timed out while sending (large upload).
+  sendTimeout,
+  /// Any other lower-level connection error.
+  unknown,
+}
 
 class CacheException implements Exception {}
