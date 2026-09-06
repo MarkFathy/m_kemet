@@ -66,21 +66,40 @@ class CandidateRepositoryImpl implements CandidateRepository {
     try {
       final result = await remoteDataSource.getSavedCandidates();
       return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e));
+    } on DioException catch (e) {
+      return Left(
+        ServerFailure(
+          ServerException(
+            e.response?.statusCode ?? 500,
+            e.response?.data?['message']?.toString() ?? e.message ?? 'Failed to load saved candidates',
+            null,
+          ),
+        ),
+      );
     } catch (e) {
-      try {
-        final local = await localDataSource.getSavedCandidates();
-        return Right(local);
-      } catch (_) {
-        return Left(ServerFailure(ServerException(500, e.toString(), null)));
-      }
+      return Left(ServerFailure(ServerException(500, e.toString(), null)));
     }
   }
 
   @override
   Future<Either<Failure, CandidateEntity>> toggleSaveCandidate(String candidateId) async {
     try {
-      final result = await localDataSource.toggleSaveCandidate(candidateId);
+      final result = await remoteDataSource.toggleSaveCandidate(candidateId);
       return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e));
+    } on DioException catch (e) {
+      return Left(
+        ServerFailure(
+          ServerException(
+            e.response?.statusCode ?? 500,
+            e.response?.data?['message']?.toString() ?? e.message ?? 'Failed to update bookmark',
+            null,
+          ),
+        ),
+      );
     } catch (e) {
       return Left(ServerFailure(ServerException(500, e.toString(), null)));
     }

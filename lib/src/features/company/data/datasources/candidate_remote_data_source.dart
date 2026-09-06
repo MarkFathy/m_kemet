@@ -46,6 +46,9 @@ class CandidateRemoteDataSourceImpl implements CandidateRemoteDataSource {
                     model.copyWith(
                       experienceYears: detail.experienceYears,
                       bio: detail.bio.isNotEmpty ? detail.bio : model.bio,
+                      currentCountry: detail.currentCountry.isNotEmpty ? detail.currentCountry : model.currentCountry,
+                      targetCountries: detail.targetCountries.isNotEmpty ? detail.targetCountries : model.targetCountries,
+                      profession: detail.profession.isNotEmpty ? detail.profession : model.profession,
                     ),
                   );
                 }
@@ -101,6 +104,9 @@ class CandidateRemoteDataSourceImpl implements CandidateRemoteDataSource {
                     model.copyWith(
                       experienceYears: detail.experienceYears,
                       bio: detail.bio.isNotEmpty ? detail.bio : model.bio,
+                      currentCountry: detail.currentCountry.isNotEmpty ? detail.currentCountry : model.currentCountry,
+                      targetCountries: detail.targetCountries.isNotEmpty ? detail.targetCountries : model.targetCountries,
+                      profession: detail.profession.isNotEmpty ? detail.profession : model.profession,
                       isSaved: true,
                     ),
                   );

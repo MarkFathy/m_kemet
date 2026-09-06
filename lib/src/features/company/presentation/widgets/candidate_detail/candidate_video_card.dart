@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:m_kemet/generated/l10n.dart';
@@ -6,6 +5,7 @@ import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
+import 'package:m_kemet/src/core/widgets/image_widgets/video_thumbnail_preview.dart';
 import 'package:m_kemet/src/core/widgets/video_preview_modal.dart';
 
 class CandidateVideoCard extends StatelessWidget {
@@ -99,36 +99,12 @@ class CandidateVideoCard extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    // Video thumbnail if available, or dark cinematic video background
-                    if (thumbnailUrl != null && thumbnailUrl!.isNotEmpty)
-                      CachedNetworkImage(
-                        imageUrl: thumbnailUrl!,
-                        fit: BoxFit.cover,
-                        color: Colors.black.withValues(alpha: 0.45),
-                        colorBlendMode: BlendMode.darken,
-                        placeholder: (context, url) => Container(color: AppColors.midnightNavy),
-                        errorWidget: (context, url, error) => Container(color: AppColors.midnightNavy),
-                      )
-                    else
-                      Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.midnightNavy,
-                              AppColors.darkNavy,
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                        ),
-                        child: Center(
-                          child: Icon(
-                            Icons.video_library_rounded,
-                            size: 64.sp,
-                            color: AppColors.whiteColor.withValues(alpha: 0.08),
-                          ),
-                        ),
-                      ),
+                    // Video thumbnail: displays video first frame if no thumbnailUrl
+                    VideoThumbnailPreview(
+                      thumbnailUrl: thumbnailUrl,
+                      videoUrl: videoUrl,
+                      fit: BoxFit.cover,
+                    ),
 
                     // Play Button & "Click to watch" banner
                     Center(

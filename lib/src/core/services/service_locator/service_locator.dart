@@ -10,6 +10,7 @@ import 'package:m_kemet/src/features/auth/data/datasources/auth_local_data_sourc
 import 'package:m_kemet/src/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:m_kemet/src/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:m_kemet/src/features/auth/domain/repositories/auth_repository.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/delete_account_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/forgot_password_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/get_countries_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/get_genders_usecase.dart';
@@ -150,6 +151,7 @@ Future<void> setupServiceLocator() async {
     ..registerLazySingleton(() => ResetPasswordUseCase(sl()))
     ..registerLazySingleton(() => GetProfileUseCase(sl()))
     ..registerLazySingleton(() => LogoutUseCase(sl()))
+    ..registerLazySingleton(() => DeleteAccountUseCase(sl()))
     ..registerLazySingleton(() => GetGendersUseCase(sl()))
     ..registerLazySingleton(() => GetCountriesUseCase(sl()))
     ..registerFactory(
@@ -164,6 +166,7 @@ Future<void> setupServiceLocator() async {
         resetPasswordUseCase: sl(),
         getProfileUseCase: sl(),
         logoutUseCase: sl(),
+        deleteAccountUseCase: sl(),
         getGendersUseCase: sl(),
         getCountriesUseCase: sl(),
       ),
@@ -220,9 +223,8 @@ Future<void> setupServiceLocator() async {
       (candidate, _) => CandidateDetailCubit(
         getCandidateDetailUseCase: sl(),
         sendContactRequestUseCase: sl(),
-        toggleBookmarkUseCase: sl(),
         initialCandidate: candidate,
-        initialIsBookmarked: sl<BookmarksCubit>().state.isBookmarked(candidate.id),
+        initialIsBookmarked: sl<BookmarksCubit>().state.bookmarkedIds.contains(candidate.id),
       ),
     )
 

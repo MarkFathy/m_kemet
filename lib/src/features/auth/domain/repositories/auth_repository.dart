@@ -64,6 +64,8 @@ abstract class AuthRepository {
 
   Future<Either<Failure, void>> logoutAll();
 
+  Future<Either<Failure, void>> deleteAccount();
+
   Future<Either<Failure, List<GenderEntity>>> fetchGenders();
 
   Future<Either<Failure, List<CountryEntity>>> fetchCountries();

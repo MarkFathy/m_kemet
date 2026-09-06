@@ -54,12 +54,10 @@ class UserTypeOptionCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            // Top Row: Selection Radio Button & Icon Container
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Radio Selection Circle
                 Container(
                   width: 20.w,
                   height: 20.h,
@@ -83,7 +81,6 @@ class UserTypeOptionCard extends StatelessWidget {
                   child: Center(child: iconWidget),
                 ),
 
-                // Spacer for visual symmetry
                 20.szW,
               ],
             ),

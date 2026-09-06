@@ -84,7 +84,7 @@ class _LoginViewState extends State<_LoginView> {
             state.status == AuthStatus.authenticated) {
           final targetType = state.userType ?? widget.userType;
           if (targetType == UserType.jobSeeker) {
-            SessionManager.isJobSeekerProfileCompleted().then((isCompleted) {
+            SessionManager.checkAndSyncJobSeekerProfileCompleted().then((isCompleted) {
               if (isCompleted) {
                 Go.offAllNamed(NamedRoutes.jobSeekerMain);
               } else {

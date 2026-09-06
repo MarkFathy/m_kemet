@@ -45,6 +45,7 @@ class _JobSeekerMainScreenState extends State<JobSeekerMainScreen> {
       child: AppScaffold(
         safeTop: true,
         safeBottom: true,
+        extendBody: true,
         backgroundColor: AppColors.pageBg,
         body: IndexedStack(
           index: _currentIndex,

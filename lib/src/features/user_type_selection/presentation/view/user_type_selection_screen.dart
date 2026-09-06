@@ -7,6 +7,7 @@ import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
+import 'package:m_kemet/src/core/navigation/constants/imports_constants.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
@@ -22,7 +23,7 @@ class UserTypeSelectionScreen extends StatelessWidget {
   const UserTypeSelectionScreen({super.key});
 
   void _navigateToAuth(UserType? selectedType) {
-    Go.offAllNamed(NamedRoutes.login, arguments: selectedType);
+    Go.offAllNamed(NamedRoutes.login, arguments: selectedType,transition: TransitionType.slide);
   }
 
   @override

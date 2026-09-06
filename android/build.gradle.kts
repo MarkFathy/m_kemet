@@ -20,7 +20,14 @@ subprojects {
         val android = extensions.findByName("android")
         if (android is com.android.build.gradle.BaseExtension) {
             android.compileSdkVersion(36)
+            android.compileOptions {
+                sourceCompatibility = JavaVersion.VERSION_17
+                targetCompatibility = JavaVersion.VERSION_17
+            }
         }
+    }
+    tasks.withType<JavaCompile>().configureEach {
+        options.compilerArgs.add("-Xlint:-options")
     }
 }
 

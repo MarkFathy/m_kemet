@@ -1,7 +1,6 @@
 export 'app_loading_overlay.dart';
 export 'app_progress_indicator.dart';
 export 'app_scaffold.dart';
-export 'app_upgrader.dart';
 export 'buttons/custom_back_button.dart';
 export 'buttons/custom_button.dart';
 export 'buttons/language_switcher_button.dart';
@@ -19,3 +18,5 @@ export 'text_fields/custom_pin_input.dart';
 export 'text_fields/default_text_field.dart';
 export 'user_avatar_picker.dart';
 export 'user_profile_avatar.dart';
+export 'shimmer/shimmer.dart';
+export 'image_widgets/video_thumbnail_preview.dart';

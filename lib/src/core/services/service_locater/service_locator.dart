@@ -116,9 +116,8 @@ Future<void> setupServiceLocator() async {
       (candidate, _) => CandidateDetailCubit(
         getCandidateDetailUseCase: sl(),
         sendContactRequestUseCase: sl(),
-        toggleBookmarkUseCase: sl(),
         initialCandidate: candidate,
-        initialIsBookmarked: sl<BookmarksCubit>().state.isBookmarked(candidate.id),
+        initialIsBookmarked: sl<BookmarksCubit>().state.bookmarkedIds.contains(candidate.id),
       ),
     )
 

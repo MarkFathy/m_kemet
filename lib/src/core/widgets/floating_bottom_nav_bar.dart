@@ -41,26 +41,28 @@ class FloatingBottomNavBar extends StatelessWidget {
     final unselectedIconColor = isDarkTheme ? const Color(0xFF94A3B8) : AppColors.greyColor;
 
     return Container(
-      margin: EdgeInsets.only(left: 12.w, right: 12.w, bottom: 12.h),
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(28.r),
-        boxShadow: [
-          BoxShadow(
-            color: isDarkTheme
-                ? AppColors.darkNavy.withValues(alpha: 0.3)
-                : Colors.black.withValues(alpha: 0.08),
-            blurRadius: 18.r,
-            offset: const Offset(0, 6),
+      color: Colors.transparent,
+      child: Container(
+        margin: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(28.r),
+          boxShadow: [
+            BoxShadow(
+              color: isDarkTheme
+                  ? AppColors.darkNavy.withValues(alpha: 0.3)
+                  : Colors.black.withValues(alpha: 0.08),
+              blurRadius: 18.r,
+              offset: const Offset(0, 6),
+            ),
+          ],
+          border: Border.all(
+            color: borderColor,
+            width: 1.w,
           ),
-        ],
-        border: Border.all(
-          color: borderColor,
-          width: 1.w,
         ),
-      ),
-      child: Row(
+        child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: List.generate(items.length, (index) {
           final isSelected = currentIndex == index;
@@ -109,6 +111,7 @@ class FloatingBottomNavBar extends StatelessWidget {
           );
         }),
       ),
-    );
-  }
+    ),
+  );
+}
 }

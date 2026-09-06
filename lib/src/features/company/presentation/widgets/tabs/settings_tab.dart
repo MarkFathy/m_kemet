@@ -13,15 +13,13 @@ import 'package:m_kemet/src/core/widgets/confirm_action_bottom_sheet.dart';
 import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
 import 'package:m_kemet/src/core/widgets/setting_action_tile.dart';
 
-class SettingsTab extends StatefulWidget {
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
+
+class SettingsTab extends StatelessWidget {
   const SettingsTab({super.key});
 
-  @override
-  State<SettingsTab> createState() => _SettingsTabState();
-}
-
-class _SettingsTabState extends State<SettingsTab> {
-  bool _notificationsEnabled = true;
+  static final ValueNotifier<bool> _notificationsNotifier = ValueNotifier<bool>(true);
 
   void _showLogoutWarningSheet(BuildContext context) {
     showConfirmActionBottomSheet(
@@ -34,7 +32,22 @@ class _SettingsTabState extends State<SettingsTab> {
       cancelLabel: S.of(context).cancel,
       confirmLabel: S.of(context).logout,
       confirmColor: AppColors.darkNavy,
-      onConfirm: () => Go.offAllNamed(NamedRoutes.userTypeSelection),
+      onConfirm: () async {
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => const Center(
+            child: CircularProgressIndicator(color: AppColors.darkNavy),
+          ),
+        );
+
+        await context.read<AuthCubit>().logout();
+
+        if (context.mounted) {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+        Go.offAllNamed(NamedRoutes.userTypeSelection);
+      },
     );
   }
 
@@ -49,7 +62,36 @@ class _SettingsTabState extends State<SettingsTab> {
       cancelLabel: S.of(context).cancel,
       confirmLabel: S.of(context).confirmDeleteAction,
       confirmColor: AppColors.errorRed,
-      onConfirm: () => Go.offAllNamed(NamedRoutes.userTypeSelection),
+      onConfirm: () async {
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => const Center(
+            child: CircularProgressIndicator(color: AppColors.errorRed),
+          ),
+        );
+
+        final success = await context.read<AuthCubit>().deleteAccount();
+
+        if (context.mounted) {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+
+        if (success) {
+          if (context.mounted) {
+            CustomSnackBar.showSuccess(
+              context,
+              message: S.of(context).deleteAccountSuccess,
+            );
+          }
+          Go.offAllNamed(NamedRoutes.userTypeSelection);
+        } else {
+          if (context.mounted) {
+            final error = context.read<AuthCubit>().state.errorMessage ?? S.of(context).deleteAccountFailure;
+            CustomSnackBar.showError(context, message: error);
+          }
+        }
+      },
     );
   }
 
@@ -104,19 +146,24 @@ class _SettingsTabState extends State<SettingsTab> {
                     ],
                   ),
                 ),
-                Switch(
-                  value: _notificationsEnabled,
-                  activeTrackColor: AppColors.switchActiveTrack,
-                  activeThumbColor: AppColors.darkNavy,
-                  inactiveTrackColor: AppColors.switchInactiveTrack,
-                  inactiveThumbColor: AppColors.switchInactiveThumb,
-                  onChanged: (val) {
-                    setState(() => _notificationsEnabled = val);
-                    CustomSnackBar.showSuccess(
-                      context,
-                      message: val
-                          ? S.of(context).notificationsEnabledMsg
-                          : S.of(context).notificationsDisabledMsg,
+                ValueListenableBuilder<bool>(
+                  valueListenable: _notificationsNotifier,
+                  builder: (context, notificationsEnabled, _) {
+                    return Switch(
+                      value: notificationsEnabled,
+                      activeTrackColor: AppColors.switchActiveTrack,
+                      activeThumbColor: AppColors.darkNavy,
+                      inactiveTrackColor: AppColors.switchInactiveTrack,
+                      inactiveThumbColor: AppColors.switchInactiveThumb,
+                      onChanged: (val) {
+                        _notificationsNotifier.value = val;
+                        CustomSnackBar.showSuccess(
+                          context,
+                          message: val
+                              ? S.of(context).notificationsEnabledMsg
+                              : S.of(context).notificationsDisabledMsg,
+                        );
+                      },
                     );
                   },
                 ),
@@ -215,7 +262,7 @@ class _SettingsTabState extends State<SettingsTab> {
             onTap: () => _showDeleteAccountWarningSheet(context),
           ),
 
-          20.szH,
+          100.szH,
         ],
       ),
     );

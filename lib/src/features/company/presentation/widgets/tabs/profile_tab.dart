@@ -35,7 +35,7 @@ class ProfileTab extends StatelessWidget {
           // Detailed Info Card
           const CompanyProfileDetailsCard(),
 
-          24.szH,
+          100.szH,
         ],
       ),
     );

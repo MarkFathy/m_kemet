@@ -417,6 +417,32 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Either<Failure, void>> deleteAccount() async {
+    try {
+      await remoteDataSource.deleteAccount();
+      await localDataSource.clearAuthSession();
+      return const Right(null);
+    } on ServerException catch (e) {
+      await localDataSource.clearAuthSession();
+      return Left(ServerFailure(e));
+    } on DioException catch (e) {
+      await localDataSource.clearAuthSession();
+      return Left(
+        ServerFailure(
+          ServerException(
+            e.response?.statusCode ?? 500,
+            e.response?.data?['message']?.toString() ?? e.message ?? 'Delete account failed',
+            null,
+          ),
+        ),
+      );
+    } catch (e) {
+      await localDataSource.clearAuthSession();
+      return const Right(null);
+    }
+  }
+
+  @override
   Future<Either<Failure, List<GenderEntity>>> fetchGenders() async {
     try {
       final result = await remoteDataSource.fetchGenders();

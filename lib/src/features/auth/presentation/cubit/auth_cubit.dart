@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/delete_account_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/forgot_password_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/get_countries_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/get_genders_usecase.dart';
@@ -27,6 +28,7 @@ class AuthCubit extends Cubit<AuthState> {
   final ResetPasswordUseCase resetPasswordUseCase;
   final GetProfileUseCase getProfileUseCase;
   final LogoutUseCase logoutUseCase;
+  final DeleteAccountUseCase deleteAccountUseCase;
   final GetGendersUseCase getGendersUseCase;
   final GetCountriesUseCase getCountriesUseCase;
 
@@ -41,6 +43,7 @@ class AuthCubit extends Cubit<AuthState> {
     required this.resetPasswordUseCase,
     required this.getProfileUseCase,
     required this.logoutUseCase,
+    required this.deleteAccountUseCase,
     required this.getGendersUseCase,
     required this.getCountriesUseCase,
   }) : super(const AuthState());
@@ -320,6 +323,26 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(status: AuthStatus.loading));
     await logoutUseCase();
     emit(const AuthState(status: AuthStatus.unauthenticated));
+  }
+
+  Future<bool> deleteAccount() async {
+    emit(state.copyWith(status: AuthStatus.loading));
+    final result = await deleteAccountUseCase();
+    return result.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            status: AuthStatus.error,
+            errorMessage: failure.serverException.message,
+          ),
+        );
+        return false;
+      },
+      (_) {
+        emit(const AuthState(status: AuthStatus.unauthenticated));
+        return true;
+      },
+    );
   }
 
   Future<void> fetchGenders() async {

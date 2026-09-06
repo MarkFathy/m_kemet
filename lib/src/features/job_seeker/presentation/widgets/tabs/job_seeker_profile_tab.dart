@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m_kemet/src/config/res/app_sizes.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
-import 'package:m_kemet/src/core/widgets/app_progress_indicator.dart';
+import 'package:m_kemet/src/core/widgets/shimmer/shimmer.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_state.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_cubit.dart';
@@ -23,7 +23,7 @@ class JobSeekerProfileTab extends StatelessWidget {
         final user = authState.user;
 
         if (authState.status == AuthStatus.loading && user == null) {
-          return const AppProgressIndicator.centered();
+          return const CandidateProfileShimmer(showHeader: true);
         }
 
         final name = user?.name ?? '';
@@ -100,7 +100,7 @@ class JobSeekerProfileTab extends StatelessWidget {
                       gender: gender,
                     ),
 
-                    24.szH,
+                    100.szH,
                   ],
                 ),
               ),

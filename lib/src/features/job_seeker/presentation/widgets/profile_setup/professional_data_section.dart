@@ -15,7 +15,7 @@ import 'package:m_kemet/src/features/job_seeker/domain/entities/qualification_en
 import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_cubit.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_state.dart';
 
-class ProfessionalDataSection extends StatefulWidget {
+class ProfessionalDataSection extends StatelessWidget {
   final TextEditingController professionController;
   final TextEditingController specializationController;
   final TextEditingController experienceYearsController;
@@ -39,12 +39,7 @@ class ProfessionalDataSection extends StatefulWidget {
     required this.targetCountriesController,
   });
 
-  @override
-  State<ProfessionalDataSection> createState() => _ProfessionalDataSectionState();
-}
-
-class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
-  final List<String> _expectedSalaryOptions = [
+  static const List<String> _expectedSalaryOptions = [
     '1000 - 2000',
     '2000 - 4000',
     '4000 - 7000',
@@ -52,7 +47,7 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
     '12000+',
   ];
 
-  void _showProfessionBottomSheet(List<ProfessionEntity> professions) {
+  void _showProfessionBottomSheet(BuildContext context, List<ProfessionEntity> professions) {
     final cubit = context.read<JobSeekerProfileCubit>();
 
     showModalBottomSheet(
@@ -117,7 +112,7 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
                               separatorBuilder: (context, index) => const Divider(height: 1),
                               itemBuilder: (context, index) {
                                 final item = filtered[index];
-                                final isSelected = widget.professionController.text == item.name;
+                                final isSelected = professionController.text == item.name;
                                 return ListTile(
                                   title: Text(
                                     item.name,
@@ -129,9 +124,7 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
                                       ? const Icon(Icons.check_circle_rounded, color: AppColors.darkNavy)
                                       : null,
                                   onTap: () {
-                                    setState(() {
-                                      widget.professionController.text = item.name;
-                                    });
+                                    professionController.text = item.name;
                                     if (item.id != 0) {
                                       cubit.selectProfession(item);
                                     }
@@ -151,7 +144,7 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
     );
   }
 
-  void _showExperienceLevelBottomSheet(List<ExperienceLevelEntity> levels) {
+  void _showExperienceLevelBottomSheet(BuildContext context, List<ExperienceLevelEntity> levels) {
     final cubit = context.read<JobSeekerProfileCubit>();
 
     showModalBottomSheet(
@@ -197,7 +190,7 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
                   separatorBuilder: (context, index) => const Divider(height: 1),
                   itemBuilder: (context, index) {
                     final item = options[index];
-                    final isSelected = widget.experienceYearsController.text == item.name;
+                    final isSelected = experienceYearsController.text == item.name;
                     return ListTile(
                       title: Text(
                         item.name,
@@ -209,9 +202,7 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
                           ? const Icon(Icons.check_circle_rounded, color: AppColors.darkNavy)
                           : null,
                       onTap: () {
-                        setState(() {
-                          widget.experienceYearsController.text = item.name;
-                        });
+                        experienceYearsController.text = item.name;
                         cubit.selectExperienceLevel(item);
                         Navigator.pop(modalCtx);
                       },
@@ -226,7 +217,7 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
     );
   }
 
-  void _showQualificationBottomSheet(List<QualificationEntity> qualifications) {
+  void _showQualificationBottomSheet(BuildContext context, List<QualificationEntity> qualifications) {
     final cubit = context.read<JobSeekerProfileCubit>();
 
     showModalBottomSheet(
@@ -273,7 +264,7 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
                         separatorBuilder: (context, index) => const Divider(height: 1),
                         itemBuilder: (context, index) {
                           final item = qualifications[index];
-                          final isSelected = widget.qualificationController.text == item.name;
+                          final isSelected = qualificationController.text == item.name;
                           return ListTile(
                             title: Text(
                               item.name,
@@ -285,9 +276,7 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
                                 ? const Icon(Icons.check_circle_rounded, color: AppColors.darkNavy)
                                 : null,
                             onTap: () {
-                              setState(() {
-                                widget.qualificationController.text = item.name;
-                              });
+                              qualificationController.text = item.name;
                               cubit.selectQualification(item);
                               Navigator.pop(modalCtx);
                             },
@@ -302,7 +291,8 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
     );
   }
 
-  void _showSingleSelectionBottomSheet({
+  void _showSingleSelectionBottomSheet(
+    BuildContext context, {
     required String title,
     required List<String> options,
     required TextEditingController controller,
@@ -354,9 +344,7 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
                           ? const Icon(Icons.check_circle_rounded, color: AppColors.darkNavy)
                           : null,
                       onTap: () {
-                        setState(() {
-                          controller.text = item;
-                        });
+                        controller.text = item;
                         onSelected?.call(item);
                         Navigator.pop(modalCtx);
                       },
@@ -371,7 +359,7 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
     );
   }
 
-  void _showTargetCountriesBottomSheet(List<CountryEntity> countries) {
+  void _showTargetCountriesBottomSheet(BuildContext context, List<CountryEntity> countries) {
     final cubit = context.read<JobSeekerProfileCubit>();
 
     showModalBottomSheet(
@@ -471,10 +459,8 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
                       text: S.of(modalCtx).continueAction,
                       onPressed: () {
                         final updatedSelected = cubit.state.selectedTargetCountries;
-                        setState(() {
-                          widget.targetCountriesController.text =
-                              updatedSelected.map((c) => c.name).join(', ');
-                        });
+                        targetCountriesController.text =
+                            updatedSelected.map((c) => c.name).join(', ');
                         Navigator.pop(modalCtx);
                       },
                       backgroundColor: AppColors.darkNavy,
@@ -526,11 +512,11 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
 
               // 1. Profession
               DefaultTextField(
-                controller: widget.professionController,
+                controller: professionController,
                 label: S.of(context).professionLabel,
                 hint: S.of(context).professionHint,
                 readOnly: true,
-                onTap: () => _showProfessionBottomSheet(state.professions),
+                onTap: () => _showProfessionBottomSheet(context, state.professions),
                 prefixIcon: Icon(Icons.engineering_outlined, color: AppColors.greyColor, size: 20.sp),
                 suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkNavy, size: 24.sp),
               ),
@@ -539,7 +525,7 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
 
               // 2. Specialization
               DefaultTextField(
-                controller: widget.specializationController,
+                controller: specializationController,
                 label: S.of(context).specializationLabel,
                 hint: S.of(context).specializationHint,
                 prefixIcon: Icon(Icons.category_outlined, color: AppColors.greyColor, size: 20.sp),
@@ -549,11 +535,11 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
 
               // 3. Experience Level / Years
               DefaultTextField(
-                controller: widget.experienceYearsController,
+                controller: experienceYearsController,
                 label: S.of(context).experienceYearsLabel,
                 hint: S.of(context).experienceYearsHint,
                 readOnly: true,
-                onTap: () => _showExperienceLevelBottomSheet(state.experienceLevels),
+                onTap: () => _showExperienceLevelBottomSheet(context, state.experienceLevels),
                 prefixIcon: Icon(Icons.history_toggle_off_rounded, color: AppColors.greyColor, size: 20.sp),
                 suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkNavy, size: 24.sp),
               ),
@@ -562,11 +548,11 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
 
               // 4. Qualification
               DefaultTextField(
-                controller: widget.qualificationController,
+                controller: qualificationController,
                 label: S.of(context).qualificationLabel,
                 hint: S.of(context).qualificationHint,
                 readOnly: true,
-                onTap: () => _showQualificationBottomSheet(state.qualifications),
+                onTap: () => _showQualificationBottomSheet(context, state.qualifications),
                 prefixIcon: Icon(Icons.school_outlined, color: AppColors.greyColor, size: 20.sp),
                 suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkNavy, size: 24.sp),
               ),
@@ -575,7 +561,7 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
 
               // 5. Languages
               DefaultTextField(
-                controller: widget.languagesController,
+                controller: languagesController,
                 label: S.of(context).languagesLabel,
                 hint: 'مثال: العربية، الإنجليزية',
                 prefixIcon: Icon(Icons.translate_rounded, color: AppColors.greyColor, size: 20.sp),
@@ -594,7 +580,7 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
 
               // 6. Skills
               DefaultTextField(
-                controller: widget.skillsController,
+                controller: skillsController,
                 label: S.of(context).skillsLabel,
                 hint: 'مثال: قيادة، كهرباء، صيانة',
                 prefixIcon: Icon(Icons.star_outline_rounded, color: AppColors.greyColor, size: 20.sp),
@@ -613,7 +599,7 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
 
               // 7. Previous Experience / Summary
               DefaultTextField(
-                controller: widget.previousExperienceController,
+                controller: previousExperienceController,
                 label: S.of(context).previousExperienceLabel,
                 hint: S.of(context).previousExperienceHint,
                 inputType: TextInputType.multiline,
@@ -625,14 +611,15 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
 
               // 8. Expected Salary
               DefaultTextField(
-                controller: widget.expectedSalaryController,
+                controller: expectedSalaryController,
                 label: S.of(context).expectedSalaryLabel,
                 hint: S.of(context).expectedSalaryHint,
                 readOnly: true,
                 onTap: () => _showSingleSelectionBottomSheet(
+                  context,
                   title: S.of(context).expectedSalaryLabel,
                   options: _expectedSalaryOptions,
-                  controller: widget.expectedSalaryController,
+                  controller: expectedSalaryController,
                 ),
                 prefixIcon: Icon(Icons.attach_money_rounded, color: AppColors.greyColor, size: 20.sp),
                 suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkNavy, size: 24.sp),
@@ -642,11 +629,11 @@ class _ProfessionalDataSectionState extends State<ProfessionalDataSection> {
 
               // Target Countries
               DefaultTextField(
-                controller: widget.targetCountriesController,
+                controller: targetCountriesController,
                 label: S.of(context).targetCountriesLabel,
                 hint: S.of(context).targetCountriesHint,
                 readOnly: true,
-                onTap: () => _showTargetCountriesBottomSheet(state.countries),
+                onTap: () => _showTargetCountriesBottomSheet(context, state.countries),
                 prefixIcon: Icon(Icons.travel_explore_rounded, color: AppColors.greyColor, size: 20.sp),
                 suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkNavy, size: 24.sp),
               ),

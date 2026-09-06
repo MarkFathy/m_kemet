@@ -127,8 +127,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "deleteAccountConfirmTitle": MessageLookupByLibrary.simpleMessage(
       "Warning: Delete Company Account",
     ),
+    "deleteAccountFailure": MessageLookupByLibrary.simpleMessage(
+      "Failed to delete account",
+    ),
     "deleteAccountSub": MessageLookupByLibrary.simpleMessage(
       "Permanently delete company account and data",
+    ),
+    "deleteAccountSuccess": MessageLookupByLibrary.simpleMessage(
+      "Account deleted successfully",
     ),
     "documentsCompletion": MessageLookupByLibrary.simpleMessage(
       "Profile Completion",
@@ -222,6 +228,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Intro Video (Important)",
     ),
     "invalidPassport": MessageLookupByLibrary.simpleMessage("Invalid Passport"),
+    "jobSeekerDeleteAccountConfirmMsg": MessageLookupByLibrary.simpleMessage(
+      "Deleting your account will permanently remove your application, uploaded documents, video, and profile data. This action cannot be undone.",
+    ),
+    "jobSeekerDeleteAccountConfirmTitle": MessageLookupByLibrary.simpleMessage(
+      "Warning: Delete Candidate Account",
+    ),
+    "jobSeekerDeleteAccountSub": MessageLookupByLibrary.simpleMessage(
+      "Permanently delete your account and all uploaded data",
+    ),
     "jobSeekerDesc": MessageLookupByLibrary.simpleMessage(
       "Explore distinguished job opportunities in tourism & travel and build your professional profile.",
     ),
@@ -230,6 +245,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "jobSeekerFeature2": MessageLookupByLibrary.simpleMessage(
       "Create and update your CV",
+    ),
+    "jobSeekerLogoutConfirmMsg": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to log out of your account?",
     ),
     "jobSeekerTitle": MessageLookupByLibrary.simpleMessage("Job Seeker"),
     "languagesHint": MessageLookupByLibrary.simpleMessage("Select languages"),

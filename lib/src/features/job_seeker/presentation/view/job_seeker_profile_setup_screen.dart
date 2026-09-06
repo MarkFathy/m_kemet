@@ -9,6 +9,7 @@ import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
+import 'package:m_kemet/src/core/services/session_manager.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/buttons/language_switcher_button.dart';
 import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
@@ -242,6 +243,11 @@ class _JobSeekerProfileSetupViewState extends State<_JobSeekerProfileSetupView> 
       listener: (context, state) {
         if (state.profileFetchStatus == LoadingStatus.success) {
           _populateProfileData(state);
+          if (state.profileDetail?.hasCompletedOrSubmittedProfile == true) {
+            SessionManager.setJobSeekerProfileCompleted(true);
+            Go.offAllNamed(NamedRoutes.jobSeekerMain);
+            return;
+          }
         }
 
         if (state.submitStatus == SubmissionStatus.success) {

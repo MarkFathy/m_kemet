@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:m_kemet/src/core/error/exceptions.dart';
 import 'package:m_kemet/src/core/network/api_endpoints.dart';
 import 'package:m_kemet/src/core/network/dio_client.dart';
@@ -36,18 +37,11 @@ abstract class AuthRemoteDataSource {
     required String code,
   });
 
-  Future<String> resendOtp({
-    required String email,
-  });
+  Future<String> resendOtp({required String email});
 
-  Future<String> forgotPassword({
-    required String email,
-  });
+  Future<String> forgotPassword({required String email});
 
-  Future<String> verifyResetOtp({
-    required String email,
-    required String code,
-  });
+  Future<String> verifyResetOtp({required String email, required String code});
 
   Future<String> resetPassword({
     required String email,
@@ -62,9 +56,9 @@ abstract class AuthRemoteDataSource {
 
   Future<void> logoutAll();
 
-  Future<AuthResponseModel> refreshToken({
-    required String refreshToken,
-  });
+  Future<void> deleteAccount();
+
+  Future<AuthResponseModel> refreshToken({required String refreshToken});
 
   Future<List<GenderModel>> fetchGenders();
 
@@ -140,10 +134,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }) async {
     final response = await _dioClient.dio.post(
       ApiEndpoints.login,
-      data: {
-        'email': email,
-        'password': password,
-      },
+      data: {'email': email, 'password': password},
     );
 
     if (response.data is Map<String, dynamic>) {
@@ -159,10 +150,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }) async {
     final response = await _dioClient.dio.post(
       ApiEndpoints.verifyOtp,
-      data: {
-        'email': email,
-        'code': code,
-      },
+      data: {'email': email, 'code': code},
     );
 
     if (response.data is Map<String, dynamic>) {
@@ -172,14 +160,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<String> resendOtp({
-    required String email,
-  }) async {
+  Future<String> resendOtp({required String email}) async {
     final response = await _dioClient.dio.post(
       ApiEndpoints.resendOtp,
-      data: {
-        'email': email,
-      },
+      data: {'email': email},
     );
 
     if (response.data is Map<String, dynamic>) {
@@ -189,14 +173,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<String> forgotPassword({
-    required String email,
-  }) async {
+  Future<String> forgotPassword({required String email}) async {
     final response = await _dioClient.dio.post(
       ApiEndpoints.forgotPassword,
-      data: {
-        'email': email,
-      },
+      data: {'email': email},
     );
 
     if (response.data is Map<String, dynamic>) {
@@ -212,14 +192,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }) async {
     final response = await _dioClient.dio.post(
       ApiEndpoints.verifyResetOtp,
-      data: {
-        'email': email,
-        'code': code,
-      },
+      data: {'email': email, 'code': code},
     );
 
     if (response.data is Map<String, dynamic>) {
-      return response.data['message']?.toString() ?? 'Code verified successfully';
+      return response.data['message']?.toString() ??
+          'Code verified successfully';
     }
     return 'Code verified successfully';
   }
@@ -242,16 +220,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     );
 
     if (response.data is Map<String, dynamic>) {
-      return response.data['message']?.toString() ?? 'Password reset successfully';
+      return response.data['message']?.toString() ??
+          'Password reset successfully';
     }
     return 'Password reset successfully';
   }
 
   @override
   Future<UserModel> getProfile() async {
-    final response = await _dioClient.dio.get(
-      ApiEndpoints.profile,
-    );
+    final response = await _dioClient.dio.get(ApiEndpoints.profile);
 
     if (response.data is Map<String, dynamic>) {
       final map = response.data as Map<String, dynamic>;
@@ -284,14 +261,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<AuthResponseModel> refreshToken({
-    required String refreshToken,
-  }) async {
+  Future<void> deleteAccount() async {
+    try {
+      await _dioClient.dio.post(ApiEndpoints.deleteAccount);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 405) {
+        await _dioClient.dio.delete(ApiEndpoints.deleteAccount);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  @override
+  Future<AuthResponseModel> refreshToken({required String refreshToken}) async {
     final response = await _dioClient.dio.post(
       ApiEndpoints.refreshToken,
-      data: {
-        'refresh_token': refreshToken,
-      },
+      data: {'refresh_token': refreshToken},
     );
 
     if (response.data is Map<String, dynamic>) {

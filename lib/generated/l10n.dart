@@ -1885,6 +1885,66 @@ class S {
     );
   }
 
+  /// `تم حذف الحساب بنجاح`
+  String get deleteAccountSuccess {
+    return Intl.message(
+      'تم حذف الحساب بنجاح',
+      name: 'deleteAccountSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فشل حذف الحساب`
+  String get deleteAccountFailure {
+    return Intl.message(
+      'فشل حذف الحساب',
+      name: 'deleteAccountFailure',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `هل أنت متأكد من رغبتك في تسجيل الخروج من حسابك؟`
+  String get jobSeekerLogoutConfirmMsg {
+    return Intl.message(
+      'هل أنت متأكد من رغبتك في تسجيل الخروج من حسابك؟',
+      name: 'jobSeekerLogoutConfirmMsg',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تنبيه: حذف حساب الباحث عن عمل`
+  String get jobSeekerDeleteAccountConfirmTitle {
+    return Intl.message(
+      'تنبيه: حذف حساب الباحث عن عمل',
+      name: 'jobSeekerDeleteAccountConfirmTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سيؤدي حذف الحساب إلى إلغاء طلبك وكافة بيانات السيرة الذاتية والمستندات نهائياً ولا يمكن استعادتها.`
+  String get jobSeekerDeleteAccountConfirmMsg {
+    return Intl.message(
+      'سيؤدي حذف الحساب إلى إلغاء طلبك وكافة بيانات السيرة الذاتية والمستندات نهائياً ولا يمكن استعادتها.',
+      name: 'jobSeekerDeleteAccountConfirmMsg',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حذف حسابك نهائياً وكافة البيانات المرفوعة`
+  String get jobSeekerDeleteAccountSub {
+    return Intl.message(
+      'حذف حسابك نهائياً وكافة البيانات المرفوعة',
+      name: 'jobSeekerDeleteAccountSub',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `حذف الحساب نهائياً`
   String get confirmDeleteAction {
     return Intl.message(

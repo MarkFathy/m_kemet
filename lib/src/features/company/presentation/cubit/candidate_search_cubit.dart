@@ -64,7 +64,10 @@ class CandidateSearchCubit extends Cubit<CandidateSearchState> {
     await fetchCandidates();
   }
 
-  Future<void> toggleSaveCandidate(String candidateId) async {
+  /// Local-only optimistic update — no API call.
+  /// The actual API call is made exclusively by BookmarksCubit to avoid
+  /// making the same network request twice.
+  void toggleSaveCandidate(String candidateId) {
     // 1. Identify current state & candidate
     final inCandidates = state.candidates.any((c) => c.id == candidateId);
     final inSaved = state.savedCandidatesList.any((c) => c.id == candidateId);
@@ -97,53 +100,28 @@ class CandidateSearchCubit extends Cubit<CandidateSearchState> {
       candidates: optimisticCandidates,
       savedCandidatesList: optimisticSaved,
     ));
+  }
 
-    // 3. Network call in background
-    final result = await toggleSaveCandidateUseCase(candidateId);
-    result.fold(
-      (failure) {
-        // Revert on failure
-        final revertedCandidates = state.candidates.map((c) {
-          return c.id == candidateId ? c.copyWith(isSaved: previousSaved) : c;
-        }).toList();
+  /// Called externally (e.g., by a BlocListener on BookmarksCubit) to sync
+  /// the local search list state after an API rollback.
+  void syncCandidateBookmark(String candidateId, {required bool isSaved}) {
+    final updatedCandidates = state.candidates.map((c) {
+      return c.id == candidateId ? c.copyWith(isSaved: isSaved) : c;
+    }).toList();
 
-        final revertedSaved = List<CandidateEntity>.from(state.savedCandidatesList);
-        if (previousSaved) {
-          if (targetCandidate != null && !revertedSaved.any((c) => c.id == candidateId)) {
-            revertedSaved.add(targetCandidate.copyWith(isSaved: true));
-          }
-        } else {
-          revertedSaved.removeWhere((c) => c.id == candidateId);
-        }
+    final updatedSaved = List<CandidateEntity>.from(state.savedCandidatesList);
+    if (isSaved) {
+      final candidate = state.candidates.where((c) => c.id == candidateId).firstOrNull;
+      if (candidate != null && !updatedSaved.any((c) => c.id == candidateId)) {
+        updatedSaved.add(candidate.copyWith(isSaved: true));
+      }
+    } else {
+      updatedSaved.removeWhere((c) => c.id == candidateId);
+    }
 
-        emit(state.copyWith(
-          candidates: revertedCandidates,
-          savedCandidatesList: revertedSaved,
-          errorMessage: failure.serverException.message,
-        ));
-      },
-      (updatedCandidate) {
-        // Confirm with server response if server returned different status
-        if (updatedCandidate.isSaved != newSaved) {
-          final confirmedCandidates = state.candidates.map((c) {
-            return c.id == candidateId ? c.copyWith(isSaved: updatedCandidate.isSaved) : c;
-          }).toList();
-
-          final confirmedSaved = List<CandidateEntity>.from(state.savedCandidatesList);
-          if (updatedCandidate.isSaved) {
-            if (targetCandidate != null && !confirmedSaved.any((c) => c.id == candidateId)) {
-              confirmedSaved.add(targetCandidate.copyWith(isSaved: true));
-            }
-          } else {
-            confirmedSaved.removeWhere((c) => c.id == candidateId);
-          }
-
-          emit(state.copyWith(
-            candidates: confirmedCandidates,
-            savedCandidatesList: confirmedSaved,
-          ));
-        }
-      },
-    );
+    emit(state.copyWith(
+      candidates: updatedCandidates,
+      savedCandidatesList: updatedSaved,
+    ));
   }
 }

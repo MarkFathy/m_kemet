@@ -38,12 +38,18 @@ class CandidateModel extends CandidateEntity {
     // Current country
     String countryName = '';
     String countryFlag = '';
-    if (json['current_country'] is Map<String, dynamic>) {
-      final cMap = json['current_country'] as Map<String, dynamic>;
+    if (json['current_country'] is Map) {
+      final cMap = json['current_country'] as Map;
+      countryName = cMap['name']?.toString() ?? '';
+      countryFlag = cMap['flag']?.toString() ?? '';
+    } else if (json['country'] is Map) {
+      final cMap = json['country'] as Map;
       countryName = cMap['name']?.toString() ?? '';
       countryFlag = cMap['flag']?.toString() ?? '';
     } else if (json['current_country_name'] != null) {
       countryName = json['current_country_name'].toString();
+    } else if (json['country_name'] != null) {
+      countryName = json['country_name'].toString();
     } else if (json['currentCountry'] != null) {
       countryName = json['currentCountry'].toString();
     }
@@ -70,8 +76,8 @@ class CandidateModel extends CandidateEntity {
     // Passport status
     bool hasPassport = false;
     String passportLabel = '';
-    if (json['passport_status'] is Map<String, dynamic>) {
-      final pMap = json['passport_status'] as Map<String, dynamic>;
+    if (json['passport_status'] is Map) {
+      final pMap = json['passport_status'] as Map;
       hasPassport = pMap['has_passport'] == true || pMap['is_approved'] == true;
       passportLabel = pMap['status_label']?.toString() ?? '';
     }
@@ -135,9 +141,10 @@ class CandidateModel extends CandidateEntity {
     // Video
     String videoUrl = '';
     String videoThumbnail = '';
-    if (json['video'] is Map<String, dynamic>) {
-      videoUrl = json['video']['video_url']?.toString() ?? '';
-      videoThumbnail = json['video']['thumbnail_url']?.toString() ?? '';
+    if (json['video'] is Map) {
+      final vMap = json['video'] as Map;
+      videoUrl = vMap['video_url']?.toString() ?? '';
+      videoThumbnail = vMap['thumbnail_url']?.toString() ?? '';
     } else if (json['video_url'] != null) {
       videoUrl = json['video_url'].toString();
     } else if (json['introVideoUrl'] != null) {

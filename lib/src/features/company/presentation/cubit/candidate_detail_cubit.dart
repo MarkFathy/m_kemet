@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:m_kemet/src/features/bookmarks/domain/usecases/toggle_bookmark_usecase.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
 import 'package:m_kemet/src/features/company/domain/usecases/get_candidate_detail_usecase.dart';
 import 'package:m_kemet/src/features/company/domain/usecases/send_contact_request_usecase.dart';
@@ -8,12 +7,10 @@ import 'package:m_kemet/src/features/company/presentation/cubit/candidate_detail
 class CandidateDetailCubit extends Cubit<CandidateDetailState> {
   final GetCandidateDetailUseCase getCandidateDetailUseCase;
   final SendContactRequestUseCase sendContactRequestUseCase;
-  final ToggleBookmarkUseCase toggleBookmarkUseCase;
 
   CandidateDetailCubit({
     required this.getCandidateDetailUseCase,
     required this.sendContactRequestUseCase,
-    required this.toggleBookmarkUseCase,
     required CandidateEntity initialCandidate,
     bool initialIsBookmarked = false,
   }) : super(CandidateDetailState(
@@ -73,32 +70,23 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
     );
   }
 
-  Future<void> toggleBookmark() async {
-    final currentSaved = state.candidate.isSaved;
-    final newSaved = !currentSaved;
-
-    // Instant optimistic update — zero lag
+  /// Called by the UI to do a local-only optimistic toggle.
+  /// The actual API call is made exclusively by BookmarksCubit to avoid
+  /// making the same network request twice.
+  void toggleBookmarkLocally() {
+    final newSaved = !state.candidate.isSaved;
     emit(state.copyWith(
       candidate: state.candidate.copyWith(isSaved: newSaved),
     ));
+  }
 
-    final result = await toggleBookmarkUseCase(state.candidate.id);
-    result.fold(
-      (failure) {
-        // Revert on failure
-        emit(state.copyWith(
-          candidate: state.candidate.copyWith(isSaved: currentSaved),
-          errorMessage: failure.serverException.message,
-        ));
-      },
-      (serverCandidate) {
-        // If server returns a different state, sync to it
-        if (serverCandidate.isSaved != newSaved) {
-          emit(state.copyWith(
-            candidate: state.candidate.copyWith(isSaved: serverCandidate.isSaved),
-          ));
-        }
-      },
-    );
+  /// Called by the UI to sync this cubit's bookmark state from BookmarksCubit
+  /// (e.g., after a rollback due to an API failure).
+  void syncBookmarkState({required bool isSaved}) {
+    if (state.candidate.isSaved != isSaved) {
+      emit(state.copyWith(
+        candidate: state.candidate.copyWith(isSaved: isSaved),
+      ));
+    }
   }
 }

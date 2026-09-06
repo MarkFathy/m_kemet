@@ -51,7 +51,6 @@ dependencies:
   image_picker: ^1.2.2
   file_picker: ^8.1.7
   pinput: ^6.0.2
-  upgrader: ^13.6.0
   awesome_notifications: ^0.12.1
   dio: ^5.7.0
   pretty_dio_logger: ^1.4.0

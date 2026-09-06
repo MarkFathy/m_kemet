@@ -56,13 +56,13 @@ class AppTheme {
       ),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: AppColors.scaffoldBackgroundColor,
+      backgroundColor: Colors.transparent,
       selectedItemColor: AppColors.skyBlue,
       unselectedItemColor: AppColors.greyColor,
       showSelectedLabels: true,
       showUnselectedLabels: true,
       type: BottomNavigationBarType.fixed,
-      elevation: 10,
+      elevation: 0,
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(

@@ -7,9 +7,10 @@ import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
-import 'package:m_kemet/src/core/widgets/app_progress_indicator.dart';
 import 'package:m_kemet/src/core/widgets/empty_state.dart';
+import 'package:m_kemet/src/core/widgets/shimmer/shimmer.dart';
 import 'package:m_kemet/src/core/widgets/text_fields/default_text_field.dart';
+import 'package:m_kemet/src/features/bookmarks/presentation/cubit/bookmarks_cubit.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
 import 'package:m_kemet/src/features/company/presentation/cubit/candidate_search_cubit.dart';
 import 'package:m_kemet/src/features/company/presentation/cubit/candidate_search_state.dart';
@@ -99,10 +100,7 @@ class SearchTab extends StatelessWidget {
             BlocBuilder<CandidateSearchCubit, CandidateSearchState>(
               builder: (context, state) {
                 if (state.status == CandidateSearchStatus.loading) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 40.h),
-                    child: const AppProgressIndicator.centered(),
-                  );
+                  return const CandidateListShimmer();
                 }
 
                 if (state.status == CandidateSearchStatus.failure) {
@@ -129,7 +127,7 @@ class SearchTab extends StatelessWidget {
                   );
                 }
 
-              return ListView.separated(
+                  return ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: state.candidates.length,
@@ -140,6 +138,9 @@ class SearchTab extends StatelessWidget {
                     candidate: candidate,
                     onViewProfile: () => onViewCandidateProfile(candidate),
                     onToggleSave: () {
+                      // BookmarksCubit: single source of truth for API call + global saved list
+                      context.read<BookmarksCubit>().toggleBookmark(candidate);
+                      // CandidateSearchCubit: keeps the local search list card in sync instantly
                       context.read<CandidateSearchCubit>().toggleSaveCandidate(candidate.id);
                     },
                   );
@@ -148,7 +149,7 @@ class SearchTab extends StatelessWidget {
             },
           ),
 
-            20.szH,
+            100.szH,
           ],
         ),
       ),

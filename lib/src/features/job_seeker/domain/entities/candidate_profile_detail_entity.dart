@@ -24,6 +24,7 @@ class CandidateProfileDetailEntity extends Equatable {
   final List<CandidateDocumentEntity> documents;
   final String? videoUrl;
   final num? completionPercentage;
+  final String? status;
 
   const CandidateProfileDetailEntity({
     this.id,
@@ -48,7 +49,19 @@ class CandidateProfileDetailEntity extends Equatable {
     this.documents = const [],
     this.videoUrl,
     this.completionPercentage,
+    this.status,
   });
+
+  /// Returns true if the candidate has previously filled the form or submitted documents/requests.
+  bool get hasCompletedOrSubmittedProfile {
+    if (documents.isNotEmpty) return true;
+    if (videoUrl != null && videoUrl!.trim().isNotEmpty) return true;
+    if (professionId != null || qualificationId != null) return true;
+    if (subSpecialization != null && subSpecialization!.trim().isNotEmpty) return true;
+    if ((completionPercentage ?? 0) > 0) return true;
+    if (status != null && status!.trim().isNotEmpty) return true;
+    return false;
+  }
 
   @override
   List<Object?> get props => [
@@ -74,5 +87,6 @@ class CandidateProfileDetailEntity extends Equatable {
         documents,
         videoUrl,
         completionPercentage,
+        status,
       ];
 }

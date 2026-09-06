@@ -54,11 +54,11 @@ class IntroVideoUploadCard extends StatelessWidget {
         final file = File(picked.path);
 
         // Validate video duration: maximum 1 minute (60 seconds)
+        VideoPlayerController? videoController;
         try {
-          final videoController = VideoPlayerController.file(file);
+          videoController = VideoPlayerController.file(file);
           await videoController.initialize();
           final duration = videoController.value.duration;
-          await videoController.dispose();
 
           if (duration.inSeconds > 60) {
             if (context.mounted) {
@@ -71,6 +71,8 @@ class IntroVideoUploadCard extends StatelessWidget {
           }
         } catch (_) {
           // If video controller initialization fails, allow flow to proceed
+        } finally {
+          await videoController?.dispose();
         }
 
         if (context.mounted) {

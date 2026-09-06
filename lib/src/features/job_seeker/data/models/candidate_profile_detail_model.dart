@@ -25,6 +25,7 @@ class CandidateProfileDetailModel extends CandidateProfileDetailEntity {
     super.documents,
     super.videoUrl,
     super.completionPercentage,
+    super.status,
   });
 
   factory CandidateProfileDetailModel.fromJson(Map<String, dynamic> json) {
@@ -112,6 +113,9 @@ class CandidateProfileDetailModel extends CandidateProfileDetailEntity {
       completionPercentage: candidateData['completion_percentage'] is num
           ? candidateData['completion_percentage'] as num
           : num.tryParse(candidateData['completion_percentage']?.toString() ?? ''),
+      status: candidateData['status']?.toString() ??
+          candidateData['request_status']?.toString() ??
+          candidateData['approval_status']?.toString(),
     );
   }
 }

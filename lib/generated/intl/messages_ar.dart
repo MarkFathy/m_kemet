@@ -127,8 +127,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "deleteAccountConfirmTitle": MessageLookupByLibrary.simpleMessage(
       "تنبيه: حذف حساب الشركة",
     ),
+    "deleteAccountFailure": MessageLookupByLibrary.simpleMessage(
+      "فشل حذف الحساب",
+    ),
     "deleteAccountSub": MessageLookupByLibrary.simpleMessage(
       "حذف حساب الشركة وكافة البيانات بشكل نهائي",
+    ),
+    "deleteAccountSuccess": MessageLookupByLibrary.simpleMessage(
+      "تم حذف الحساب بنجاح",
     ),
     "documentsCompletion": MessageLookupByLibrary.simpleMessage(
       "اكتمال الملف الشخصي",
@@ -208,6 +214,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "الفيديو التعريفي (هام جداً)",
     ),
     "invalidPassport": MessageLookupByLibrary.simpleMessage("غير ساري"),
+    "jobSeekerDeleteAccountConfirmMsg": MessageLookupByLibrary.simpleMessage(
+      "سيؤدي حذف الحساب إلى إلغاء طلبك وكافة بيانات السيرة الذاتية والمستندات نهائياً ولا يمكن استعادتها.",
+    ),
+    "jobSeekerDeleteAccountConfirmTitle": MessageLookupByLibrary.simpleMessage(
+      "تنبيه: حذف حساب الباحث عن عمل",
+    ),
+    "jobSeekerDeleteAccountSub": MessageLookupByLibrary.simpleMessage(
+      "حذف حسابك نهائياً وكافة البيانات المرفوعة",
+    ),
     "jobSeekerDesc": MessageLookupByLibrary.simpleMessage(
       "استكشف فرصال وظيفية متميزة في قطاع السياحة والسفر وابنِ ملفك المهني.",
     ),
@@ -216,6 +231,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "jobSeekerFeature2": MessageLookupByLibrary.simpleMessage(
       "إنشاء وتحديث سيرتك الذاتية",
+    ),
+    "jobSeekerLogoutConfirmMsg": MessageLookupByLibrary.simpleMessage(
+      "هل أنت متأكد من رغبتك في تسجيل الخروج من حسابك؟",
     ),
     "jobSeekerTitle": MessageLookupByLibrary.simpleMessage("باحث عن عمل"),
     "languagesHint": MessageLookupByLibrary.simpleMessage("اختر اللغات"),

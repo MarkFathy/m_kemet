@@ -10,6 +10,7 @@ import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
+import 'package:m_kemet/src/core/services/session_manager.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_back_button.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
@@ -157,7 +158,13 @@ class _OtpVerificationViewState extends State<_OtpVerificationView> {
         } else if (state.status == AuthStatus.otpVerified) {
           final targetType = state.userType ?? widget.userType;
           if (targetType == UserType.jobSeeker) {
-            Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
+            SessionManager.checkAndSyncJobSeekerProfileCompleted().then((isCompleted) {
+              if (isCompleted) {
+                Go.offAllNamed(NamedRoutes.jobSeekerMain);
+              } else {
+                Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
+              }
+            });
           } else {
             Go.offAllNamed(NamedRoutes.companyMain);
           }

@@ -10,9 +10,9 @@ import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
-import 'package:m_kemet/src/core/widgets/app_progress_indicator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_back_button.dart';
+import 'package:m_kemet/src/core/widgets/shimmer/shimmer.dart';
 import 'package:m_kemet/src/features/bookmarks/presentation/cubit/bookmarks_cubit.dart';
 import 'package:m_kemet/src/features/bookmarks/presentation/cubit/bookmarks_state.dart';
 import 'package:m_kemet/src/features/company/presentation/widgets/candidate_card.dart';
@@ -57,10 +57,7 @@ class SavedCandidatesScreen extends StatelessWidget {
                   final savedList = state.bookmarkedCandidates;
 
                   if (state.status == BookmarksStatus.loading) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 60.h),
-                      child: const AppProgressIndicator.centered(),
-                    );
+                    return const CandidateListShimmer();
                   }
 
                   if (savedList.isEmpty) {

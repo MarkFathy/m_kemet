@@ -12,17 +12,14 @@ import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
 import 'package:m_kemet/src/core/widgets/setting_action_tile.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/settings/job_seeker_language_tile.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/settings/job_seeker_notification_toggle_tile.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/settings/job_seeker_request_status_tile.dart';
 
-class JobSeekerSettingsTab extends StatefulWidget {
+class JobSeekerSettingsTab extends StatelessWidget {
   const JobSeekerSettingsTab({super.key});
 
-  @override
-  State<JobSeekerSettingsTab> createState() => _JobSeekerSettingsTabState();
-}
-
-class _JobSeekerSettingsTabState extends State<JobSeekerSettingsTab> {
-  bool _notificationsEnabled = true;
+  static final ValueNotifier<bool> _notificationsNotifier = ValueNotifier<bool>(true);
 
   void _showLogoutWarningSheet(BuildContext context) {
     showConfirmActionBottomSheet(
@@ -31,11 +28,26 @@ class _JobSeekerSettingsTabState extends State<JobSeekerSettingsTab> {
       iconBgColor: AppColors.softBlueBg,
       iconColor: AppColors.darkNavy,
       title: S.of(context).logoutConfirmTitle,
-      message: 'هل أنت متأكد من رغبتك في تسجيل الخروج من حسابك؟',
+      message: S.of(context).jobSeekerLogoutConfirmMsg,
       cancelLabel: S.of(context).cancel,
       confirmLabel: S.of(context).logout,
       confirmColor: AppColors.darkNavy,
-      onConfirm: () => Go.offAllNamed(NamedRoutes.userTypeSelection),
+      onConfirm: () async {
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => const Center(
+            child: CircularProgressIndicator(color: AppColors.darkNavy),
+          ),
+        );
+
+        await context.read<AuthCubit>().logout();
+
+        if (context.mounted) {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+        Go.offAllNamed(NamedRoutes.userTypeSelection);
+      },
     );
   }
 
@@ -45,12 +57,41 @@ class _JobSeekerSettingsTabState extends State<JobSeekerSettingsTab> {
       icon: Icons.warning_amber_rounded,
       iconBgColor: AppColors.errorBg,
       iconColor: AppColors.errorRed,
-      title: 'تنبيه: حذف حساب الباحث عن عمل',
-      message: 'سيؤدي حذف الحساب إلى إلغاء طلبك وكافة بيانات السيرة الذاتية والمستندات نهائياً ولا يمكن استعادتها.',
+      title: S.of(context).jobSeekerDeleteAccountConfirmTitle,
+      message: S.of(context).jobSeekerDeleteAccountConfirmMsg,
       cancelLabel: S.of(context).cancel,
       confirmLabel: S.of(context).confirmDeleteAction,
       confirmColor: AppColors.errorRed,
-      onConfirm: () => Go.offAllNamed(NamedRoutes.userTypeSelection),
+      onConfirm: () async {
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => const Center(
+            child: CircularProgressIndicator(color: AppColors.errorRed),
+          ),
+        );
+
+        final success = await context.read<AuthCubit>().deleteAccount();
+
+        if (context.mounted) {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+
+        if (success) {
+          if (context.mounted) {
+            CustomSnackBar.showSuccess(
+              context,
+              message: S.of(context).deleteAccountSuccess,
+            );
+          }
+          Go.offAllNamed(NamedRoutes.userTypeSelection);
+        } else {
+          if (context.mounted) {
+            final error = context.read<AuthCubit>().state.errorMessage ?? S.of(context).deleteAccountFailure;
+            CustomSnackBar.showError(context, message: error);
+          }
+        }
+      },
     );
   }
 
@@ -75,15 +116,20 @@ class _JobSeekerSettingsTabState extends State<JobSeekerSettingsTab> {
           14.szH,
 
           // 2. Notifications Toggle
-          JobSeekerNotificationToggleTile(
-            value: _notificationsEnabled,
-            onChanged: (val) {
-              setState(() => _notificationsEnabled = val);
-              CustomSnackBar.showSuccess(
-                context,
-                message: val
-                    ? S.of(context).notificationsEnabledMsg
-                    : S.of(context).notificationsDisabledMsg,
+          ValueListenableBuilder<bool>(
+            valueListenable: _notificationsNotifier,
+            builder: (context, notificationsEnabled, _) {
+              return JobSeekerNotificationToggleTile(
+                value: notificationsEnabled,
+                onChanged: (val) {
+                  _notificationsNotifier.value = val;
+                  CustomSnackBar.showSuccess(
+                    context,
+                    message: val
+                        ? S.of(context).notificationsEnabledMsg
+                        : S.of(context).notificationsDisabledMsg,
+                  );
+                },
               );
             },
           ),
@@ -137,11 +183,11 @@ class _JobSeekerSettingsTabState extends State<JobSeekerSettingsTab> {
             iconBgColor: AppColors.errorBg,
             iconColor: AppColors.errorRed,
             title: S.of(context).deleteAccount,
-            subtitle: 'حذف حسابك نهائياً وكافة البيانات المرفوعة',
+            subtitle: S.of(context).jobSeekerDeleteAccountSub,
             onTap: () => _showDeleteAccountWarningSheet(context),
           ),
 
-          24.szH,
+          100.szH,
         ],
       ),
     );

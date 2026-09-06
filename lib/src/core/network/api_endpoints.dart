@@ -14,6 +14,7 @@ class ApiEndpoints {
   static const String profile = '/api/profile';
   static const String logout = '/api/logout';
   static const String logoutAll = '/api/logout-all';
+  static const String deleteAccount = '/api/delete-account';
 
   // Lookup endpoints
   static const String genders = '/api/genders';

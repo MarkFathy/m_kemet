@@ -12,6 +12,7 @@ class AppScaffold extends StatelessWidget {
   final Color? backgroundColor;
   final bool safeTop;
   final bool safeBottom;
+  final bool extendBody;
 
   const AppScaffold({
     required this.body,
@@ -22,6 +23,7 @@ class AppScaffold extends StatelessWidget {
     this.backgroundColor,
     this.safeTop = false,
     this.safeBottom = true,
+    this.extendBody = false,
   });
 
   @override
@@ -32,13 +34,18 @@ class AppScaffold extends StatelessWidget {
         backgroundColor: backgroundColor ?? AppColors.scaffoldBackgroundColor,
         appBar: appBar,
         floatingActionButton: floatingActionButton,
+        extendBody: extendBody,
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-          child: SafeArea(top: safeTop, bottom: safeBottom, child: body),
+          child: SafeArea(
+            top: safeTop,
+            bottom: extendBody ? false : safeBottom,
+            child: body,
+          ),
         ),
         bottomNavigationBar: bottomNavigationBar != null
             ? SafeArea(
-                top: safeTop,
+                top: false,
                 bottom: safeBottom,
                 child: bottomNavigationBar!,
               )

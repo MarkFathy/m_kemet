@@ -144,7 +144,7 @@ class RequestsTab extends StatelessWidget {
               );
             },
           ),
-          20.szH,
+          100.szH,
         ],
       ),
     );
