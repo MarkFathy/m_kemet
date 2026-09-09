@@ -16,13 +16,13 @@ class CandidateModel extends CandidateEntity {
     super.isVerified,
     super.isSaved,
     super.isContactRequested,
+    super.contactRequestStatus,
     super.photoUrl,
     super.introVideoUrl,
     super.videoThumbnailUrl,
     super.cvUrl,
     super.expectedSalary,
     super.bio,
-    super.candidateId,
     super.userId,
     super.profileId,
     super.verificationBadge,
@@ -161,14 +161,37 @@ class CandidateModel extends CandidateEntity {
     final expectedSalaryStr = json['expected_salary']?.toString() ?? json['expectedSalary']?.toString() ?? '';
 
     // Contact request status
-    final hasContactReq = json['already_sent'] == true ||
-        json['has_contact_request'] == true ||
-        json['is_contact_requested'] == true ||
-        json['contact_request'] != null ||
-        json['application'] != null;
+    String contactStatus = '';
+    if (json['contact_request'] is Map) {
+      final cr = json['contact_request'] as Map;
+      contactStatus = cr['status']?.toString().toLowerCase() ?? '';
+    } else if (json['application'] is Map) {
+      final app = json['application'] as Map;
+      contactStatus = app['status']?.toString().toLowerCase() ?? '';
+    } else if (json['contact_request_status'] != null) {
+      contactStatus = json['contact_request_status'].toString().toLowerCase();
+    } else if (json['contact_status'] != null) {
+      contactStatus = json['contact_status'].toString().toLowerCase();
+    } else if (json['status'] != null) {
+      contactStatus = json['status'].toString().toLowerCase();
+    }
+
+    final isRejected = contactStatus == 'rejected' ||
+        contactStatus == 'refused' ||
+        contactStatus == 'declined' ||
+        contactStatus.contains('مرفوض');
+
+    bool hasContactReq = false;
+    if (!isRejected) {
+      hasContactReq = json['already_sent'] == true ||
+          json['has_contact_request'] == true ||
+          json['is_contact_requested'] == true ||
+          (json['contact_request'] != null && json['contact_request'] != false) ||
+          (json['application'] != null && json['application'] != false);
+    }
 
     return CandidateModel(
-      id: json['id']?.toString() ?? '',
+      id: (json['id'] ?? json['user_id'])?.toString() ?? '',
       name: json['name']?.toString() ?? '',
       profession: json['profession_title']?.toString() ?? json['profession']?.toString() ?? '',
       experienceYears: expYearsStr,
@@ -182,13 +205,13 @@ class CandidateModel extends CandidateEntity {
       isVerified: json['is_verified'] == true || json['isVerified'] == true,
       isSaved: json['is_bookmarked'] == true || json['isSaved'] == true,
       isContactRequested: hasContactReq,
+      contactRequestStatus: contactStatus,
       photoUrl: json['profile_photo']?.toString() ?? json['photoUrl']?.toString() ?? '',
       introVideoUrl: videoUrl,
       videoThumbnailUrl: videoThumbnail,
       cvUrl: json['cvUrl']?.toString() ?? '',
       expectedSalary: expectedSalaryStr,
       bio: bioStr,
-      candidateId: json['candidate_id'] is int ? json['candidate_id'] as int : int.tryParse(json['candidate_id']?.toString() ?? ''),
       userId: json['user_id'] is int ? json['user_id'] as int : int.tryParse(json['user_id']?.toString() ?? ''),
       profileId: json['profile_id'] is int ? json['profile_id'] as int : int.tryParse(json['profile_id']?.toString() ?? ''),
       verificationBadge: json['verification_badge']?.toString() ?? '',
@@ -221,7 +244,6 @@ class CandidateModel extends CandidateEntity {
       'cvUrl': cvUrl,
       'expectedSalary': expectedSalary,
       'bio': bio,
-      'candidate_id': candidateId,
       'user_id': userId,
       'profile_id': profileId,
       'verification_badge': verificationBadge,
@@ -256,7 +278,6 @@ class CandidateModel extends CandidateEntity {
       cvUrl: entity.cvUrl,
       expectedSalary: entity.expectedSalary,
       bio: entity.bio,
-      candidateId: entity.candidateId,
       userId: entity.userId,
       profileId: entity.profileId,
       verificationBadge: entity.verificationBadge,

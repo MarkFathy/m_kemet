@@ -32,6 +32,15 @@ import 'package:m_kemet/src/features/bookmarks/domain/repositories/bookmarks_rep
 import 'package:m_kemet/src/features/bookmarks/domain/usecases/get_bookmarks_usecase.dart';
 import 'package:m_kemet/src/features/bookmarks/domain/usecases/toggle_bookmark_usecase.dart';
 import 'package:m_kemet/src/features/bookmarks/presentation/cubit/bookmarks_cubit.dart';
+import 'package:m_kemet/src/features/candidate_search/data/datasources/candidate_search_remote_data_source.dart';
+import 'package:m_kemet/src/features/candidate_search/data/repositories/candidate_search_repository_impl.dart';
+import 'package:m_kemet/src/features/candidate_search/domain/repositories/candidate_search_repository.dart';
+import 'package:m_kemet/src/features/candidate_search/domain/usecases/filter_candidates_usecase.dart';
+import 'package:m_kemet/src/features/candidate_search/domain/usecases/get_initial_candidates_usecase.dart';
+import 'package:m_kemet/src/features/candidate_search/domain/usecases/get_popular_professions_usecase.dart';
+import 'package:m_kemet/src/features/candidate_search/domain/usecases/get_top_countries_usecase.dart';
+import 'package:m_kemet/src/features/candidate_search/domain/usecases/search_candidates_usecase.dart';
+import 'package:m_kemet/src/features/candidate_search/presentation/cubit/candidate_search_cubit.dart';
 import 'package:m_kemet/src/features/company/data/datasources/candidate_local_data_source.dart';
 import 'package:m_kemet/src/features/company/data/datasources/candidate_remote_data_source.dart';
 import 'package:m_kemet/src/features/company/data/repositories/candidate_repository_impl.dart';
@@ -43,7 +52,6 @@ import 'package:m_kemet/src/features/company/domain/usecases/get_saved_candidate
 import 'package:m_kemet/src/features/company/domain/usecases/send_contact_request_usecase.dart';
 import 'package:m_kemet/src/features/company/domain/usecases/toggle_save_candidate_usecase.dart';
 import 'package:m_kemet/src/features/company/presentation/cubit/candidate_detail_cubit.dart';
-import 'package:m_kemet/src/features/company/presentation/cubit/candidate_search_cubit.dart';
 import 'package:m_kemet/src/features/job_seeker/data/datasources/job_seeker_remote_data_source.dart';
 import 'package:m_kemet/src/features/job_seeker/data/repositories/job_seeker_repository_impl.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/repositories/job_seeker_repository.dart';
@@ -196,7 +204,29 @@ Future<void> setupServiceLocator() async {
       ),
     )
 
-    // ─── Employer Candidate Search Feature ─────────────────────────────────
+    // ─── Candidate Search & Filter Feature ────────────────────────────────
+    ..registerLazySingleton<CandidateSearchRemoteDataSource>(
+      () => CandidateSearchRemoteDataSourceImpl(sl()),
+    )
+    ..registerLazySingleton<CandidateSearchRepository>(
+      () => CandidateSearchRepositoryImpl(remoteDataSource: sl()),
+    )
+    ..registerLazySingleton(() => GetInitialCandidatesUseCase(sl()))
+    ..registerLazySingleton(() => SearchCandidatesUseCase(sl()))
+    ..registerLazySingleton(() => FilterCandidatesUseCase(sl()))
+    ..registerLazySingleton(() => GetTopCountriesUseCase(sl()))
+    ..registerLazySingleton(() => GetPopularProfessionsUseCase(sl()))
+    ..registerFactory(
+      () => CandidateSearchCubit(
+        getInitialCandidatesUseCase: sl(),
+        searchCandidatesUseCase: sl(),
+        filterCandidatesUseCase: sl(),
+        getTopCountriesUseCase: sl(),
+        getPopularProfessionsUseCase: sl(),
+      ),
+    )
+
+    // ─── Employer Candidate Detail & Contact Feature ───────────────────────
     ..registerLazySingleton<CandidateLocalDataSource>(
       CandidateLocalDataSourceImpl.new,
     )
@@ -214,13 +244,6 @@ Future<void> setupServiceLocator() async {
     ..registerLazySingleton(() => ToggleSaveCandidateUseCase(sl()))
     ..registerLazySingleton(() => GetCandidateDetailUseCase(sl()))
     ..registerLazySingleton(() => SendContactRequestUseCase(sl()))
-    ..registerFactory(
-      () => CandidateSearchCubit(
-        getCandidatesUseCase: sl(),
-        toggleSaveCandidateUseCase: sl(),
-        getSavedCandidatesUseCase: sl(),
-      ),
-    )
     ..registerFactoryParam<CandidateDetailCubit, CandidateEntity, void>(
       (candidate, _) => CandidateDetailCubit(
         getCandidateDetailUseCase: sl(),

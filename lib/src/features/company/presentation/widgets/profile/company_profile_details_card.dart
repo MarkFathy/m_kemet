@@ -11,16 +11,16 @@ class CompanyProfileDetailsCard extends StatelessWidget {
   final String companyName;
   final String phone;
   final String email;
-  final String crNumber;
-  final String location;
+  final String? crNumber;
+  final String? location;
 
   const CompanyProfileDetailsCard({
     super.key,
-    this.companyName = 'شركة الخليج للاستقدام والتطوير',
-    this.phone = '+966 50 123 4567',
-    this.email = 'contact@gulf-recruitment.com',
-    this.crNumber = 'CR-1010928374',
-    this.location = 'الرياض، المملكة العربية السعودية',
+    required this.companyName,
+    required this.phone,
+    required this.email,
+    this.crNumber,
+    this.location,
   });
 
   @override
@@ -43,54 +43,64 @@ class CompanyProfileDetailsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(S.of(context).companyInfoTitle, style: getTextStyle().darkNavy.w700.s16),
-          14.szH,
-          ProfileDetailRow(
-            icon: Icons.business_outlined,
-            iconColor: AppColors.darkNavy,
-            bgColor: AppColors.softBlueBg,
-            label: S.of(context).companyNameField,
-            value: companyName,
-          ),
-          12.szH,
-          const Divider(color: AppColors.dividerGrey, height: 1),
-          12.szH,
-          ProfileDetailRow(
-            icon: Icons.phone_outlined,
-            iconColor: AppColors.successGreen,
-            bgColor: AppColors.successBg,
-            label: S.of(context).companyPhoneField,
-            value: phone,
-          ),
-          12.szH,
-          const Divider(color: AppColors.dividerGrey, height: 1),
-          12.szH,
-          ProfileDetailRow(
-            icon: Icons.email_outlined,
-            iconColor: AppColors.warningAmber,
-            bgColor: AppColors.warningBg,
-            label: S.of(context).companyEmailField,
-            value: email,
-          ),
-          12.szH,
-          const Divider(color: AppColors.dividerGrey, height: 1),
-          12.szH,
-          ProfileDetailRow(
-            icon: Icons.badge_outlined,
-            iconColor: AppColors.darkNavy,
-            bgColor: AppColors.chipBg,
-            label: S.of(context).companyCrField,
-            value: crNumber,
-          ),
-          12.szH,
-          const Divider(color: AppColors.dividerGrey, height: 1),
-          12.szH,
-          ProfileDetailRow(
-            icon: Icons.location_on_outlined,
-            iconColor: AppColors.steelBlue,
-            bgColor: AppColors.softBlueBg,
-            label: S.of(context).companyLocationField,
-            value: location,
-          ),
+          if (companyName.trim().isNotEmpty) ...[
+            14.szH,
+            ProfileDetailRow(
+              icon: Icons.business_outlined,
+              iconColor: AppColors.darkNavy,
+              bgColor: AppColors.softBlueBg,
+              label: S.of(context).companyNameField,
+              value: companyName,
+            ),
+          ],
+          if (phone.trim().isNotEmpty) ...[
+            12.szH,
+            const Divider(color: AppColors.dividerGrey, height: 1),
+            12.szH,
+            ProfileDetailRow(
+              icon: Icons.phone_outlined,
+              iconColor: AppColors.successGreen,
+              bgColor: AppColors.successBg,
+              label: S.of(context).companyPhoneField,
+              value: phone,
+            ),
+          ],
+          if (email.trim().isNotEmpty) ...[
+            12.szH,
+            const Divider(color: AppColors.dividerGrey, height: 1),
+            12.szH,
+            ProfileDetailRow(
+              icon: Icons.email_outlined,
+              iconColor: AppColors.warningAmber,
+              bgColor: AppColors.warningBg,
+              label: S.of(context).companyEmailField,
+              value: email,
+            ),
+          ],
+          if (crNumber != null && crNumber!.trim().isNotEmpty) ...[
+            12.szH,
+            const Divider(color: AppColors.dividerGrey, height: 1),
+            12.szH,
+            ProfileDetailRow(
+              icon: Icons.badge_outlined,
+              iconColor: AppColors.darkNavy,
+              bgColor: AppColors.chipBg,
+              label: S.of(context).companyCrField,
+              value: crNumber!,
+            ),
+          ],
+          if (location != null && location!.trim().isNotEmpty) ...[
+            12.szH,
+            const Divider(color: AppColors.dividerGrey, height: 1),
+            12.szH,
+            ProfileDetailRow(
+              icon: Icons.location_on_outlined,
+              iconColor: AppColors.steelBlue,
+              bgColor: AppColors.softBlueBg,
+              label: S.of(context).companyLocationField,
+              value: location!,
+            ),
+          ],
         ],
       ),
     );

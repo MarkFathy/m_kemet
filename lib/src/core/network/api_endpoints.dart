@@ -19,7 +19,9 @@ class ApiEndpoints {
   // Lookup endpoints
   static const String genders = '/api/genders';
   static const String countries = '/api/countries';
+  static const String countriesTop6 = '/api/countries/top-6';
   static const String professions = '/api/professions';
+  static const String professionsPopular = '/api/professions/popular';
   static const String experienceLevels = '/api/experience-levels';
   static const String qualifications = '/api/qualifications';
 
@@ -34,6 +36,8 @@ class ApiEndpoints {
 
   // Company / Job Seekers endpoints
   static const String jobSeekers = '/api/job-seekers';
+  static const String jobSeekersSearch = '/api/job-seekers/search';
+  static const String jobSeekersFilter = '/api/job-seekers/filter';
   static const String bookmarks = '/api/bookmarks';
   static String jobSeekerDetail(dynamic id) => '/api/job-seekers/$id';
   static String jobSeekerContactRequest(dynamic id) =>

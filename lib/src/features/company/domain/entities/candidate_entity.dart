@@ -15,6 +15,7 @@ class CandidateEntity extends Equatable {
   final bool isVerified;
   final bool isSaved;
   final bool isContactRequested;
+  final String contactRequestStatus;
   final String photoUrl;
   final String introVideoUrl;
   final String videoThumbnailUrl;
@@ -23,7 +24,6 @@ class CandidateEntity extends Equatable {
   final String bio;
 
   // Fields from api/job-seekers list
-  final int? candidateId;
   final int? userId;
   final int? profileId;
   final String verificationBadge;
@@ -49,13 +49,13 @@ class CandidateEntity extends Equatable {
     this.isVerified = false,
     this.isSaved = false,
     this.isContactRequested = false,
+    this.contactRequestStatus = '',
     this.photoUrl = '',
     this.introVideoUrl = '',
     this.videoThumbnailUrl = '',
     this.cvUrl = '',
     this.expectedSalary = '',
     this.bio = '',
-    this.candidateId,
     this.userId,
     this.profileId,
     this.verificationBadge = '',
@@ -82,13 +82,13 @@ class CandidateEntity extends Equatable {
     bool? isVerified,
     bool? isSaved,
     bool? isContactRequested,
+    String? contactRequestStatus,
     String? photoUrl,
     String? introVideoUrl,
     String? videoThumbnailUrl,
     String? cvUrl,
     String? expectedSalary,
     String? bio,
-    int? candidateId,
     int? userId,
     int? profileId,
     String? verificationBadge,
@@ -114,13 +114,13 @@ class CandidateEntity extends Equatable {
       isVerified: isVerified ?? this.isVerified,
       isSaved: isSaved ?? this.isSaved,
       isContactRequested: isContactRequested ?? this.isContactRequested,
+      contactRequestStatus: contactRequestStatus ?? this.contactRequestStatus,
       photoUrl: photoUrl ?? this.photoUrl,
       introVideoUrl: introVideoUrl ?? this.introVideoUrl,
       videoThumbnailUrl: videoThumbnailUrl ?? this.videoThumbnailUrl,
       cvUrl: cvUrl ?? this.cvUrl,
       expectedSalary: expectedSalary ?? this.expectedSalary,
       bio: bio ?? this.bio,
-      candidateId: candidateId ?? this.candidateId,
       userId: userId ?? this.userId,
       profileId: profileId ?? this.profileId,
       verificationBadge: verificationBadge ?? this.verificationBadge,
@@ -149,13 +149,13 @@ class CandidateEntity extends Equatable {
         isVerified,
         isSaved,
         isContactRequested,
+        contactRequestStatus,
         photoUrl,
         introVideoUrl,
         videoThumbnailUrl,
         cvUrl,
         expectedSalary,
         bio,
-        candidateId,
         userId,
         profileId,
         verificationBadge,

@@ -26,10 +26,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "acceptTermsRequired": MessageLookupByLibrary.simpleMessage(
       "Please accept the Terms & Conditions to complete registration",
     ),
+    "activeFilters": MessageLookupByLibrary.simpleMessage("Active Filters"),
     "ageLabel": MessageLookupByLibrary.simpleMessage("Age Range"),
     "agreeToTermsPrefix": MessageLookupByLibrary.simpleMessage(
       "I agree to the ",
     ),
+    "allOptions": MessageLookupByLibrary.simpleMessage("All"),
     "alreadyHaveAccount": MessageLookupByLibrary.simpleMessage(
       "Already have an account?",
     ),
@@ -57,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Candidate Intro Video",
     ),
     "changeMedia": MessageLookupByLibrary.simpleMessage("Change"),
+    "companyAccount": MessageLookupByLibrary.simpleMessage("Company Account"),
     "companyCrField": MessageLookupByLibrary.simpleMessage(
       "Commercial Record (CR)",
     ),
@@ -79,6 +82,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "companyProfileSub": MessageLookupByLibrary.simpleMessage(
       "Verified Corporate Account | Riyadh, KSA",
     ),
+    "companyProfileTitle": MessageLookupByLibrary.simpleMessage(
+      "Company Profile",
+    ),
     "completeAllFieldsHint": MessageLookupByLibrary.simpleMessage(
       "Please complete all fields, documents, and video to proceed",
     ),
@@ -95,11 +101,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirmPasswordMismatch": MessageLookupByLibrary.simpleMessage(
       "Passwords do not match",
     ),
+    "contactRequestPending": MessageLookupByLibrary.simpleMessage(
+      "Contact request pending",
+    ),
+    "contactRequestRejected": MessageLookupByLibrary.simpleMessage(
+      "Contact request rejected",
+    ),
     "contactRequestSuccess": MessageLookupByLibrary.simpleMessage(
       "Contact request submitted successfully! Admin will review and approve your request for communication.",
     ),
     "contactSupport": MessageLookupByLibrary.simpleMessage("Contact Support"),
     "continueAction": MessageLookupByLibrary.simpleMessage("Continue"),
+    "corporateAccount": MessageLookupByLibrary.simpleMessage(
+      "Corporate Account",
+    ),
+    "corporateAccountActive": MessageLookupByLibrary.simpleMessage(
+      "Active Corporate Account",
+    ),
+    "corporateAccountVerified": MessageLookupByLibrary.simpleMessage(
+      "Verified Corporate Account",
+    ),
     "countryLabel": MessageLookupByLibrary.simpleMessage("Current Country"),
     "cropPhoto": MessageLookupByLibrary.simpleMessage("Crop Image"),
     "currentCountryHint": MessageLookupByLibrary.simpleMessage(
@@ -182,7 +203,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Select expected salary range",
     ),
     "expectedSalaryLabel": MessageLookupByLibrary.simpleMessage(
-      "Expected Salary",
+      "Expected Salary (\$)",
     ),
     "experienceLabel": MessageLookupByLibrary.simpleMessage("Experience"),
     "experienceYearsHint": MessageLookupByLibrary.simpleMessage(
@@ -295,6 +316,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Connection Failed",
     ),
     "next": MessageLookupByLibrary.simpleMessage("Next"),
+    "noCandidateVideo": MessageLookupByLibrary.simpleMessage(
+      "No intro video available for this candidate",
+    ),
     "noCountryFound": MessageLookupByLibrary.simpleMessage(
       "No matching countries found",
     ),
@@ -315,7 +339,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "No new notifications",
     ),
     "noRequestsSub": MessageLookupByLibrary.simpleMessage(
-      "All your submitted contact and recruitment requests will appear here to track their lifecycle status (Pending, Approved, Rejected, Completed).",
+      "All your submitted contact and recruitment requests will appear here to track their lifecycle status.",
     ),
     "noRequestsTitle": MessageLookupByLibrary.simpleMessage(
       "No contact requests yet",
@@ -405,6 +429,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "phoneValidationMessage": MessageLookupByLibrary.simpleMessage(
       "Please enter a valid phone number",
     ),
+    "popularProfessionsTitle": MessageLookupByLibrary.simpleMessage(
+      "Popular Professions",
+    ),
     "previousExperienceHint": MessageLookupByLibrary.simpleMessage(
       "Briefly describe your previous experience and work history",
     ),
@@ -419,6 +446,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "professionalSectionTitle": MessageLookupByLibrary.simpleMessage(
       "Professional Information",
+    ),
+    "profileLoadError": MessageLookupByLibrary.simpleMessage(
+      "An error occurred while loading profile data",
     ),
     "profileStatusTitle": MessageLookupByLibrary.simpleMessage(
       "Profile Status",
@@ -498,6 +528,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "sendResetCode": MessageLookupByLibrary.simpleMessage(
       "Send Verification Code",
     ),
+    "sendingContactRequest": MessageLookupByLibrary.simpleMessage(
+      "Sending contact request...",
+    ),
     "serverErrorSubtitle": MessageLookupByLibrary.simpleMessage(
       "An unexpected error occurred. Please try again later",
     ),
@@ -547,6 +580,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "timeoutErrorTitle": MessageLookupByLibrary.simpleMessage(
       "Connection Timed Out",
     ),
+    "topCountriesTitle": MessageLookupByLibrary.simpleMessage(
+      "Top In-Demand Countries",
+    ),
     "travelPossibilityHint": MessageLookupByLibrary.simpleMessage(
       "Select travel availability",
     ),
@@ -580,5 +616,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "viewPhoto": MessageLookupByLibrary.simpleMessage("View Photo"),
     "watchVideo": MessageLookupByLibrary.simpleMessage("Watch Video"),
+    "yearsOld": MessageLookupByLibrary.simpleMessage("years"),
   };
 }

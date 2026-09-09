@@ -18,6 +18,9 @@ class UserModel extends UserEntity {
     super.genderId,
     super.gender,
     super.avatar,
+    super.companyName,
+    super.crNumber,
+    super.location,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -50,10 +53,38 @@ class UserModel extends UserEntity {
       detectedType = UserType.employer;
     }
 
+    // Extract Company object if present
+    Map<String, dynamic>? companyMap;
+    if (json['company'] is Map<String, dynamic>) {
+      companyMap = json['company'] as Map<String, dynamic>;
+    } else if (json['company'] is Map) {
+      companyMap = Map<String, dynamic>.from(json['company'] as Map);
+    }
+
+    // Extract Company Name
+    final String? companyName = companyMap?['name']?.toString() ??
+        json['company_name']?.toString() ??
+        (detectedType == UserType.employer ? json['name']?.toString() : null);
+
+    // Extract CR Number
+    final String? crNumber = companyMap?['cr_number']?.toString() ??
+        companyMap?['commercial_registration']?.toString() ??
+        json['cr_number']?.toString() ??
+        json['commercial_registration']?.toString();
+
+    // Extract Location
+    final String? location = companyMap?['location']?.toString() ??
+        companyMap?['address']?.toString() ??
+        json['location']?.toString() ??
+        json['address']?.toString();
+
     // Extract Name
-    String extractedName = json['name']?.toString() ?? json['company_name']?.toString() ?? '';
-    if (extractedName.isEmpty && json['company'] is Map<String, dynamic>) {
-      extractedName = (json['company'] as Map<String, dynamic>)['name']?.toString() ?? '';
+    String extractedName = json['name']?.toString() ?? '';
+    if (extractedName.isEmpty && companyName != null && companyName.isNotEmpty) {
+      extractedName = companyName;
+    }
+    if (extractedName.isEmpty) {
+      extractedName = json['company_name']?.toString() ?? '';
     }
 
     final statusStr = json['status']?.toString();
@@ -100,7 +131,7 @@ class UserModel extends UserEntity {
         : (json['gender'] is! Map ? json['gender']?.toString() : null);
 
     return UserModel(
-      id: json['id']?.toString() ?? '',
+      id: json['id']?.toString() ?? (json['user_id'] ?? companyMap?['id'])?.toString() ?? '',
       email: json['email']?.toString() ?? '',
       name: extractedName,
       userType: detectedType,
@@ -114,7 +145,10 @@ class UserModel extends UserEntity {
       birthDate: json['birth_date']?.toString(),
       genderId: genderId,
       gender: genderName,
-      avatar: json['avatar']?.toString() ?? json['photo']?.toString(),
+      avatar: json['avatar']?.toString() ?? json['photo']?.toString() ?? companyMap?['logo']?.toString(),
+      companyName: companyName,
+      crNumber: crNumber,
+      location: location,
     );
   }
 
@@ -135,6 +169,9 @@ class UserModel extends UserEntity {
       'gender_id': genderId,
       'gender': gender,
       'avatar': avatar,
+      'company_name': companyName,
+      'cr_number': crNumber,
+      'location': location,
     };
   }
 }

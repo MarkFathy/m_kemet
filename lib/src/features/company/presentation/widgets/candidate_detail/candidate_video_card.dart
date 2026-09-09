@@ -57,7 +57,7 @@ class CandidateVideoCard extends StatelessWidget {
                       ),
                       3.szH,
                       Text(
-                        'لا يتوفر فيديو تعريفي لهذا المرشح',
+                        S.of(context).noCandidateVideo,
                         style: getTextStyle().greyColor.w500.s12,
                       ),
                     ],

@@ -8,14 +8,24 @@ import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 
 class CompanyProfileHeaderCard extends StatelessWidget {
   final String companyName;
+  final bool isVerified;
+  final String? status;
 
   const CompanyProfileHeaderCard({
     super.key,
-    this.companyName = 'شركة الخليج للاستقدام والتطوير',
+    required this.companyName,
+    this.isVerified = false,
+    this.status,
   });
 
   @override
   Widget build(BuildContext context) {
+    final subtitleText = status == 'active'
+        ? S.of(context).corporateAccountActive
+        : (isVerified
+            ? S.of(context).corporateAccountVerified
+            : S.of(context).corporateAccount);
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
       decoration: BoxDecoration(
@@ -46,17 +56,19 @@ class CompanyProfileHeaderCard extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        companyName,
+                        companyName.isNotEmpty ? companyName : S.of(context).companyAccount,
                         style: getTextStyle().darkNavy.w700.s16,
                       ),
                     ),
-                    6.szW,
-                    Icon(Icons.verified_rounded, size: 16.sp, color: AppColors.successGreen),
+                    if (isVerified || status == 'active') ...[
+                      6.szW,
+                      Icon(Icons.verified_rounded, size: 16.sp, color: AppColors.successGreen),
+                    ],
                   ],
                 ),
                 4.szH,
                 Text(
-                  S.of(context).companyProfileSub,
+                  subtitleText,
                   style: getTextStyle().greyColor.w500.s12,
                 ),
               ],

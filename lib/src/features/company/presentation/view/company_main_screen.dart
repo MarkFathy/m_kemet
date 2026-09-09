@@ -14,11 +14,11 @@ import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:m_kemet/src/features/bookmarks/presentation/cubit/bookmarks_cubit.dart';
 import 'package:m_kemet/src/features/bookmarks/presentation/cubit/bookmarks_state.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
-import 'package:m_kemet/src/features/company/presentation/cubit/candidate_search_cubit.dart';
-import 'package:m_kemet/src/features/company/presentation/cubit/candidate_search_state.dart';
+import 'package:m_kemet/src/features/candidate_search/presentation/cubit/candidate_search_cubit.dart';
+import 'package:m_kemet/src/features/candidate_search/presentation/cubit/candidate_search_state.dart';
+import 'package:m_kemet/src/features/candidate_search/presentation/widgets/candidate_search_tab.dart';
 import 'package:m_kemet/src/features/company/presentation/widgets/tabs/profile_tab.dart';
 import 'package:m_kemet/src/features/company/presentation/widgets/tabs/requests_tab.dart';
-import 'package:m_kemet/src/features/company/presentation/widgets/tabs/search_tab.dart';
 import 'package:m_kemet/src/features/company/presentation/widgets/tabs/settings_tab.dart';
 
 class CompanyMainScreen extends StatefulWidget {
@@ -54,7 +54,7 @@ class _CompanyMainScreenState extends State<CompanyMainScreen> {
           value: sl<BookmarksCubit>()..fetchBookmarks(),
         ),
         BlocProvider<AuthCubit>(
-          create: (context) => sl<AuthCubit>(),
+          create: (context) => sl<AuthCubit>()..getProfile(),
         ),
       ],
       child: MultiBlocListener(
@@ -77,6 +77,7 @@ class _CompanyMainScreenState extends State<CompanyMainScreen> {
               // Immediately refresh candidates and saved lists when language changes
               context.read<CandidateSearchCubit>().fetchCandidates();
               context.read<BookmarksCubit>().fetchBookmarks();
+              context.read<AuthCubit>().getProfile();
             },
           ),
           BlocListener<ConnectivityCubit, ConnectivityState>(
@@ -91,6 +92,7 @@ class _CompanyMainScreenState extends State<CompanyMainScreen> {
               // Automatically reload screen data when internet connection is restored
               context.read<CandidateSearchCubit>().fetchCandidates();
               context.read<BookmarksCubit>().fetchBookmarks();
+              context.read<AuthCubit>().getProfile();
             },
           ),
         ],
@@ -102,7 +104,7 @@ class _CompanyMainScreenState extends State<CompanyMainScreen> {
           body: IndexedStack(
             index: _currentIndex,
             children: [
-              SearchTab(
+              CandidateSearchTab(
                 searchController: _searchController,
                 onViewCandidateProfile: _onViewCandidateProfile,
               ),

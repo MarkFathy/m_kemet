@@ -495,6 +495,46 @@ class S {
     );
   }
 
+  /// `استعادة كلمة المرور`
+  String get forgotPasswordTitle {
+    return Intl.message(
+      'استعادة كلمة المرور',
+      name: 'forgotPasswordTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أدخل البريد الإلكتروني أو رقم الهاتف المسجل بحسابك وسنرسل لك رمز التحقق لاستعادة الحساب.`
+  String get forgotPasswordSub {
+    return Intl.message(
+      'أدخل البريد الإلكتروني أو رقم الهاتف المسجل بحسابك وسنرسل لك رمز التحقق لاستعادة الحساب.',
+      name: 'forgotPasswordSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إرسال رمز التحقق`
+  String get sendResetCode {
+    return Intl.message(
+      'إرسال رمز التحقق',
+      name: 'sendResetCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تذكرت كلمة المرور؟`
+  String get rememberedPassword {
+    return Intl.message(
+      'تذكرت كلمة المرور؟',
+      name: 'rememberedPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `تسجيل الدخول`
   String get loginAction {
     return Intl.message(
@@ -538,6 +578,11 @@ class S {
   /// `سجل الآن`
   String get signUpNow {
     return Intl.message('سجل الآن', name: 'signUpNow', desc: '', args: []);
+  }
+
+  /// `سجل الدخول`
+  String get signInNow {
+    return Intl.message('سجل الدخول', name: 'signInNow', desc: '', args: []);
   }
 
   /// `هذا الحساب مسجل كشركة، يرجى تسجيل الدخول من بوابة أصحاب الأعمال والشركات.`
@@ -588,11 +633,6 @@ class S {
       desc: '',
       args: [],
     );
-  }
-
-  /// `سجل الدخول`
-  String get signInNow {
-    return Intl.message('سجل الدخول', name: 'signInNow', desc: '', args: []);
   }
 
   /// `التحقق من رمز OTP`
@@ -680,6 +720,66 @@ class S {
     return Intl.message(
       'كلمتا المرور غير متطابقتين',
       name: 'confirmPasswordMismatch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `أوافق على `
+  String get agreeToTermsPrefix {
+    return Intl.message(
+      'أوافق على ',
+      name: 'agreeToTermsPrefix',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الشروط والأحكام وسياسة الخصوصية`
+  String get termsAndConditions {
+    return Intl.message(
+      'الشروط والأحكام وسياسة الخصوصية',
+      name: 'termsAndConditions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `يرجى الموافقة على الشروط والأحكام لإتمام عملية التسجيل`
+  String get acceptTermsRequired {
+    return Intl.message(
+      'يرجى الموافقة على الشروط والأحكام لإتمام عملية التسجيل',
+      name: 'acceptTermsRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الشروط والأحكام وسياسة الخصوصية`
+  String get termsScreenTitle {
+    return Intl.message(
+      'الشروط والأحكام وسياسة الخصوصية',
+      name: 'termsScreenTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `آخر تحديث: 17 أغسطس 2026`
+  String get termsLastUpdated {
+    return Intl.message(
+      'آخر تحديث: 17 أغسطس 2026',
+      name: 'termsLastUpdated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الموافقة والقبول`
+  String get acceptAndContinue {
+    return Intl.message(
+      'الموافقة والقبول',
+      name: 'acceptAndContinue',
       desc: '',
       args: [],
     );
@@ -865,10 +965,10 @@ class S {
     );
   }
 
-  /// `الراتب المتوقع`
+  /// `الراتب المتوقع (بالدولار)`
   String get expectedSalaryLabel {
     return Intl.message(
-      'الراتب المتوقع',
+      'الراتب المتوقع (بالدولار)',
       name: 'expectedSalaryLabel',
       desc: '',
       args: [],
@@ -1090,6 +1190,86 @@ class S {
     return Intl.message(
       'تأكد من وضوح جميع المستندات وسريان مفعول جواز السفر لمدة لا تقل عن 6 أشهر وتصوير الفيديو بشكل واضح لتسريع ترشيحك للشركات.',
       name: 'importantInfoDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مشاهدة الفيديو`
+  String get watchVideo {
+    return Intl.message(
+      'مشاهدة الفيديو',
+      name: 'watchVideo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `عرض الصورة`
+  String get viewPhoto {
+    return Intl.message('عرض الصورة', name: 'viewPhoto', desc: '', args: []);
+  }
+
+  /// `تغيير`
+  String get changeMedia {
+    return Intl.message('تغيير', name: 'changeMedia', desc: '', args: []);
+  }
+
+  /// `رفع`
+  String get uploadAction {
+    return Intl.message('رفع', name: 'uploadAction', desc: '', args: []);
+  }
+
+  /// `قص وتعديل الصورة`
+  String get cropPhoto {
+    return Intl.message(
+      'قص وتعديل الصورة',
+      name: 'cropPhoto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تأكيد وقص`
+  String get confirmCrop {
+    return Intl.message('تأكيد وقص', name: 'confirmCrop', desc: '', args: []);
+  }
+
+  /// `+5 ثواني`
+  String get seconds5Forward {
+    return Intl.message(
+      '+5 ثواني',
+      name: 'seconds5Forward',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `-5 ثواني`
+  String get seconds5Backward {
+    return Intl.message(
+      '-5 ثواني',
+      name: 'seconds5Backward',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `يرجى استكمال جميع البيانات والمستندات والفيديو لتفعيل المتابعة`
+  String get completeAllFieldsHint {
+    return Intl.message(
+      'يرجى استكمال جميع البيانات والمستندات والفيديو لتفعيل المتابعة',
+      name: 'completeAllFieldsHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `جارٍ رفع الملفات والوسائط، يرجى الانتظار...`
+  String get uploadingMediaHint {
+    return Intl.message(
+      'جارٍ رفع الملفات والوسائط، يرجى الانتظار...',
+      name: 'uploadingMediaHint',
       desc: '',
       args: [],
     );
@@ -1355,6 +1535,11 @@ class S {
     return Intl.message('الملف الشخصي', name: 'navProfile', desc: '', args: []);
   }
 
+  /// `الإعدادات`
+  String get navSettings {
+    return Intl.message('الإعدادات', name: 'navSettings', desc: '', args: []);
+  }
+
   /// `البحث عن المرشحين`
   String get employerSearchTitle {
     return Intl.message(
@@ -1400,6 +1585,41 @@ class S {
     return Intl.message('إعادة ضبط', name: 'resetFilters', desc: '', args: []);
   }
 
+  /// `الدول الأكثر طلباً`
+  String get topCountriesTitle {
+    return Intl.message(
+      'الدول الأكثر طلباً',
+      name: 'topCountriesTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المهن الأكثر طلباً`
+  String get popularProfessionsTitle {
+    return Intl.message(
+      'المهن الأكثر طلباً',
+      name: 'popularProfessionsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الكل`
+  String get allOptions {
+    return Intl.message('الكل', name: 'allOptions', desc: '', args: []);
+  }
+
+  /// `الفلاتر النشطة`
+  String get activeFilters {
+    return Intl.message(
+      'الفلاتر النشطة',
+      name: 'activeFilters',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `الدولة الحالية`
   String get countryLabel {
     return Intl.message(
@@ -1425,31 +1645,6 @@ class S {
     );
   }
 
-  /// `عرض الملف`
-  String get viewCandidateProfile {
-    return Intl.message(
-      'عرض الملف',
-      name: 'viewCandidateProfile',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `محقق`
-  String get verifiedBadge {
-    return Intl.message('محقق', name: 'verifiedBadge', desc: '', args: []);
-  }
-
-  /// `غير محقق`
-  String get unverifiedBadge {
-    return Intl.message(
-      'غير محقق',
-      name: 'unverifiedBadge',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `جواز ساري`
   String get validPassport {
     return Intl.message('جواز ساري', name: 'validPassport', desc: '', args: []);
@@ -1463,6 +1658,51 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `لا توجد نتائج طابقها البحث الحالي`
+  String get noSearchResultsTitle {
+    return Intl.message(
+      'لا توجد نتائج طابقها البحث الحالي',
+      name: 'noSearchResultsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `جرب تغيير كلمات البحث أو إعادة ضبط الفلاتر`
+  String get noSearchResultsSub {
+    return Intl.message(
+      'جرب تغيير كلمات البحث أو إعادة ضبط الفلاتر',
+      name: 'noSearchResultsSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الملف الشخصي`
+  String get candidateProfileTitle {
+    return Intl.message(
+      'الملف الشخصي',
+      name: 'candidateProfileTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `عرض الملف`
+  String get viewCandidateProfile {
+    return Intl.message(
+      'عرض الملف',
+      name: 'viewCandidateProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الخبرة`
+  String get experienceLabel {
+    return Intl.message('الخبرة', name: 'experienceLabel', desc: '', args: []);
   }
 
   /// `الموقع الحالي`
@@ -1485,6 +1725,171 @@ class S {
     );
   }
 
+  /// `محقق`
+  String get verifiedBadge {
+    return Intl.message('محقق', name: 'verifiedBadge', desc: '', args: []);
+  }
+
+  /// `غير محقق`
+  String get unverifiedBadge {
+    return Intl.message(
+      'غير محقق',
+      name: 'unverifiedBadge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الفيديو التعريفي للمرشح`
+  String get candidateVideoTitle {
+    return Intl.message(
+      'الفيديو التعريفي للمرشح',
+      name: 'candidateVideoTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا يتوفر فيديو تعريفي لهذا المرشح`
+  String get noCandidateVideo {
+    return Intl.message(
+      'لا يتوفر فيديو تعريفي لهذا المرشح',
+      name: 'noCandidateVideo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `نبذة عن المرشح`
+  String get candidateBioTitle {
+    return Intl.message(
+      'نبذة عن المرشح',
+      name: 'candidateBioTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `البيانات المهنية والتفاصيل`
+  String get candidateDetailsTitle {
+    return Intl.message(
+      'البيانات المهنية والتفاصيل',
+      name: 'candidateDetailsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سنة`
+  String get yearsOld {
+    return Intl.message('سنة', name: 'yearsOld', desc: '', args: []);
+  }
+
+  /// `طلب تواصل`
+  String get requestContact {
+    return Intl.message(
+      'طلب تواصل',
+      name: 'requestContact',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم إرسال طلب التواصل بنجاح! سيتم مراجعة الطلب والموافقة عليه للتواصل مع المرشح.`
+  String get contactRequestSuccess {
+    return Intl.message(
+      'تم إرسال طلب التواصل بنجاح! سيتم مراجعة الطلب والموافقة عليه للتواصل مع المرشح.',
+      name: 'contactRequestSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `طلب تواصل قيد الانتظار`
+  String get contactRequestPending {
+    return Intl.message(
+      'طلب تواصل قيد الانتظار',
+      name: 'contactRequestPending',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم رفض طلب التواصل`
+  String get contactRequestRejected {
+    return Intl.message(
+      'تم رفض طلب التواصل',
+      name: 'contactRequestRejected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `جاري إرسال الطلب...`
+  String get sendingContactRequest {
+    return Intl.message(
+      'جاري إرسال الطلب...',
+      name: 'sendingContactRequest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تحميل السيرة الذاتية`
+  String get downloadCv {
+    return Intl.message(
+      'تحميل السيرة الذاتية',
+      name: 'downloadCv',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `جارٍ فتح ملف السيرة الذاتية (CV) للمرشح...`
+  String get cvDownloadInfo {
+    return Intl.message(
+      'جارٍ فتح ملف السيرة الذاتية (CV) للمرشح...',
+      name: 'cvDownloadInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `طلبات التوظيف`
+  String get requestsTitle {
+    return Intl.message(
+      'طلبات التوظيف',
+      name: 'requestsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد طلبات تواصل حالية`
+  String get noRequestsTitle {
+    return Intl.message(
+      'لا توجد طلبات تواصل حالية',
+      name: 'noRequestsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `جميع طلبات التواصل والاستقدام المعروضة ستظهر هنا عند إرسالها ومتابعة حالتها.`
+  String get noRequestsSub {
+    return Intl.message(
+      'جميع طلبات التواصل والاستقدام المعروضة ستظهر هنا عند إرسالها ومتابعة حالتها.',
+      name: 'noRequestsSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مكتمل`
+  String get statusCompleted {
+    return Intl.message('مكتمل', name: 'statusCompleted', desc: '', args: []);
+  }
+
   /// `المرشحين المحفوظين`
   String get savedCandidatesTitle {
     return Intl.message(
@@ -1505,21 +1910,31 @@ class S {
     );
   }
 
-  /// `طلبات التوظيف`
-  String get requestsTitle {
+  /// `عرض وتصفح المرشحين المميزين المحفوظين لديك`
+  String get savedCandidatesSub {
     return Intl.message(
-      'طلبات التوظيف',
-      name: 'requestsTitle',
+      'عرض وتصفح المرشحين المميزين المحفوظين لديك',
+      name: 'savedCandidatesSub',
       desc: '',
       args: [],
     );
   }
 
-  /// `الإشعارات`
-  String get notificationsTitle {
+  /// `يمكنك حفظ المرشحين المميزين أثناء البحث للعودة إليهم لاحقاً بسهولة.`
+  String get savedCandidatesEmptySub {
     return Intl.message(
-      'الإشعارات',
-      name: 'notificationsTitle',
+      'يمكنك حفظ المرشحين المميزين أثناء البحث للعودة إليهم لاحقاً بسهولة.',
+      name: 'savedCandidatesEmptySub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ملف الشركة`
+  String get companyProfileTitle {
+    return Intl.message(
+      'ملف الشركة',
+      name: 'companyProfileTitle',
       desc: '',
       args: [],
     );
@@ -1535,44 +1950,134 @@ class S {
     );
   }
 
-  /// `الملف الشخصي `
-  String get candidateProfileTitle {
+  /// `شركة الخليج للاستقدام والتطوير`
+  String get companyProfileHeader {
     return Intl.message(
-      'الملف الشخصي ',
-      name: 'candidateProfileTitle',
+      'شركة الخليج للاستقدام والتطوير',
+      name: 'companyProfileHeader',
       desc: '',
       args: [],
     );
   }
 
-  /// `الخبرة`
-  String get experienceLabel {
-    return Intl.message('الخبرة', name: 'experienceLabel', desc: '', args: []);
-  }
-
-  /// `طلب تواصل`
-  String get requestContact {
+  /// `حساب مؤسسة موثق | الرياض، السعودية`
+  String get companyProfileSub {
     return Intl.message(
-      'طلب تواصل',
-      name: 'requestContact',
+      'حساب مؤسسة موثق | الرياض، السعودية',
+      name: 'companyProfileSub',
       desc: '',
       args: [],
     );
   }
 
-  /// `تحميل السيرة الذاتية`
-  String get downloadCv {
+  /// `معلومات الاتصال والمنشأة`
+  String get companyInfoTitle {
     return Intl.message(
-      'تحميل السيرة الذاتية',
-      name: 'downloadCv',
+      'معلومات الاتصال والمنشأة',
+      name: 'companyInfoTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `الإعدادات`
-  String get navSettings {
-    return Intl.message('الإعدادات', name: 'navSettings', desc: '', args: []);
+  /// `اسم الشركة`
+  String get companyNameField {
+    return Intl.message(
+      'اسم الشركة',
+      name: 'companyNameField',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `رقم الهاتف`
+  String get companyPhoneField {
+    return Intl.message(
+      'رقم الهاتف',
+      name: 'companyPhoneField',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `البريد الإلكتروني`
+  String get companyEmailField {
+    return Intl.message(
+      'البريد الإلكتروني',
+      name: 'companyEmailField',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `رقم السجل التجاري`
+  String get companyCrField {
+    return Intl.message(
+      'رقم السجل التجاري',
+      name: 'companyCrField',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `المقر الرئيسي`
+  String get companyLocationField {
+    return Intl.message(
+      'المقر الرئيسي',
+      name: 'companyLocationField',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حساب مؤسسة نشط`
+  String get corporateAccountActive {
+    return Intl.message(
+      'حساب مؤسسة نشط',
+      name: 'corporateAccountActive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حساب مؤسسة موثق`
+  String get corporateAccountVerified {
+    return Intl.message(
+      'حساب مؤسسة موثق',
+      name: 'corporateAccountVerified',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حساب مؤسسة`
+  String get corporateAccount {
+    return Intl.message(
+      'حساب مؤسسة',
+      name: 'corporateAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حساب شركة`
+  String get companyAccount {
+    return Intl.message(
+      'حساب شركة',
+      name: 'companyAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حدث خطأ أثناء تحميل بيانات الملف الشخصي`
+  String get profileLoadError {
+    return Intl.message(
+      'حدث خطأ أثناء تحميل بيانات الملف الشخصي',
+      name: 'profileLoadError',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `تنبيهات وإشعارات التطبيق`
@@ -1615,71 +2120,11 @@ class S {
     );
   }
 
-  /// `عرض وتصفح المرشحين المميزين المحفوظين لديك`
-  String get savedCandidatesSub {
+  /// `الإشعارات`
+  String get notificationsTitle {
     return Intl.message(
-      'عرض وتصفح المرشحين المميزين المحفوظين لديك',
-      name: 'savedCandidatesSub',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `شركة الخليج للاستقدام والتطوير`
-  String get companyProfileHeader {
-    return Intl.message(
-      'شركة الخليج للاستقدام والتطوير',
-      name: 'companyProfileHeader',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `حساب مؤسسة موثق | الرياض، السعودية`
-  String get companyProfileSub {
-    return Intl.message(
-      'حساب مؤسسة موثق | الرياض، السعودية',
-      name: 'companyProfileSub',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `لا توجد نتائج طابقها البحث الحالي`
-  String get noSearchResultsTitle {
-    return Intl.message(
-      'لا توجد نتائج طابقها البحث الحالي',
-      name: 'noSearchResultsTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `جرب تغيير كلمات البحث أو إعادة ضبط الفلاتر`
-  String get noSearchResultsSub {
-    return Intl.message(
-      'جرب تغيير كلمات البحث أو إعادة ضبط الفلاتر',
-      name: 'noSearchResultsSub',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `لا يوجد طلبات تواصل حالية`
-  String get noRequestsTitle {
-    return Intl.message(
-      'لا يوجد طلبات تواصل حالية',
-      name: 'noRequestsTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `جميع طلبات التواصل والاستقدام المعروضة ستظهر هنا ومتابعة حالتها (قيد المراجعة، مقبول، مكتمل).`
-  String get noRequestsSub {
-    return Intl.message(
-      'جميع طلبات التواصل والاستقدام المعروضة ستظهر هنا ومتابعة حالتها (قيد المراجعة، مقبول، مكتمل).',
-      name: 'noRequestsSub',
+      'الإشعارات',
+      name: 'notificationsTitle',
       desc: '',
       args: [],
     );
@@ -1705,46 +2150,6 @@ class S {
     );
   }
 
-  /// `يمكنك حفظ المرشحين المميزين أثناء البحث للعودة إليهم لاحقاً بسهولة.`
-  String get savedCandidatesEmptySub {
-    return Intl.message(
-      'يمكنك حفظ المرشحين المميزين أثناء البحث للعودة إليهم لاحقاً بسهولة.',
-      name: 'savedCandidatesEmptySub',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `الفيديو التعريفي للمرشح`
-  String get candidateVideoTitle {
-    return Intl.message(
-      'الفيديو التعريفي للمرشح',
-      name: 'candidateVideoTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `نبذة عن المرشح`
-  String get candidateBioTitle {
-    return Intl.message(
-      'نبذة عن المرشح',
-      name: 'candidateBioTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `البيانات المهنية والتفاصيل`
-  String get candidateDetailsTitle {
-    return Intl.message(
-      'البيانات المهنية والتفاصيل',
-      name: 'candidateDetailsTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `لغة التطبيق`
   String get appLanguageTitle {
     return Intl.message(
@@ -1760,26 +2165,6 @@ class S {
     return Intl.message(
       'تغيير لغة العرض بين العربية والإنجليزية',
       name: 'appLanguageSub',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `تم إرسال طلب التواصل بنجاح! سيتم مراجعة الطلب من الداشبورد والموافقة عليه للتواصل مع المرشح.`
-  String get contactRequestSuccess {
-    return Intl.message(
-      'تم إرسال طلب التواصل بنجاح! سيتم مراجعة الطلب من الداشبورد والموافقة عليه للتواصل مع المرشح.',
-      name: 'contactRequestSuccess',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `جارٍ فتح ملف السيرة الذاتية (CV) للمرشح...`
-  String get cvDownloadInfo {
-    return Intl.message(
-      'جارٍ فتح ملف السيرة الذاتية (CV) للمرشح...',
-      name: 'cvDownloadInfo',
       desc: '',
       args: [],
     );
@@ -1803,11 +2188,6 @@ class S {
       desc: '',
       args: [],
     );
-  }
-
-  /// `مكتمل`
-  String get statusCompleted {
-    return Intl.message('مكتمل', name: 'statusCompleted', desc: '', args: []);
   }
 
   /// `تسجيل الخروج`
@@ -1958,246 +2338,6 @@ class S {
   /// `إلغاء`
   String get cancel {
     return Intl.message('إلغاء', name: 'cancel', desc: '', args: []);
-  }
-
-  /// `أوافق على `
-  String get agreeToTermsPrefix {
-    return Intl.message(
-      'أوافق على ',
-      name: 'agreeToTermsPrefix',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `الشروط والأحكام وسياسة الخصوصية`
-  String get termsAndConditions {
-    return Intl.message(
-      'الشروط والأحكام وسياسة الخصوصية',
-      name: 'termsAndConditions',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `يرجى الموافقة على الشروط والأحكام لإتمام عملية التسجيل`
-  String get acceptTermsRequired {
-    return Intl.message(
-      'يرجى الموافقة على الشروط والأحكام لإتمام عملية التسجيل',
-      name: 'acceptTermsRequired',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `الشروط والأحكام وسياسة الخصوصية`
-  String get termsScreenTitle {
-    return Intl.message(
-      'الشروط والأحكام وسياسة الخصوصية',
-      name: 'termsScreenTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `آخر تحديث: 17 أغسطس 2026`
-  String get termsLastUpdated {
-    return Intl.message(
-      'آخر تحديث: 17 أغسطس 2026',
-      name: 'termsLastUpdated',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `الموافقة والقبول`
-  String get acceptAndContinue {
-    return Intl.message(
-      'الموافقة والقبول',
-      name: 'acceptAndContinue',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `معلومات الاتصال والمنشأة`
-  String get companyInfoTitle {
-    return Intl.message(
-      'معلومات الاتصال والمنشأة',
-      name: 'companyInfoTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `اسم الشركة`
-  String get companyNameField {
-    return Intl.message(
-      'اسم الشركة',
-      name: 'companyNameField',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `رقم الهاتف`
-  String get companyPhoneField {
-    return Intl.message(
-      'رقم الهاتف',
-      name: 'companyPhoneField',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `البريد الإلكتروني`
-  String get companyEmailField {
-    return Intl.message(
-      'البريد الإلكتروني',
-      name: 'companyEmailField',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `رقم السجل التجاري`
-  String get companyCrField {
-    return Intl.message(
-      'رقم السجل التجاري',
-      name: 'companyCrField',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `المقر الرئيسي`
-  String get companyLocationField {
-    return Intl.message(
-      'المقر الرئيسي',
-      name: 'companyLocationField',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `استعادة كلمة المرور`
-  String get forgotPasswordTitle {
-    return Intl.message(
-      'استعادة كلمة المرور',
-      name: 'forgotPasswordTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `أدخل البريد الإلكتروني أو رقم الهاتف المسجل بحسابك وسنرسل لك رمز التحقق لاستعادة الحساب.`
-  String get forgotPasswordSub {
-    return Intl.message(
-      'أدخل البريد الإلكتروني أو رقم الهاتف المسجل بحسابك وسنرسل لك رمز التحقق لاستعادة الحساب.',
-      name: 'forgotPasswordSub',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `إرسال رمز التحقق`
-  String get sendResetCode {
-    return Intl.message(
-      'إرسال رمز التحقق',
-      name: 'sendResetCode',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `تذكرت كلمة المرور؟`
-  String get rememberedPassword {
-    return Intl.message(
-      'تذكرت كلمة المرور؟',
-      name: 'rememberedPassword',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `مشاهدة الفيديو`
-  String get watchVideo {
-    return Intl.message(
-      'مشاهدة الفيديو',
-      name: 'watchVideo',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `عرض الصورة`
-  String get viewPhoto {
-    return Intl.message('عرض الصورة', name: 'viewPhoto', desc: '', args: []);
-  }
-
-  /// `تغيير`
-  String get changeMedia {
-    return Intl.message('تغيير', name: 'changeMedia', desc: '', args: []);
-  }
-
-  /// `رفع`
-  String get uploadAction {
-    return Intl.message('رفع', name: 'uploadAction', desc: '', args: []);
-  }
-
-  /// `قص وتعديل الصورة`
-  String get cropPhoto {
-    return Intl.message(
-      'قص وتعديل الصورة',
-      name: 'cropPhoto',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `تأكيد وقص`
-  String get confirmCrop {
-    return Intl.message('تأكيد وقص', name: 'confirmCrop', desc: '', args: []);
-  }
-
-  /// `+5 ثواني`
-  String get seconds5Forward {
-    return Intl.message(
-      '+5 ثواني',
-      name: 'seconds5Forward',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `-5 ثواني`
-  String get seconds5Backward {
-    return Intl.message(
-      '-5 ثواني',
-      name: 'seconds5Backward',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `يرجى استكمال جميع البيانات والمستندات والفيديو لتفعيل المتابعة`
-  String get completeAllFieldsHint {
-    return Intl.message(
-      'يرجى استكمال جميع البيانات والمستندات والفيديو لتفعيل المتابعة',
-      name: 'completeAllFieldsHint',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `جارٍ رفع الملفات والوسائط، يرجى الانتظار...`
-  String get uploadingMediaHint {
-    return Intl.message(
-      'جارٍ رفع الملفات والوسائط، يرجى الانتظار...',
-      name: 'uploadingMediaHint',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `لا يوجد اتصال بالإنترنت`

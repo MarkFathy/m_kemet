@@ -28,8 +28,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "acceptTermsRequired": MessageLookupByLibrary.simpleMessage(
       "يرجى الموافقة على الشروط والأحكام لإتمام عملية التسجيل",
     ),
+    "activeFilters": MessageLookupByLibrary.simpleMessage("الفلاتر النشطة"),
     "ageLabel": MessageLookupByLibrary.simpleMessage("العمر"),
     "agreeToTermsPrefix": MessageLookupByLibrary.simpleMessage("أوافق على "),
+    "allOptions": MessageLookupByLibrary.simpleMessage("الكل"),
     "alreadyHaveAccount": MessageLookupByLibrary.simpleMessage(
       "لديك حساب بالفعل؟",
     ),
@@ -51,12 +53,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "البيانات المهنية والتفاصيل",
     ),
     "candidateProfileTitle": MessageLookupByLibrary.simpleMessage(
-      "الملف الشخصي ",
+      "الملف الشخصي",
     ),
     "candidateVideoTitle": MessageLookupByLibrary.simpleMessage(
       "الفيديو التعريفي للمرشح",
     ),
     "changeMedia": MessageLookupByLibrary.simpleMessage("تغيير"),
+    "companyAccount": MessageLookupByLibrary.simpleMessage("حساب شركة"),
     "companyCrField": MessageLookupByLibrary.simpleMessage("رقم السجل التجاري"),
     "companyEmailField": MessageLookupByLibrary.simpleMessage(
       "البريد الإلكتروني",
@@ -79,6 +82,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "companyProfileSub": MessageLookupByLibrary.simpleMessage(
       "حساب مؤسسة موثق | الرياض، السعودية",
     ),
+    "companyProfileTitle": MessageLookupByLibrary.simpleMessage("ملف الشركة"),
     "completeAllFieldsHint": MessageLookupByLibrary.simpleMessage(
       "يرجى استكمال جميع البيانات والمستندات والفيديو لتفعيل المتابعة",
     ),
@@ -95,11 +99,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirmPasswordMismatch": MessageLookupByLibrary.simpleMessage(
       "كلمتا المرور غير متطابقتين",
     ),
+    "contactRequestPending": MessageLookupByLibrary.simpleMessage(
+      "طلب تواصل قيد الانتظار",
+    ),
+    "contactRequestRejected": MessageLookupByLibrary.simpleMessage(
+      "تم رفض طلب التواصل",
+    ),
     "contactRequestSuccess": MessageLookupByLibrary.simpleMessage(
-      "تم إرسال طلب التواصل بنجاح! سيتم مراجعة الطلب من الداشبورد والموافقة عليه للتواصل مع المرشح.",
+      "تم إرسال طلب التواصل بنجاح! سيتم مراجعة الطلب والموافقة عليه للتواصل مع المرشح.",
     ),
     "contactSupport": MessageLookupByLibrary.simpleMessage("الدعم الفني"),
     "continueAction": MessageLookupByLibrary.simpleMessage("المتابعة"),
+    "corporateAccount": MessageLookupByLibrary.simpleMessage("حساب مؤسسة"),
+    "corporateAccountActive": MessageLookupByLibrary.simpleMessage(
+      "حساب مؤسسة نشط",
+    ),
+    "corporateAccountVerified": MessageLookupByLibrary.simpleMessage(
+      "حساب مؤسسة موثق",
+    ),
     "countryLabel": MessageLookupByLibrary.simpleMessage("الدولة الحالية"),
     "cropPhoto": MessageLookupByLibrary.simpleMessage("قص وتعديل الصورة"),
     "currentCountryHint": MessageLookupByLibrary.simpleMessage(
@@ -176,7 +193,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "اختر الراتب المتوقع",
     ),
     "expectedSalaryLabel": MessageLookupByLibrary.simpleMessage(
-      "الراتب المتوقع",
+      "الراتب المتوقع (بالدولار)",
     ),
     "experienceLabel": MessageLookupByLibrary.simpleMessage("الخبرة"),
     "experienceYearsHint": MessageLookupByLibrary.simpleMessage(
@@ -283,6 +300,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "تعذّر الاتصال بالخادم",
     ),
     "next": MessageLookupByLibrary.simpleMessage("التالي"),
+    "noCandidateVideo": MessageLookupByLibrary.simpleMessage(
+      "لا يتوفر فيديو تعريفي لهذا المرشح",
+    ),
     "noCountryFound": MessageLookupByLibrary.simpleMessage(
       "لا توجد نتائج مطابقة",
     ),
@@ -303,10 +323,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "لا يوجد إشعارات جديدة",
     ),
     "noRequestsSub": MessageLookupByLibrary.simpleMessage(
-      "جميع طلبات التواصل والاستقدام المعروضة ستظهر هنا ومتابعة حالتها (قيد المراجعة، مقبول، مكتمل).",
+      "جميع طلبات التواصل والاستقدام المعروضة ستظهر هنا عند إرسالها ومتابعة حالتها.",
     ),
     "noRequestsTitle": MessageLookupByLibrary.simpleMessage(
-      "لا يوجد طلبات تواصل حالية",
+      "لا توجد طلبات تواصل حالية",
     ),
     "noSavedCandidates": MessageLookupByLibrary.simpleMessage(
       "لا يوجد مرشحين محفوظين حالياً",
@@ -395,6 +415,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "phoneValidationMessage": MessageLookupByLibrary.simpleMessage(
       "يرجى إدخال رقم هاتف صحيح",
     ),
+    "popularProfessionsTitle": MessageLookupByLibrary.simpleMessage(
+      "المهن الأكثر طلباً",
+    ),
     "previousExperienceHint": MessageLookupByLibrary.simpleMessage(
       "اكتب نبذة عن خبراتك وأماكن عملك السابقة",
     ),
@@ -409,6 +432,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "professionalSectionTitle": MessageLookupByLibrary.simpleMessage(
       "البيانات المهنية",
+    ),
+    "profileLoadError": MessageLookupByLibrary.simpleMessage(
+      "حدث خطأ أثناء تحميل بيانات الملف الشخصي",
     ),
     "profileStatusTitle": MessageLookupByLibrary.simpleMessage("حالة الملف"),
     "qualificationHint": MessageLookupByLibrary.simpleMessage(
@@ -484,6 +510,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "seconds5Backward": MessageLookupByLibrary.simpleMessage("-5 ثواني"),
     "seconds5Forward": MessageLookupByLibrary.simpleMessage("+5 ثواني"),
     "sendResetCode": MessageLookupByLibrary.simpleMessage("إرسال رمز التحقق"),
+    "sendingContactRequest": MessageLookupByLibrary.simpleMessage(
+      "جاري إرسال الطلب...",
+    ),
     "serverErrorSubtitle": MessageLookupByLibrary.simpleMessage(
       "حدث خطأ غير متوقع. يرجى المحاولة لاحقاً",
     ),
@@ -533,6 +562,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "timeoutErrorTitle": MessageLookupByLibrary.simpleMessage(
       "انتهت مهلة الاتصال",
     ),
+    "topCountriesTitle": MessageLookupByLibrary.simpleMessage(
+      "الدول الأكثر طلباً",
+    ),
     "travelPossibilityHint": MessageLookupByLibrary.simpleMessage(
       "اختر إمكانية السفر",
     ),
@@ -564,5 +596,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "viewCandidateProfile": MessageLookupByLibrary.simpleMessage("عرض الملف"),
     "viewPhoto": MessageLookupByLibrary.simpleMessage("عرض الصورة"),
     "watchVideo": MessageLookupByLibrary.simpleMessage("مشاهدة الفيديو"),
+    "yearsOld": MessageLookupByLibrary.simpleMessage("سنة"),
   };
 }

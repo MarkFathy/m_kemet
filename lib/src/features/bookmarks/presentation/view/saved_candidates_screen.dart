@@ -15,7 +15,7 @@ import 'package:m_kemet/src/core/widgets/buttons/custom_back_button.dart';
 import 'package:m_kemet/src/core/widgets/shimmer/shimmer.dart';
 import 'package:m_kemet/src/features/bookmarks/presentation/cubit/bookmarks_cubit.dart';
 import 'package:m_kemet/src/features/bookmarks/presentation/cubit/bookmarks_state.dart';
-import 'package:m_kemet/src/features/company/presentation/widgets/candidate_card.dart';
+import 'package:m_kemet/src/features/candidate_search/presentation/widgets/candidate_card.dart';
 
 class SavedCandidatesScreen extends StatelessWidget {
   const SavedCandidatesScreen({super.key});

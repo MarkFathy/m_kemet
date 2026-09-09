@@ -68,9 +68,27 @@ class CandidateRemoteDataSourceImpl implements CandidateRemoteDataSource {
     if (response.data is Map<String, dynamic>) {
       final data = response.data['data'];
       if (data is Map<String, dynamic>) {
-        final candidateJson = data['candidate'] is Map<String, dynamic>
-            ? data['candidate'] as Map<String, dynamic>
-            : data;
+        final Map<String, dynamic> candidateJson = data['candidate'] is Map<String, dynamic>
+            ? Map<String, dynamic>.from(data['candidate'] as Map)
+            : Map<String, dynamic>.from(data);
+
+        // Merge root-level contact request information if present
+        for (final key in [
+          'contact_request',
+          'has_contact_request',
+          'is_contact_requested',
+          'already_sent',
+          'application',
+          'can_contact',
+          'can_send_contact_request',
+          'status',
+          'status_label',
+          'contact_request_status'
+        ]) {
+          if (data.containsKey(key) && !candidateJson.containsKey(key)) {
+            candidateJson[key] = data[key];
+          }
+        }
         return CandidateModel.fromJson(candidateJson);
       }
     }

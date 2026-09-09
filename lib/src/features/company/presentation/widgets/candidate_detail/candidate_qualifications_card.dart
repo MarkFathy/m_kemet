@@ -69,9 +69,16 @@ class CandidateQualificationsCard extends StatelessWidget {
                   : S.of(context).invalidPassport),
         ),
       if (candidate.gender.isNotEmpty)
-        MapEntry(S.of(context).genderLabel, candidate.gender),
+        MapEntry(
+          S.of(context).genderLabel,
+          (candidate.gender == 'ذكر' || candidate.gender == 'male')
+              ? S.of(context).male
+              : ((candidate.gender == 'أنثى' || candidate.gender == 'female')
+                  ? S.of(context).female
+                  : candidate.gender),
+        ),
       if (candidate.age > 0)
-        MapEntry(S.of(context).ageLabel, '${candidate.age} سنة'),
+        MapEntry(S.of(context).ageLabel, '${candidate.age} ${S.of(context).yearsOld}'),
       if (candidate.expectedSalary.isNotEmpty)
         MapEntry(S.of(context).expectedSalaryLabel, candidate.expectedSalary),
     ];

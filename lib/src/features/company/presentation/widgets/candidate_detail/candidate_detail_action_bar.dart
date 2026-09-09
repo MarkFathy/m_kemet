@@ -29,40 +29,88 @@ class CandidateDetailActionBar extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.darkNavy,
               foregroundColor: AppColors.whiteColor,
-              disabledBackgroundColor: const Color(0xFFF1F5F9),
+              disabledBackgroundColor: isSending
+                  ? AppColors.softBlueBg
+                  : (isSent ? const Color(0xFFF1F5F9) : const Color(0xFFF1F5F9)),
               disabledForegroundColor: AppColors.darkNavy,
               padding: EdgeInsets.symmetric(vertical: 14.h),
-              elevation: isSent ? 0 : 2,
+              elevation: (isSent || isSending) ? 0 : 2,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                side: isSent
+                side: isSending
                     ? BorderSide(
-                        color: AppColors.successGreen.withValues(alpha: 0.5),
+                        color: AppColors.darkNavy.withValues(alpha: 0.2),
                         width: 1.2,
                       )
-                    : BorderSide.none,
+                    : (isSent
+                        ? BorderSide(
+                            color: AppColors.successGreen.withValues(alpha: 0.5),
+                            width: 1.2,
+                          )
+                        : BorderSide.none),
               ),
             ),
             child: isSending
-                ? SizedBox(
-                    width: 22.r,
-                    height: 22.r,
-                    child: const CircularProgressIndicator(
-                      strokeWidth: 2.2,
-                      color: AppColors.whiteColor,
-                    ),
-                  )
-                : Text(
-                    isSent
-                        ? (state.contactRequestStatusLabel ??
-                            S.of(context).contactRequestSuccess)
-                        : S.of(context).requestContact,
-                    style: getTextStyle().w700.s14.copyWith(
-                          color: isSent
-                              ? const Color(0xFF1E293B)
-                              : AppColors.whiteColor,
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 20.r,
+                        height: 20.r,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.4,
+                          valueColor: const AlwaysStoppedAnimation<Color>(AppColors.darkNavy),
+                          backgroundColor: AppColors.skyBlue.withValues(alpha: 0.35),
                         ),
-                  ),
+                      ),
+                      SizedBox(width: 10.w),
+                      Text(
+                        S.of(context).sendingContactRequest,
+                        style: getTextStyle().darkNavy.w700.s14,
+                      ),
+                    ],
+                  )
+                : (isSent
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.check_circle_rounded,
+                            size: 18.sp,
+                            color: AppColors.successGreen,
+                          ),
+                          SizedBox(width: 8.w),
+                          Flexible(
+                            child: Text(
+                              state.contactRequestStatusLabel ??
+                                  S.of(context).contactRequestSuccess,
+                              style: getTextStyle().w700.s14.copyWith(
+                                    color: const Color(0xFF1E293B),
+                                  ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.person_add_alt_1_rounded,
+                            size: 18.sp,
+                            color: AppColors.whiteColor,
+                          ),
+                          SizedBox(width: 8.w),
+                          Text(
+                            S.of(context).requestContact,
+                            style: getTextStyle().whiteColor.w700.s14,
+                          ),
+                        ],
+                      )),
           ),
         );
       },
