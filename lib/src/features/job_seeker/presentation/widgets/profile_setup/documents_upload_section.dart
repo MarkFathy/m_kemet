@@ -3,12 +3,14 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_mlkit_document_scanner/google_mlkit_document_scanner.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:m_kemet/generated/l10n.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
+import 'package:m_kemet/src/core/helpers/document_filter_helper.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_cubit.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_state.dart';
 
@@ -59,6 +61,59 @@ class DocumentsUploadSection extends StatelessWidget {
       },
     );
   }
+
+  Future<void> _scanAndUploadPassport({
+    required BuildContext context,
+    required Future<void> Function(File file) uploadFn,
+  }) async {
+    // If not running on Android (e.g. iOS), fallback to regular image picker with crop
+    if (!Platform.isAndroid) {
+      await _pickAndUploadImage(
+        context: context,
+        uploadFn: uploadFn,
+        title: S.of(context).cropPhoto,
+      );
+      return;
+    }
+
+    final options = DocumentScannerOptions(
+      documentFormats: {DocumentFormat.jpeg},
+      mode: ScannerMode.full,
+      pageLimit: 1,
+      isGalleryImport: false,
+    );
+    final documentScanner = DocumentScanner(options: options);
+
+    try {
+      final result = await documentScanner.scanDocument();
+      final images = result.images;
+      if (images != null && images.isNotEmpty) {
+        final processedPath =
+            await DocumentFilterHelper.processCamScannerImage(images.first);
+        final file = File(processedPath);
+        if (!context.mounted) return;
+        await uploadFn(file);
+      }
+    } catch (e) {
+      debugPrint('Error scanning passport: $e');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'تعذر مسح جواز السفر، يرجى التأكد من صلاحية الكاميرا والمحاولة مرة أخرى',
+              style: getTextStyle().white.w500.s14,
+            ),
+            backgroundColor: AppColors.errorRed,
+          ),
+        );
+      }
+    } finally {
+      documentScanner.close();
+    }
+  }
+
+
+
 
   Future<void> _pickAndUploadPdf({
     required BuildContext context,
@@ -190,18 +245,15 @@ class DocumentsUploadSection extends StatelessWidget {
             _buildDocumentCard(
               context: context,
               title: S.of(context).passportCopyTitle,
-              subtitle: S.of(context).passportCopyDesc,
               icon: Icons.badge_outlined,
               iconBgColor: AppColors.softBlueBg,
               isUploaded: isPassportUploaded,
               isUploading: isPassportUploading,
               fileName: state.uploadedPassport?.originalName ??
                   state.localPassportPath?.split(Platform.pathSeparator).last,
-              onUploadTap: () => _pickAndUploadImage(
+              onUploadTap: () => _scanAndUploadPassport(
                 context: context,
                 uploadFn: cubit.uploadPassport,
-                title: S.of(context).passportCopyTitle,
-                initialAspectRatio: null,
               ),
               onPreviewTap: () {
                 final file = state.localPassportPath != null
@@ -214,11 +266,9 @@ class DocumentsUploadSection extends StatelessWidget {
                   file: file,
                   imageUrl: url,
                   title: S.of(context).passportCopyTitle,
-                  onChange: () => _pickAndUploadImage(
+                  onChange: () => _scanAndUploadPassport(
                     context: context,
                     uploadFn: cubit.uploadPassport,
-                    title: S.of(context).passportCopyTitle,
-                    initialAspectRatio: null,
                   ),
                 );
               },
@@ -247,7 +297,7 @@ class DocumentsUploadSection extends StatelessWidget {
   Widget _buildDocumentCard({
     required BuildContext context,
     required String title,
-    required String subtitle,
+    String? subtitle,
     required IconData icon,
     required Color iconBgColor,
     required bool isUploaded,
@@ -298,11 +348,13 @@ class DocumentsUploadSection extends StatelessWidget {
                         title,
                         style: getTextStyle().darkNavy.w700.s16,
                       ),
-                      4.szH,
-                      Text(
-                        subtitle,
-                        style: getTextStyle().greyColor.w400.s12,
-                      ),
+                      if (subtitle != null && subtitle.isNotEmpty) ...[
+                        4.szH,
+                        Text(
+                          subtitle,
+                          style: getTextStyle().greyColor.w400.s12,
+                        ),
+                      ],
                     ],
                   ),
                 ),

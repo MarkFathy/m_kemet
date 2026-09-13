@@ -2,6 +2,7 @@ import 'package:m_kemet/src/core/error/exceptions.dart';
 import 'package:m_kemet/src/core/network/api_endpoints.dart';
 import 'package:m_kemet/src/core/network/dio_client.dart';
 import 'package:m_kemet/src/features/company/data/models/candidate_model.dart';
+import 'package:m_kemet/src/features/company/data/models/company_contact_request_model.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_filter_entity.dart';
 
 abstract class CandidateRemoteDataSource {
@@ -11,6 +12,7 @@ abstract class CandidateRemoteDataSource {
   Future<CandidateModel> toggleSaveCandidate(String candidateId);
   Future<CandidateModel> getCandidateDetail(String candidateId);
   Future<Map<String, dynamic>> sendContactRequest(String candidateId);
+  Future<List<CompanyContactRequestModel>> getCompanyContactRequests();
 }
 
 class CandidateRemoteDataSourceImpl implements CandidateRemoteDataSource {
@@ -172,5 +174,19 @@ class CandidateRemoteDataSourceImpl implements CandidateRemoteDataSource {
       return response.data as Map<String, dynamic>;
     }
     throw const ServerException(500, 'Invalid response from server', null);
+  }
+
+  @override
+  Future<List<CompanyContactRequestModel>> getCompanyContactRequests() async {
+    final response = await _dioClient.dio.get(ApiEndpoints.myRequests);
+    if (response.data is Map<String, dynamic>) {
+      final rawData = response.data['data'];
+      if (rawData is List) {
+        return rawData
+            .map((item) => CompanyContactRequestModel.fromJson(item as Map<String, dynamic>))
+            .toList();
+      }
+    }
+    return [];
   }
 }

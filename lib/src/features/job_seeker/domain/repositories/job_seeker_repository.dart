@@ -10,6 +10,8 @@ import 'package:m_kemet/src/features/job_seeker/domain/entities/experience_level
 import 'package:m_kemet/src/features/job_seeker/domain/entities/profession_entity.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/entities/qualification_entity.dart';
 
+import 'package:m_kemet/src/features/job_seeker/data/models/contact_request_model.dart';
+
 abstract class JobSeekerRepository {
   Future<Either<Failure, List<ProfessionEntity>>> getProfessions();
   Future<Either<Failure, List<ExperienceLevelEntity>>> getExperienceLevels();
@@ -20,6 +22,7 @@ abstract class JobSeekerRepository {
   Future<Either<Failure, CandidateProfileDetailEntity>> updateCandidateProfile(
     CandidateProfileUpdateRequest request,
   );
+  Future<Either<Failure, List<ContactRequestModel>>> getMyContactRequests();
   Future<Either<Failure, CandidateDocumentEntity>> uploadDocument({
     required String documentType,
     required File file,

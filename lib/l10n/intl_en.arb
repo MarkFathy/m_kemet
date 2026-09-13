@@ -217,7 +217,7 @@
   "cvDownloadInfo": "Opening candidate CV file...",
 
   "@@companyRequests": "-----------------------------------------------------------------------------",
-  "requestsTitle": "Recruitment Requests",
+  "requestsTitle": "Contact Requests",
   "noRequestsTitle": "No contact requests yet",
   "noRequestsSub": "All your submitted contact and recruitment requests will appear here to track their lifecycle status.",
   "statusCompleted": "Completed",

@@ -8,6 +8,7 @@ import 'package:m_kemet/src/features/auth/data/models/gender_model.dart';
 import 'package:m_kemet/src/features/job_seeker/data/models/candidate_document_model.dart';
 import 'package:m_kemet/src/features/job_seeker/data/models/candidate_profile_detail_model.dart';
 import 'package:m_kemet/src/features/job_seeker/data/models/candidate_profile_update_request.dart';
+import 'package:m_kemet/src/features/job_seeker/data/models/contact_request_model.dart';
 import 'package:m_kemet/src/features/job_seeker/data/models/experience_level_model.dart';
 import 'package:m_kemet/src/features/job_seeker/data/models/profession_model.dart';
 import 'package:m_kemet/src/features/job_seeker/data/models/qualification_model.dart';
@@ -20,6 +21,7 @@ abstract class JobSeekerRemoteDataSource {
   Future<List<GenderModel>> fetchGenders();
   Future<CandidateProfileDetailModel> fetchCandidateProfile();
   Future<CandidateProfileDetailModel> updateCandidateProfile(CandidateProfileUpdateRequest request);
+  Future<List<ContactRequestModel>> fetchMyContactRequests();
   Future<CandidateDocumentModel> uploadDocument({
     required String documentType,
     required File file,
@@ -217,5 +219,17 @@ class JobSeekerRemoteDataSourceImpl implements JobSeekerRemoteDataSource {
       return CandidateDocumentModel.fromJson(videoData);
     }
     throw const ServerException(500, 'Failed to upload video', null);
+  }
+
+  @override
+  Future<List<ContactRequestModel>> fetchMyContactRequests() async {
+    final response = await _dioClient.dio.get(ApiEndpoints.myRequests);
+    final data = response.data;
+    if (data is Map<String, dynamic> && data['data'] is List) {
+      return (data['data'] as List)
+          .map((item) => ContactRequestModel.fromJson(item as Map<String, dynamic>))
+          .toList();
+    }
+    return [];
   }
 }

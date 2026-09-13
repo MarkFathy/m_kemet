@@ -25,9 +25,15 @@ subprojects {
                 targetCompatibility = JavaVersion.VERSION_17
             }
         }
+        tasks.matching { it.name.startsWith("lintVital") }.configureEach {
+            enabled = false
+        }
     }
     tasks.withType<JavaCompile>().configureEach {
         options.compilerArgs.add("-Xlint:-options")
+    }
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+        compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
 

@@ -24,13 +24,6 @@ class JobSeekerHeroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ImageProvider? imageProvider;
-    if (localAvatarFile != null && localAvatarFile!.existsSync()) {
-      imageProvider = FileImage(localAvatarFile!);
-    } else if (avatar != null && avatar!.isNotEmpty) {
-      imageProvider = CachedNetworkImageProvider(avatar!);
-    }
-
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       decoration: BoxDecoration(
@@ -47,17 +40,47 @@ class JobSeekerHeroCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 34.r,
-            backgroundColor: AppColors.softBlueBg,
-            backgroundImage: imageProvider,
-            child: imageProvider == null
-                ? Icon(
-                    Icons.person_rounded,
-                    color: AppColors.darkNavy,
-                    size: 36.sp,
-                  )
-                : null,
+          ClipOval(
+            child: Container(
+              width: 68.r,
+              height: 68.r,
+              color: AppColors.softBlueBg,
+              child: localAvatarFile != null && localAvatarFile!.existsSync()
+                  ? Image.file(
+                      localAvatarFile!,
+                      width: 68.r,
+                      height: 68.r,
+                      fit: BoxFit.cover,
+                    )
+                  : (avatar != null && avatar!.trim().isNotEmpty)
+                      ? CachedNetworkImage(
+                          imageUrl: avatar!.trim(),
+                          width: 68.r,
+                          height: 68.r,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Center(
+                            child: Icon(
+                              Icons.person_rounded,
+                              size: 36.sp,
+                              color: AppColors.darkNavy,
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Center(
+                            child: Icon(
+                              Icons.person_rounded,
+                              size: 36.sp,
+                              color: AppColors.darkNavy,
+                            ),
+                          ),
+                        )
+                      : Center(
+                          child: Icon(
+                            Icons.person_rounded,
+                            size: 36.sp,
+                            color: AppColors.darkNavy,
+                          ),
+                        ),
+            ),
           ),
           14.szW,
           Expanded(

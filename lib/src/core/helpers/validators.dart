@@ -40,23 +40,10 @@ class Validators {
     bool requireSpecialChar = false,
   }) {
     if (value == null || value.trim().isEmpty) {
-      return emptyMessage ?? 'Password is required';
+      return emptyMessage ?? minLengthMessage ?? 'كلمة المرور يجب ألا تقل عن $minLength أحرف';
     }
     if (value.length < minLength) {
-      return minLengthMessage ?? 'Password must be at least $minLength characters';
-    }
-    if (requireMixedCase) {
-      final hasUpper = RegExp(r'[A-Z]').hasMatch(value);
-      final hasLower = RegExp(r'[a-z]').hasMatch(value);
-      if (!hasUpper || !hasLower) {
-        return mixedCaseMessage ?? 'يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير على الأقل.';
-      }
-    }
-    if (requireSpecialChar) {
-      final hasSymbol = RegExp(r'[!@#$%^&*(),.?":{}|<>\-_+=\[\]\\\/~`؛،؟]').hasMatch(value);
-      if (!hasSymbol) {
-        return symbolMessage ?? 'يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل.';
-      }
+      return minLengthMessage ?? 'كلمة المرور يجب ألا تقل عن $minLength أحرف';
     }
     return null;
   }

@@ -27,6 +27,7 @@ class ApiEndpoints {
 
   // Candidate endpoints
   static const String candidateMyDocument = '/api/candidate/my-document';
+  static const String myRequests = '/api/my-requests';
   static const String candidateUpdateDocument =
       '/api/candidate/update-document';
   static const String candidateDocuments = '/api/candidate/documents';

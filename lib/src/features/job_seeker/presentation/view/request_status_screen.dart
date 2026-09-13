@@ -6,9 +6,12 @@ import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
+import 'package:m_kemet/src/core/navigation/named_routes.dart';
+import 'package:m_kemet/src/core/navigation/navigator.dart';
+import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
-import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
-import 'package:m_kemet/src/core/widgets/buttons/custom_back_button.dart';
+import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
+import 'package:m_kemet/src/features/job_seeker/domain/usecases/get_candidate_profile_usecase.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/request_status/approved_status_card.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/request_status/pending_status_card.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/request_status/rejected_status_card.dart';
@@ -17,12 +20,10 @@ enum RequestApprovalStatus { pending, approved, rejected }
 
 class RequestStatusScreen extends StatefulWidget {
   final RequestApprovalStatus initialStatus;
-  final bool showTestTabs;
 
   const RequestStatusScreen({
     super.key,
     this.initialStatus = RequestApprovalStatus.pending,
-    this.showTestTabs = true,
   });
 
   @override
@@ -31,25 +32,47 @@ class RequestStatusScreen extends StatefulWidget {
 
 class _RequestStatusScreenState extends State<RequestStatusScreen> {
   late RequestApprovalStatus _currentStatus;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _currentStatus = widget.initialStatus;
+    _fetchProfileStatus();
+  }
+
+  Future<void> _fetchProfileStatus() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final result = await sl<GetCandidateProfileUseCase>()();
+    if (!mounted) return;
+
+    result.fold(
+      (failure) {
+        setState(() {
+          _isLoading = false;
+        });
+      },
+      (profile) {
+        final backendStatus = profile.status?.toLowerCase().trim();
+        setState(() {
+          if (backendStatus == 'approved') {
+            _currentStatus = RequestApprovalStatus.approved;
+          } else if (backendStatus == 'rejected') {
+            _currentStatus = RequestApprovalStatus.rejected;
+          } else {
+            _currentStatus = RequestApprovalStatus.pending;
+          }
+          _isLoading = false;
+        });
+      },
+    );
   }
 
   Future<void> _onRefresh() async {
-    await Future.delayed(const Duration(milliseconds: 800));
-    if (mounted) {
-      CustomSnackBar.showSuccess(
-        context,
-        message: _currentStatus == RequestApprovalStatus.pending
-            ? S.of(context).statusPending
-            : _currentStatus == RequestApprovalStatus.approved
-                ? S.of(context).statusApproved
-                : S.of(context).statusRejected,
-      );
-    }
+    await _fetchProfileStatus();
   }
 
   @override
@@ -73,132 +96,44 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Screen Header with Back Button
-              Row(
-                children: [
-                  const CustomBackButton(),
-                  10.szW,
-                  Expanded(
-                    child: Text(
-                      S.of(context).requestStatusScreenTitle,
-                      style: getTextStyle().darkNavy.w700.s20,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-
-              16.szH,
-
-              // Interactive Status Selector Tabs
-              if (widget.showTestTabs) ...[
-                Container(
-                  padding: EdgeInsets.all(4.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.borderGrey,
-                    borderRadius: BorderRadius.circular(14.r),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: _buildStatusTab(
-                          status: RequestApprovalStatus.pending,
-                          title: S.of(context).statusPending,
-                          icon: Icons.hourglass_top_rounded,
-                          activeColor: AppColors.warningAmber,
-                          activeBgColor: AppColors.warningBg,
-                        ),
-                      ),
-                      4.szW,
-                      Expanded(
-                        child: _buildStatusTab(
-                          status: RequestApprovalStatus.approved,
-                          title: S.of(context).statusApproved,
-                          icon: Icons.check_circle_rounded,
-                          activeColor: AppColors.successGreen,
-                          activeBgColor: AppColors.successBg,
-                        ),
-                      ),
-                      4.szW,
-                      Expanded(
-                        child: _buildStatusTab(
-                          status: RequestApprovalStatus.rejected,
-                          title: S.of(context).statusRejected,
-                          icon: Icons.cancel_rounded,
-                          activeColor: AppColors.errorRed,
-                          activeBgColor: AppColors.errorBg,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                20.szH,
-              ],
-
-              // Animated Dynamic Status Content Body
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                child: _buildStatusCardContent(context),
+              // Screen Title (no back button - this is a terminal screen after submission)
+              Text(
+                S.of(context).requestStatusScreenTitle,
+                style: getTextStyle().darkNavy.w700.s20,
               ),
 
               20.szH,
+
+              // Status Content Body
+              if (_isLoading)
+                Container(
+                  height: 300.h,
+                  alignment: Alignment.center,
+                  child: const CircularProgressIndicator(
+                    color: AppColors.darkNavy,
+                  ),
+                )
+              else
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: _buildStatusCardContent(context),
+                ),
+
+              20.szH,
+
+              // Home Action Button (الرئيسية)
+              CustomButton(
+                text: 'الرئيسية (صفحة البروفايل)',
+                onPressed: () {
+                  Go.offAllNamed(NamedRoutes.jobSeekerMain);
+                },
+                backgroundColor: AppColors.darkNavy,
+                textStyle: getTextStyle().whiteColor.w700.s16,
+              ),
+
+              16.szH,
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatusTab({
-    required RequestApprovalStatus status,
-    required String title,
-    required IconData icon,
-    required Color activeColor,
-    required Color activeBgColor,
-  }) {
-    final isSelected = _currentStatus == status;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _currentStatus = status;
-        });
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 4.w),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.whiteColor : Colors.transparent,
-          borderRadius: BorderRadius.circular(10.r),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.06),
-                    blurRadius: 6.r,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : [],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 14.sp,
-              color: isSelected ? activeColor : AppColors.greyColor,
-            ),
-            4.szW,
-            Flexible(
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                style: isSelected
-                    ? getTextStyle().darkNavy.w700.s11.copyWith(color: activeColor)
-                    : getTextStyle().greyColor.w500.s11,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
         ),
       ),
     );
@@ -221,3 +156,4 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
     }
   }
 }
+

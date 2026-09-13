@@ -52,24 +52,28 @@ class SessionManager {
 
   /// Checks both local cache and backend server to see if the candidate has
   /// already submitted their documents, video, or request.
+  /// Returns false for rejected candidates so they are redirected to refill the form.
   static Future<bool> checkAndSyncJobSeekerProfileCompleted() async {
-    final localStatus = await isJobSeekerProfileCompleted();
-    if (localStatus) return true;
-
     try {
       final result = await sl<GetCandidateProfileUseCase>()();
       return await result.fold(
-        (_) async => false,
+        (_) async => isJobSeekerProfileCompleted(),
         (profile) async {
+          // Rejected candidates must refill the form
+          if (profile.isRejected) {
+            await setJobSeekerProfileCompleted(false);
+            return false;
+          }
           if (profile.hasCompletedOrSubmittedProfile) {
             await setJobSeekerProfileCompleted(true);
             return true;
           }
+          await setJobSeekerProfileCompleted(false);
           return false;
         },
       );
     } catch (_) {
-      return false;
+      return isJobSeekerProfileCompleted();
     }
   }
 

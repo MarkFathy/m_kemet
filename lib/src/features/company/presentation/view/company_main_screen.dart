@@ -17,6 +17,7 @@ import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.da
 import 'package:m_kemet/src/features/candidate_search/presentation/cubit/candidate_search_cubit.dart';
 import 'package:m_kemet/src/features/candidate_search/presentation/cubit/candidate_search_state.dart';
 import 'package:m_kemet/src/features/candidate_search/presentation/widgets/candidate_search_tab.dart';
+import 'package:m_kemet/src/features/company/presentation/cubit/company_requests_cubit.dart';
 import 'package:m_kemet/src/features/company/presentation/widgets/tabs/profile_tab.dart';
 import 'package:m_kemet/src/features/company/presentation/widgets/tabs/requests_tab.dart';
 import 'package:m_kemet/src/features/company/presentation/widgets/tabs/settings_tab.dart';
@@ -56,6 +57,9 @@ class _CompanyMainScreenState extends State<CompanyMainScreen> {
         BlocProvider<AuthCubit>(
           create: (context) => sl<AuthCubit>()..getProfile(),
         ),
+        BlocProvider<CompanyRequestsCubit>.value(
+          value: sl<CompanyRequestsCubit>()..fetchRequests(),
+        ),
       ],
       child: MultiBlocListener(
         listeners: [
@@ -78,6 +82,7 @@ class _CompanyMainScreenState extends State<CompanyMainScreen> {
               context.read<CandidateSearchCubit>().fetchCandidates();
               context.read<BookmarksCubit>().fetchBookmarks();
               context.read<AuthCubit>().getProfile();
+              context.read<CompanyRequestsCubit>().fetchRequests(isRefresh: true);
             },
           ),
           BlocListener<ConnectivityCubit, ConnectivityState>(
@@ -93,6 +98,7 @@ class _CompanyMainScreenState extends State<CompanyMainScreen> {
               context.read<CandidateSearchCubit>().fetchCandidates();
               context.read<BookmarksCubit>().fetchBookmarks();
               context.read<AuthCubit>().getProfile();
+              context.read<CompanyRequestsCubit>().fetchRequests(isRefresh: true);
             },
           ),
         ],

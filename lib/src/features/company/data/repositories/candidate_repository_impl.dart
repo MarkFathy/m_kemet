@@ -4,6 +4,7 @@ import 'package:m_kemet/src/core/error/exceptions.dart';
 import 'package:m_kemet/src/core/error/failure.dart';
 import 'package:m_kemet/src/features/company/data/datasources/candidate_local_data_source.dart';
 import 'package:m_kemet/src/features/company/data/datasources/candidate_remote_data_source.dart';
+import 'package:m_kemet/src/features/company/data/models/company_contact_request_model.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_filter_entity.dart';
 import 'package:m_kemet/src/features/company/domain/repositories/candidate_repository.dart';
@@ -96,6 +97,20 @@ class CandidateRepositoryImpl implements CandidateRepository {
       return Left(ServerFailure(e));
     } on DioException catch (e) {
       return Left(_handleDioError(e, 'Failed to send contact request'));
+    } catch (e) {
+      return Left(ServerFailure(ServerException(500, e.toString(), null)));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<CompanyContactRequestModel>>> getCompanyContactRequests() async {
+    try {
+      final result = await remoteDataSource.getCompanyContactRequests();
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e));
+    } on DioException catch (e) {
+      return Left(_handleDioError(e, 'Failed to fetch contact requests'));
     } catch (e) {
       return Left(ServerFailure(ServerException(500, e.toString(), null)));
     }

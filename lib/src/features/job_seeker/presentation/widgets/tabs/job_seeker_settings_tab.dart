@@ -14,6 +14,7 @@ import 'package:m_kemet/src/features/job_seeker/presentation/widgets/settings/jo
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/settings/job_seeker_notification_toggle_tile.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
+
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/settings/job_seeker_request_status_tile.dart';
 
 class JobSeekerSettingsTab extends StatelessWidget {
@@ -110,12 +111,24 @@ class JobSeekerSettingsTab extends StatelessWidget {
 
           20.szH,
 
-          // 1. Request Status Highlight Tile
+          // 1. Application Request Status Highlight Tile
           const JobSeekerRequestStatusTile(),
 
           14.szH,
 
-          // 2. Notifications Toggle
+          // 2. Company Contact Requests Tile
+          SettingActionTile(
+            icon: Icons.mark_email_read_outlined,
+            iconBgColor: AppColors.softBlueBg,
+            iconColor: AppColors.darkNavy,
+            title: 'طلبات التواصل',
+            subtitle: 'متابعة طلبات الشركات للربط والتواصل معك',
+            onTap: () => Go.toNamed(NamedRoutes.myContactRequests),
+          ),
+
+          14.szH,
+
+          // 3. Notifications Toggle
           ValueListenableBuilder<bool>(
             valueListenable: _notificationsNotifier,
             builder: (context, notificationsEnabled, _) {

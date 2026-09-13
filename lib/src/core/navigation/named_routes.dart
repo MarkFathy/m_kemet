@@ -13,7 +13,8 @@ enum NamedRoutes {
   companyMain('/companyMain'),
   candidateDetail('/candidateDetail'),
   savedCandidates('/savedCandidates'),
-  notifications('/notifications');
+  notifications('/notifications'),
+  myContactRequests('/myContactRequests');
 
   final String routeName;
 

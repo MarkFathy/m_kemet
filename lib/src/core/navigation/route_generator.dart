@@ -10,6 +10,7 @@ import 'package:m_kemet/src/features/auth/presentation/view/register_screen.dart
 import 'package:m_kemet/src/features/auth/presentation/view/terms_and_conditions_screen.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/view/job_seeker_main_screen.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/view/job_seeker_profile_setup_screen.dart';
+import 'package:m_kemet/src/features/job_seeker/presentation/view/my_contact_requests_screen.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/view/request_status_screen.dart';
 import 'package:m_kemet/src/features/onboarding/presentation/view/onboarding_screen.dart';
 import 'package:m_kemet/src/features/splash/presentation/splash_screen.dart';
@@ -154,6 +155,12 @@ class RouterGenerator {
       ),
       NamedRoutes.notifications => _pageRouter.build(
         const NotificationsScreen(),
+        settings: actualSettings,
+        transition: transition,
+        options: options,
+      ),
+      NamedRoutes.myContactRequests => _pageRouter.build(
+        const MyContactRequestsScreen(),
         settings: actualSettings,
         transition: transition,
         options: options,

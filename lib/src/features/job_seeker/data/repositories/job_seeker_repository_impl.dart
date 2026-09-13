@@ -6,6 +6,7 @@ import 'package:m_kemet/src/features/auth/domain/entities/country_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/gender_entity.dart';
 import 'package:m_kemet/src/features/job_seeker/data/datasources/job_seeker_remote_data_source.dart';
 import 'package:m_kemet/src/features/job_seeker/data/models/candidate_profile_update_request.dart';
+import 'package:m_kemet/src/features/job_seeker/data/models/contact_request_model.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/entities/candidate_document_entity.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/entities/candidate_profile_detail_entity.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/entities/experience_level_entity.dart';
@@ -138,6 +139,18 @@ class JobSeekerRepositoryImpl implements JobSeekerRepository {
         durationSeconds: durationSeconds,
         onSendProgress: onSendProgress,
       );
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e));
+    } catch (e) {
+      return Left(ServerFailure(ServerException(500, e.toString(), null)));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ContactRequestModel>>> getMyContactRequests() async {
+    try {
+      final result = await remoteDataSource.fetchMyContactRequests();
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(e));

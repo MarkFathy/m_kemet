@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:m_kemet/src/core/error/failure.dart';
+import 'package:m_kemet/src/features/company/data/models/company_contact_request_model.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_filter_entity.dart';
 
@@ -10,4 +11,5 @@ abstract class CandidateRepository {
   Future<Either<Failure, CandidateEntity>> toggleSaveCandidate(String candidateId);
   Future<Either<Failure, CandidateEntity>> getCandidateDetail(String candidateId);
   Future<Either<Failure, Map<String, dynamic>>> sendContactRequest(String candidateId);
+  Future<Either<Failure, List<CompanyContactRequestModel>>> getCompanyContactRequests();
 }

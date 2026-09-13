@@ -49,14 +49,17 @@ import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.da
 import 'package:m_kemet/src/features/company/domain/usecases/get_candidate_detail_usecase.dart';
 import 'package:m_kemet/src/features/company/domain/usecases/get_candidates_usecase.dart';
 import 'package:m_kemet/src/features/company/domain/usecases/get_saved_candidates_usecase.dart';
+import 'package:m_kemet/src/features/company/domain/usecases/get_company_contact_requests_usecase.dart';
 import 'package:m_kemet/src/features/company/domain/usecases/send_contact_request_usecase.dart';
 import 'package:m_kemet/src/features/company/domain/usecases/toggle_save_candidate_usecase.dart';
 import 'package:m_kemet/src/features/company/presentation/cubit/candidate_detail_cubit.dart';
+import 'package:m_kemet/src/features/company/presentation/cubit/company_requests_cubit.dart';
 import 'package:m_kemet/src/features/job_seeker/data/datasources/job_seeker_remote_data_source.dart';
 import 'package:m_kemet/src/features/job_seeker/data/repositories/job_seeker_repository_impl.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/repositories/job_seeker_repository.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/usecases/get_candidate_profile_usecase.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/usecases/get_job_seeker_lookups_usecase.dart';
+import 'package:m_kemet/src/features/job_seeker/domain/usecases/get_my_contact_requests_usecase.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/usecases/update_candidate_profile_usecase.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/usecases/upload_candidate_document_usecase.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/usecases/upload_candidate_video_usecase.dart';
@@ -194,6 +197,7 @@ Future<void> setupServiceLocator() async {
     ..registerLazySingleton(() => UpdateCandidateProfileUseCase(sl()))
     ..registerLazySingleton(() => UploadCandidateDocumentUseCase(sl()))
     ..registerLazySingleton(() => UploadCandidateVideoUseCase(sl()))
+    ..registerLazySingleton(() => GetMyContactRequestsUseCase(sl()))
     ..registerFactory(
       () => JobSeekerProfileCubit(
         getJobSeekerLookupsUseCase: sl(),
@@ -244,6 +248,10 @@ Future<void> setupServiceLocator() async {
     ..registerLazySingleton(() => ToggleSaveCandidateUseCase(sl()))
     ..registerLazySingleton(() => GetCandidateDetailUseCase(sl()))
     ..registerLazySingleton(() => SendContactRequestUseCase(sl()))
+    ..registerLazySingleton(() => GetCompanyContactRequestsUseCase(sl()))
+    ..registerLazySingleton(
+      () => CompanyRequestsCubit(getRequestsUseCase: sl()),
+    )
     ..registerFactoryParam<CandidateDetailCubit, CandidateEntity, void>(
       (candidate, _) => CandidateDetailCubit(
         getCandidateDetailUseCase: sl(),

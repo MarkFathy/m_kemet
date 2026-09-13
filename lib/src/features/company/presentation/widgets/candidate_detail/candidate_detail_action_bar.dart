@@ -5,11 +5,30 @@ import 'package:m_kemet/generated/l10n.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
+import 'package:m_kemet/src/core/widgets/confirm_action_bottom_sheet.dart';
 import 'package:m_kemet/src/features/company/presentation/cubit/candidate_detail_cubit.dart';
 import 'package:m_kemet/src/features/company/presentation/cubit/candidate_detail_state.dart';
 
 class CandidateDetailActionBar extends StatelessWidget {
   const CandidateDetailActionBar({super.key});
+
+  void _showConfirmContactRequestSheet(BuildContext context) {
+    showConfirmActionBottomSheet(
+      context,
+      icon: Icons.person_add_alt_1_rounded,
+      iconBgColor: AppColors.softBlueBg,
+      iconColor: AppColors.darkNavy,
+      title: 'تأكيد طلب التواصل',
+      message:
+          'هل أنت متأكد من رغبتك في إرسال طلب تواصل مع هذا المرشح؟ سيتم إرسال الطلب لإدارة المنصة للمراجعة.',
+      cancelLabel: S.of(context).cancel,
+      confirmLabel: 'تأكيد الإرسال',
+      confirmColor: AppColors.darkNavy,
+      onConfirm: () {
+        context.read<CandidateDetailCubit>().sendContactRequest();
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +42,7 @@ class CandidateDetailActionBar extends StatelessWidget {
           child: ElevatedButton(
             onPressed: (isSent || isSending)
                 ? null
-                : () {
-                    context.read<CandidateDetailCubit>().sendContactRequest();
-                  },
+                : () => _showConfirmContactRequestSheet(context),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.darkNavy,
               foregroundColor: AppColors.whiteColor,
@@ -44,7 +61,7 @@ class CandidateDetailActionBar extends StatelessWidget {
                       )
                     : (isSent
                         ? BorderSide(
-                            color: AppColors.successGreen.withValues(alpha: 0.5),
+                            color: AppColors.warningAmber.withValues(alpha: 0.5),
                             width: 1.2,
                           )
                         : BorderSide.none),
@@ -60,8 +77,11 @@ class CandidateDetailActionBar extends StatelessWidget {
                         height: 20.r,
                         child: CircularProgressIndicator(
                           strokeWidth: 2.4,
-                          valueColor: const AlwaysStoppedAnimation<Color>(AppColors.darkNavy),
-                          backgroundColor: AppColors.skyBlue.withValues(alpha: 0.35),
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            AppColors.darkNavy,
+                          ),
+                          backgroundColor:
+                              AppColors.skyBlue.withValues(alpha: 0.35),
                         ),
                       ),
                       SizedBox(width: 10.w),
@@ -77,15 +97,29 @@ class CandidateDetailActionBar extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            Icons.check_circle_rounded,
+                            (state.contactRequestStatusLabel?.contains('مقبول') ==
+                                        true ||
+                                    state.contactRequestStatusLabel
+                                            ?.toLowerCase()
+                                            .contains('approved') ==
+                                        true)
+                                ? Icons.check_circle_rounded
+                                : Icons.hourglass_top_rounded,
                             size: 18.sp,
-                            color: AppColors.successGreen,
+                            color: (state.contactRequestStatusLabel?.contains('مقبول') ==
+                                        true ||
+                                    state.contactRequestStatusLabel
+                                            ?.toLowerCase()
+                                            .contains('approved') ==
+                                        true)
+                                ? AppColors.successGreen
+                                : AppColors.warningAmber,
                           ),
                           SizedBox(width: 8.w),
                           Flexible(
                             child: Text(
                               state.contactRequestStatusLabel ??
-                                  S.of(context).contactRequestSuccess,
+                                  'طلب تواصل قيد الانتظار',
                               style: getTextStyle().w700.s14.copyWith(
                                     color: const Color(0xFF1E293B),
                                   ),

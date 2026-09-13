@@ -52,8 +52,14 @@ class CandidateProfileDetailEntity extends Equatable {
     this.status,
   });
 
+  /// True if candidate's application was rejected by admin.
+  bool get isRejected => status?.toLowerCase().trim() == 'rejected';
+
   /// Returns true if the candidate has previously filled the form or submitted documents/requests.
+  /// NOTE: Rejected candidates are NOT considered completed — they must resubmit.
   bool get hasCompletedOrSubmittedProfile {
+    // Rejected users must refill the form
+    if (isRejected) return false;
     if (documents.isNotEmpty) return true;
     if (videoUrl != null && videoUrl!.trim().isNotEmpty) return true;
     if (professionId != null || qualificationId != null) return true;

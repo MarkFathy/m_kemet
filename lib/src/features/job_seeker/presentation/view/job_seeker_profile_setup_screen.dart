@@ -16,7 +16,6 @@ import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_cubit.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_state.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/documents_upload_section.dart';
-import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/important_info_notice_card.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/intro_video_upload_card.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/professional_data_section.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/profile_completion_gauge_card.dart';
@@ -265,6 +264,8 @@ class _JobSeekerProfileSetupViewState extends State<_JobSeekerProfileSetupView> 
       listener: (context, state) {
         if (state.profileFetchStatus == LoadingStatus.success) {
           _populateProfileData(state);
+          // hasCompletedOrSubmittedProfile already returns false for rejected users
+          // so they stay on the form. Pending/approved users go to main.
           if (state.profileDetail?.hasCompletedOrSubmittedProfile == true) {
             SessionManager.setJobSeekerProfileCompleted(true);
             Go.offAllNamed(NamedRoutes.jobSeekerMain);
@@ -273,11 +274,12 @@ class _JobSeekerProfileSetupViewState extends State<_JobSeekerProfileSetupView> 
         }
 
         if (state.submitStatus == SubmissionStatus.success) {
+          SessionManager.setJobSeekerProfileCompleted(true);
           CustomSnackBar.showSuccess(
             context,
             message: state.successMessage ?? 'تم حفظ وإرسال بيانات طلب التوظيف بنجاح',
           );
-          Go.offAllNamed(NamedRoutes.jobSeekerMain);
+          Go.offAllNamed(NamedRoutes.requestStatus);
         } else if (state.submitStatus == SubmissionStatus.failure) {
           CustomSnackBar.showError(
             context,
@@ -369,10 +371,7 @@ class _JobSeekerProfileSetupViewState extends State<_JobSeekerProfileSetupView> 
                   onContinuePressed: () => _onContinuePressed(context),
                 ),
 
-                16.szH,
-                const ImportantInfoNoticeCard(),
-
-                16.szH,
+                24.szH,
               ],
             ),
           ),

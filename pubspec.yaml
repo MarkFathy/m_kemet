@@ -58,6 +58,8 @@ dependencies:
   image_cropper: ^12.2.1
   crop_your_image: ^2.0.0
   connectivity_plus: ^6.1.4
+  google_mlkit_document_scanner: ^0.6.1
+  image: ^4.3.0
 
 dev_dependencies:
   flutter_test:
