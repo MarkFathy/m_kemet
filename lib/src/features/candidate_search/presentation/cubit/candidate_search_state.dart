@@ -14,6 +14,10 @@ class CandidateSearchState extends Equatable {
   final List<CountryEntity> topCountries;
   final List<ProfessionEntity> popularProfessions;
   final bool lookupsLoading;
+  final int currentPage;
+  final bool hasMore;
+  final bool isLoadingMore;
+  final int? totalCandidates;
 
   const CandidateSearchState({
     this.status = CandidateSearchStatus.initial,
@@ -23,6 +27,10 @@ class CandidateSearchState extends Equatable {
     this.topCountries = const [],
     this.popularProfessions = const [],
     this.lookupsLoading = false,
+    this.currentPage = 1,
+    this.hasMore = true,
+    this.isLoadingMore = false,
+    this.totalCandidates,
   });
 
   CandidateSearchState copyWith({
@@ -33,6 +41,10 @@ class CandidateSearchState extends Equatable {
     List<CountryEntity>? topCountries,
     List<ProfessionEntity>? popularProfessions,
     bool? lookupsLoading,
+    int? currentPage,
+    bool? hasMore,
+    bool? isLoadingMore,
+    int? totalCandidates,
   }) {
     return CandidateSearchState(
       status: status ?? this.status,
@@ -42,6 +54,10 @@ class CandidateSearchState extends Equatable {
       topCountries: topCountries ?? this.topCountries,
       popularProfessions: popularProfessions ?? this.popularProfessions,
       lookupsLoading: lookupsLoading ?? this.lookupsLoading,
+      currentPage: currentPage ?? this.currentPage,
+      hasMore: hasMore ?? this.hasMore,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      totalCandidates: totalCandidates ?? this.totalCandidates,
     );
   }
 
@@ -54,5 +70,9 @@ class CandidateSearchState extends Equatable {
         topCountries,
         popularProfessions,
         lookupsLoading,
+        currentPage,
+        hasMore,
+        isLoadingMore,
+        totalCandidates,
       ];
 }

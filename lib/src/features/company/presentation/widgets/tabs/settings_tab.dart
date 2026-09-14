@@ -16,10 +16,15 @@ import 'package:m_kemet/src/core/widgets/setting_action_tile.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
 
-class SettingsTab extends StatelessWidget {
+class SettingsTab extends StatefulWidget {
   const SettingsTab({super.key});
 
-  static final ValueNotifier<bool> _notificationsNotifier = ValueNotifier<bool>(true);
+  @override
+  State<SettingsTab> createState() => _SettingsTabState();
+}
+
+class _SettingsTabState extends State<SettingsTab> {
+  bool _notificationsEnabled = true;
 
   void _showLogoutWarningSheet(BuildContext context) {
     showConfirmActionBottomSheet(
@@ -146,24 +151,21 @@ class SettingsTab extends StatelessWidget {
                     ],
                   ),
                 ),
-                ValueListenableBuilder<bool>(
-                  valueListenable: _notificationsNotifier,
-                  builder: (context, notificationsEnabled, _) {
-                    return Switch(
-                      value: notificationsEnabled,
-                      activeTrackColor: AppColors.switchActiveTrack,
-                      activeThumbColor: AppColors.darkNavy,
-                      inactiveTrackColor: AppColors.switchInactiveTrack,
-                      inactiveThumbColor: AppColors.switchInactiveThumb,
-                      onChanged: (val) {
-                        _notificationsNotifier.value = val;
-                        CustomSnackBar.showSuccess(
-                          context,
-                          message: val
-                              ? S.of(context).notificationsEnabledMsg
-                              : S.of(context).notificationsDisabledMsg,
-                        );
-                      },
+                Switch(
+                  value: _notificationsEnabled,
+                  activeTrackColor: AppColors.switchActiveTrack,
+                  activeThumbColor: AppColors.darkNavy,
+                  inactiveTrackColor: AppColors.switchInactiveTrack,
+                  inactiveThumbColor: AppColors.switchInactiveThumb,
+                  onChanged: (val) {
+                    setState(() {
+                      _notificationsEnabled = val;
+                    });
+                    CustomSnackBar.showSuccess(
+                      context,
+                      message: val
+                          ? S.of(context).notificationsEnabledMsg
+                          : S.of(context).notificationsDisabledMsg,
                     );
                   },
                 ),

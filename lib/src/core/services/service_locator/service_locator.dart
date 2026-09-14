@@ -256,6 +256,9 @@ Future<void> setupServiceLocator() async {
       (candidate, _) => CandidateDetailCubit(
         getCandidateDetailUseCase: sl(),
         sendContactRequestUseCase: sl(),
+        getCompanyContactRequestsUseCase: sl(),
+        localDataSource: sl(),
+        companyRequestsCubit: sl(),
         initialCandidate: candidate,
         initialIsBookmarked: sl<BookmarksCubit>().state.bookmarkedIds.contains(candidate.id),
       ),

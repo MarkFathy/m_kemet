@@ -215,9 +215,21 @@
   "sendingContactRequest": "Sending contact request...",
   "downloadCv": "Download CV",
   "cvDownloadInfo": "Opening candidate CV file...",
+  "confirmContactRequestTitle": "Confirm Contact Request",
+  "confirmContactRequestMsg": "Are you sure you want to send a contact request for this candidate? The request will be sent to the administration for review.",
+  "confirmSendAction": "Confirm Send",
+  "tapToWatchVideo": "Tap to watch video",
 
   "@@companyRequests": "-----------------------------------------------------------------------------",
   "requestsTitle": "Contact Requests",
+  "requestsCountBadge": "{count} requests",
+  "@requestsCountBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "noRequestsTitle": "No contact requests yet",
   "noRequestsSub": "All your submitted contact and recruitment requests will appear here to track their lifecycle status.",
   "statusCompleted": "Completed",

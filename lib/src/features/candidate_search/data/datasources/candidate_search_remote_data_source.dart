@@ -6,10 +6,26 @@ import 'package:m_kemet/src/features/company/data/models/candidate_model.dart';
 import 'package:m_kemet/src/features/candidate_search/domain/entities/candidate_search_filter_entity.dart';
 import 'package:m_kemet/src/features/job_seeker/data/models/profession_model.dart';
 
+class PaginatedCandidatesModelResult {
+  final List<CandidateModel> candidates;
+  final int currentPage;
+  final int? lastPage;
+  final int? total;
+  final bool hasMore;
+
+  const PaginatedCandidatesModelResult({
+    required this.candidates,
+    required this.currentPage,
+    this.lastPage,
+    this.total,
+    required this.hasMore,
+  });
+}
+
 abstract class CandidateSearchRemoteDataSource {
-  Future<List<CandidateModel>> getInitialCandidates();
-  Future<List<CandidateModel>> searchCandidates(String query);
-  Future<List<CandidateModel>> filterCandidates(CandidateSearchFilterEntity filter);
+  Future<PaginatedCandidatesModelResult> getInitialCandidates({int page = 1, int perPage = 10});
+  Future<PaginatedCandidatesModelResult> searchCandidates(String query, {int page = 1, int perPage = 10});
+  Future<PaginatedCandidatesModelResult> filterCandidates(CandidateSearchFilterEntity filter, {int page = 1, int perPage = 10});
   Future<List<CountryModel>> getTopCountries();
   Future<List<ProfessionModel>> getPopularProfessions();
 }
@@ -19,56 +35,128 @@ class CandidateSearchRemoteDataSourceImpl implements CandidateSearchRemoteDataSo
 
   CandidateSearchRemoteDataSourceImpl(this._dioClient);
 
-  List<CandidateModel> _parseCandidates(dynamic data) {
-    if (data is Map<String, dynamic> && data['data'] is List) {
-      return (data['data'] as List)
-          .map((item) => CandidateModel.fromJson(item as Map<String, dynamic>))
-          .toList();
+  PaginatedCandidatesModelResult _parsePaginatedCandidates(
+    dynamic data,
+    int requestedPage,
+    int requestedPerPage,
+  ) {
+    List<CandidateModel> candidates = [];
+    int currentPage = requestedPage;
+    int? lastPage;
+    int? total;
+    bool? hasNextPage;
+
+    if (data is Map<String, dynamic>) {
+      // 1. Extract candidates list
+      if (data['data'] is List) {
+        candidates = (data['data'] as List)
+            .map((item) => CandidateModel.fromJson(item as Map<String, dynamic>))
+            .toList();
+      } else if (data['data'] is Map<String, dynamic> && data['data']['data'] is List) {
+        candidates = (data['data']['data'] as List)
+            .map((item) => CandidateModel.fromJson(item as Map<String, dynamic>))
+            .toList();
+      } else if (data['candidates'] is List) {
+        candidates = (data['candidates'] as List)
+            .map((item) => CandidateModel.fromJson(item as Map<String, dynamic>))
+            .toList();
+      }
+
+      // 2. Extract pagination metadata
+      final meta = data['meta'] is Map<String, dynamic>
+          ? data['meta'] as Map<String, dynamic>
+          : (data['data'] is Map<String, dynamic> ? data['data'] as Map<String, dynamic> : data);
+
+      currentPage = int.tryParse(meta['current_page']?.toString() ?? '') ?? requestedPage;
+      lastPage = int.tryParse(meta['last_page']?.toString() ?? '');
+      total = int.tryParse(meta['total']?.toString() ?? '');
+
+      if (data['links'] is Map<String, dynamic>) {
+        hasNextPage = (data['links']['next'] != null);
+      } else if (meta['next_page_url'] != null) {
+        hasNextPage = true;
+      }
     } else if (data is List) {
-      return data
+      candidates = data
           .map((item) => CandidateModel.fromJson(item as Map<String, dynamic>))
           .toList();
     }
-    return [];
+
+    final bool hasMore;
+    if (hasNextPage != null) {
+      hasMore = hasNextPage;
+    } else if (lastPage != null) {
+      hasMore = currentPage < lastPage;
+    } else {
+      hasMore = candidates.isNotEmpty && candidates.length >= requestedPerPage;
+    }
+
+    return PaginatedCandidatesModelResult(
+      candidates: candidates,
+      currentPage: currentPage,
+      lastPage: lastPage,
+      total: total,
+      hasMore: hasMore,
+    );
   }
 
   @override
-  Future<List<CandidateModel>> getInitialCandidates() async {
-    final response = await _dioClient.dio.get(ApiEndpoints.jobSeekers);
-    return _parseCandidates(response.data);
+  Future<PaginatedCandidatesModelResult> getInitialCandidates({int page = 1, int perPage = 10}) async {
+    final response = await _dioClient.dio.get(
+      ApiEndpoints.jobSeekers,
+      queryParameters: {'page': page, 'per_page': perPage},
+    );
+    return _parsePaginatedCandidates(response.data, page, perPage);
   }
 
   @override
-  Future<List<CandidateModel>> searchCandidates(String query) async {
+  Future<PaginatedCandidatesModelResult> searchCandidates(
+    String query, {
+    int page = 1,
+    int perPage = 10,
+  }) async {
     final trimmed = query.trim();
     if (trimmed.isEmpty) {
-      return getInitialCandidates();
+      return getInitialCandidates(page: page, perPage: perPage);
     }
 
     try {
       final response = await _dioClient.dio.get(
         ApiEndpoints.jobSeekersSearch,
-        queryParameters: {'keyword': trimmed, 'search': trimmed, 'q': trimmed},
+        queryParameters: {
+          'keyword': trimmed,
+          'search': trimmed,
+          'q': trimmed,
+          'page': page,
+          'per_page': perPage,
+        },
       );
-      return _parseCandidates(response.data);
+      return _parsePaginatedCandidates(response.data, page, perPage);
     } on DioException catch (e) {
       // If backend search endpoint 404s or fallback is needed, fallback to /api/job-seekers?search=
       if (e.response?.statusCode == 404) {
         final fallbackResponse = await _dioClient.dio.get(
           ApiEndpoints.jobSeekers,
-          queryParameters: {'search': trimmed},
+          queryParameters: {'search': trimmed, 'page': page, 'per_page': perPage},
         );
-        return _parseCandidates(fallbackResponse.data);
+        return _parsePaginatedCandidates(fallbackResponse.data, page, perPage);
       }
       rethrow;
     }
   }
 
   @override
-  Future<List<CandidateModel>> filterCandidates(CandidateSearchFilterEntity filter) async {
-    final queryParams = filter.toFilterQueryParams();
-    if (queryParams.isEmpty) {
-      return getInitialCandidates();
+  Future<PaginatedCandidatesModelResult> filterCandidates(
+    CandidateSearchFilterEntity filter, {
+    int page = 1,
+    int perPage = 10,
+  }) async {
+    final queryParams = Map<String, dynamic>.from(filter.toFilterQueryParams());
+    queryParams['page'] = page;
+    queryParams['per_page'] = perPage;
+
+    if (filter.toFilterQueryParams().isEmpty) {
+      return getInitialCandidates(page: page, perPage: perPage);
     }
 
     try {
@@ -76,7 +164,7 @@ class CandidateSearchRemoteDataSourceImpl implements CandidateSearchRemoteDataSo
         ApiEndpoints.jobSeekersFilter,
         queryParameters: queryParams,
       );
-      return _parseCandidates(response.data);
+      return _parsePaginatedCandidates(response.data, page, perPage);
     } on DioException catch (e) {
       // If backend filter endpoint 404s, fallback to /api/job-seekers with query parameters
       if (e.response?.statusCode == 404) {
@@ -84,7 +172,7 @@ class CandidateSearchRemoteDataSourceImpl implements CandidateSearchRemoteDataSo
           ApiEndpoints.jobSeekers,
           queryParameters: queryParams,
         );
-        return _parseCandidates(fallbackResponse.data);
+        return _parsePaginatedCandidates(fallbackResponse.data, page, perPage);
       }
       rethrow;
     }

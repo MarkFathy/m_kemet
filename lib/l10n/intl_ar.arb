@@ -215,9 +215,21 @@
   "sendingContactRequest": "جاري إرسال الطلب...",
   "downloadCv": "تحميل السيرة الذاتية",
   "cvDownloadInfo": "جارٍ فتح ملف السيرة الذاتية (CV) للمرشح...",
+  "confirmContactRequestTitle": "تأكيد طلب التواصل",
+  "confirmContactRequestMsg": "هل أنت متأكد من رغبتك في إرسال طلب تواصل مع هذا المرشح؟ سيتم إرسال الطلب لإدارة المنصة للمراجعة.",
+  "confirmSendAction": "تأكيد الإرسال",
+  "tapToWatchVideo": "اضغط لمشاهدة الفيديو",
 
   "@@companyRequests": "-----------------------------------------------------------------------------",
   "requestsTitle": "طلبات التواصل",
+  "requestsCountBadge": "{count} طلبات",
+  "@requestsCountBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "noRequestsTitle": "لا توجد طلبات تواصل حالية",
   "noRequestsSub": "جميع طلبات التواصل والاستقدام المعروضة ستظهر هنا عند إرسالها ومتابعة حالتها.",
   "statusCompleted": "مكتمل",

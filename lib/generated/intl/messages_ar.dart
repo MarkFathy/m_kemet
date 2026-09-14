@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ar';
 
+  static String m0(count) => "${count} طلبات";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "acceptAndContinue":
@@ -75,6 +77,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ملف الشركة"),
         "completeAllFieldsHint": MessageLookupByLibrary.simpleMessage(
             "يرجى استكمال جميع البيانات والمستندات والفيديو لتفعيل المتابعة"),
+        "confirmContactRequestMsg": MessageLookupByLibrary.simpleMessage(
+            "هل أنت متأكد من رغبتك في إرسال طلب تواصل مع هذا المرشح؟ سيتم إرسال الطلب لإدارة المنصة للمراجعة."),
+        "confirmContactRequestTitle":
+            MessageLookupByLibrary.simpleMessage("تأكيد طلب التواصل"),
         "confirmCrop": MessageLookupByLibrary.simpleMessage("تأكيد وقص"),
         "confirmDeleteAction":
             MessageLookupByLibrary.simpleMessage("حذف الحساب نهائياً"),
@@ -84,6 +90,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تأكيد كلمة المرور"),
         "confirmPasswordMismatch":
             MessageLookupByLibrary.simpleMessage("كلمتا المرور غير متطابقتين"),
+        "confirmSendAction":
+            MessageLookupByLibrary.simpleMessage("تأكيد الإرسال"),
         "contactRequestPending":
             MessageLookupByLibrary.simpleMessage("طلب تواصل قيد الانتظار"),
         "contactRequestRejected":
@@ -373,6 +381,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("حالة طلب التوظيف"),
         "requestedDestination":
             MessageLookupByLibrary.simpleMessage("الدول المطلوبة"),
+        "requestsCountBadge": m0,
         "requestsTitle": MessageLookupByLibrary.simpleMessage("طلبات التواصل"),
         "requiredBadge": MessageLookupByLibrary.simpleMessage("مطلوب"),
         "resendCode": MessageLookupByLibrary.simpleMessage("إعادة إرسال الرمز"),
@@ -424,6 +433,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "step3Title": MessageLookupByLibrary.simpleMessage("القرار النهائي"),
         "submissionDateLabel":
             MessageLookupByLibrary.simpleMessage("تاريخ التقديم:"),
+        "tapToWatchVideo":
+            MessageLookupByLibrary.simpleMessage("اضغط لمشاهدة الفيديو"),
         "targetCountriesHint": MessageLookupByLibrary.simpleMessage(
             "اختر الدول المرغوب السفر إليها"),
         "targetCountriesLabel": MessageLookupByLibrary.simpleMessage(

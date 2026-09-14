@@ -143,7 +143,7 @@ class CandidateVideoCard extends StatelessWidget {
                                 Icon(Icons.visibility_rounded, size: 14.sp, color: AppColors.whiteColor),
                                 6.szW,
                                 Text(
-                                  'اضغط لمشاهدة الفيديو',
+                                  S.of(context).tapToWatchVideo,
                                   style: getTextStyle().whiteColor.w600.s12,
                                 ),
                               ],

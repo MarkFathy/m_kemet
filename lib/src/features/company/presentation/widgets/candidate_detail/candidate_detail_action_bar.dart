@@ -18,11 +18,10 @@ class CandidateDetailActionBar extends StatelessWidget {
       icon: Icons.person_add_alt_1_rounded,
       iconBgColor: AppColors.softBlueBg,
       iconColor: AppColors.darkNavy,
-      title: 'تأكيد طلب التواصل',
-      message:
-          'هل أنت متأكد من رغبتك في إرسال طلب تواصل مع هذا المرشح؟ سيتم إرسال الطلب لإدارة المنصة للمراجعة.',
+      title: S.of(context).confirmContactRequestTitle,
+      message: S.of(context).confirmContactRequestMsg,
       cancelLabel: S.of(context).cancel,
-      confirmLabel: 'تأكيد الإرسال',
+      confirmLabel: S.of(context).confirmSendAction,
       confirmColor: AppColors.darkNavy,
       onConfirm: () {
         context.read<CandidateDetailCubit>().sendContactRequest();
@@ -119,7 +118,7 @@ class CandidateDetailActionBar extends StatelessWidget {
                           Flexible(
                             child: Text(
                               state.contactRequestStatusLabel ??
-                                  'طلب تواصل قيد الانتظار',
+                                  S.of(context).contactRequestPending,
                               style: getTextStyle().w700.s14.copyWith(
                                     color: const Color(0xFF1E293B),
                                   ),

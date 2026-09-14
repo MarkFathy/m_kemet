@@ -7,6 +7,7 @@ import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/country_entity.dart';
 import 'package:m_kemet/src/features/candidate_search/domain/entities/candidate_search_filter_entity.dart';
+import 'package:m_kemet/src/features/candidate_search/presentation/widgets/filter_option_chip.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/entities/profession_entity.dart';
 
 class CandidateFilterBottomSheet extends StatefulWidget {
@@ -129,14 +130,14 @@ class _CandidateFilterBottomSheetState extends State<CandidateFilterBottomSheet>
 
             16.szH,
 
-            // 1. Top Countries Filter (from /api/countries/top-6)
+            // 1. Top Countries Filter
             _buildSectionTitle(S.of(context).topCountriesTitle),
             8.szH,
             _buildCountriesChips(),
 
             18.szH,
 
-            // 2. Popular Professions Filter (from /api/professions/popular)
+            // 2. Popular Professions Filter
             _buildSectionTitle(S.of(context).popularProfessionsTitle),
             8.szH,
             _buildProfessionsChips(),
@@ -148,20 +149,25 @@ class _CandidateFilterBottomSheetState extends State<CandidateFilterBottomSheet>
             8.szH,
             Row(
               children: [
-                _buildOptionChip(
+                FilterOptionChip(
                   label: S.of(context).allOptions,
-                  isSelected: _selectedGender == null || _selectedGender == S.of(context).allOptions || _selectedGender == 'الكل',
+                  isExpanded: true,
+                  isSelected: _selectedGender == null ||
+                      _selectedGender == S.of(context).allOptions ||
+                      _selectedGender == 'الكل',
                   onTap: () => setState(() => _selectedGender = null),
                 ),
                 10.szW,
-                _buildOptionChip(
+                FilterOptionChip(
                   label: S.of(context).male,
+                  isExpanded: true,
                   isSelected: _selectedGender == 'ذكر' || _selectedGender == 'male',
                   onTap: () => setState(() => _selectedGender = 'ذكر'),
                 ),
                 10.szW,
-                _buildOptionChip(
+                FilterOptionChip(
                   label: S.of(context).female,
+                  isExpanded: true,
                   isSelected: _selectedGender == 'أنثى' || _selectedGender == 'female',
                   onTap: () => setState(() => _selectedGender = 'أنثى'),
                 ),
@@ -175,20 +181,23 @@ class _CandidateFilterBottomSheetState extends State<CandidateFilterBottomSheet>
             8.szH,
             Row(
               children: [
-                _buildOptionChip(
+                FilterOptionChip(
                   label: S.of(context).allOptions,
+                  isExpanded: true,
                   isSelected: _selectedPassportStatus == null,
                   onTap: () => setState(() => _selectedPassportStatus = null),
                 ),
                 10.szW,
-                _buildOptionChip(
+                FilterOptionChip(
                   label: S.of(context).validPassport,
+                  isExpanded: true,
                   isSelected: _selectedPassportStatus == true,
                   onTap: () => setState(() => _selectedPassportStatus = true),
                 ),
                 10.szW,
-                _buildOptionChip(
+                FilterOptionChip(
                   label: S.of(context).invalidPassport,
+                  isExpanded: true,
                   isSelected: _selectedPassportStatus == false,
                   onTap: () => setState(() => _selectedPassportStatus = false),
                 ),
@@ -250,7 +259,7 @@ class _CandidateFilterBottomSheetState extends State<CandidateFilterBottomSheet>
       spacing: 8.w,
       runSpacing: 8.h,
       children: [
-        _buildChipItem(
+        FilterOptionChip(
           label: S.of(context).allOptions,
           isSelected: isAllSelected,
           onTap: () {
@@ -267,7 +276,7 @@ class _CandidateFilterBottomSheetState extends State<CandidateFilterBottomSheet>
               ? '${country.flag} ${country.name}'
               : country.name;
 
-          return _buildChipItem(
+          return FilterOptionChip(
             label: displayText,
             isSelected: isSelected,
             onTap: () {
@@ -307,7 +316,7 @@ class _CandidateFilterBottomSheetState extends State<CandidateFilterBottomSheet>
       spacing: 8.w,
       runSpacing: 8.h,
       children: [
-        _buildChipItem(
+        FilterOptionChip(
           label: S.of(context).allOptions,
           isSelected: isAllSelected,
           onTap: () {
@@ -321,7 +330,7 @@ class _CandidateFilterBottomSheetState extends State<CandidateFilterBottomSheet>
           final isSelected = _selectedProfessionId == prof.id ||
               _selectedProfessionName == prof.name;
 
-          return _buildChipItem(
+          return FilterOptionChip(
             label: prof.name,
             isSelected: isSelected,
             onTap: () {
@@ -338,69 +347,6 @@ class _CandidateFilterBottomSheetState extends State<CandidateFilterBottomSheet>
           );
         }),
       ],
-    );
-  }
-
-  Widget _buildChipItem({
-    required String label,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20.r),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.darkNavy : AppColors.chipBg,
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(
-            color: isSelected ? AppColors.darkNavy : AppColors.borderGrey,
-          ),
-        ),
-        child: Text(
-          label,
-          style: getTextStyle().s13.copyWith(
-                color: isSelected ? AppColors.whiteColor : AppColors.darkNavy,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-              ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildOptionChip({
-    required String label,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return Expanded(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(10.r),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          alignment: Alignment.center,
-          padding: EdgeInsets.symmetric(vertical: 10.h),
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.darkNavy : AppColors.chipBg,
-            borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(
-              color: isSelected ? AppColors.darkNavy : AppColors.borderGrey,
-            ),
-          ),
-          child: Text(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: getTextStyle().s13.copyWith(
-                  color: isSelected ? AppColors.whiteColor : AppColors.darkNavy,
-                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                ),
-          ),
-        ),
-      ),
     );
   }
 }

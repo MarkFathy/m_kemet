@@ -1,6 +1,10 @@
+import 'dart:async';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:m_kemet/src/core/error/failure.dart';
 import 'package:m_kemet/src/core/usecases/usecase.dart';
 import 'package:m_kemet/src/features/candidate_search/domain/entities/candidate_search_filter_entity.dart';
+import 'package:m_kemet/src/features/candidate_search/domain/entities/paginated_candidates_entity.dart';
 import 'package:m_kemet/src/features/candidate_search/domain/usecases/filter_candidates_usecase.dart';
 import 'package:m_kemet/src/features/candidate_search/domain/usecases/get_initial_candidates_usecase.dart';
 import 'package:m_kemet/src/features/candidate_search/domain/usecases/get_popular_professions_usecase.dart';
@@ -15,6 +19,8 @@ class CandidateSearchCubit extends Cubit<CandidateSearchState> {
   final GetTopCountriesUseCase getTopCountriesUseCase;
   final GetPopularProfessionsUseCase getPopularProfessionsUseCase;
 
+  Timer? _debounceTimer;
+
   CandidateSearchCubit({
     required this.getInitialCandidatesUseCase,
     required this.searchCandidatesUseCase,
@@ -23,9 +29,16 @@ class CandidateSearchCubit extends Cubit<CandidateSearchState> {
     required this.getPopularProfessionsUseCase,
   }) : super(const CandidateSearchState());
 
-  /// Fetch candidates and pre-load top-6 countries & popular professions
-  Future<void> fetchCandidates() async {
-    emit(state.copyWith(status: CandidateSearchStatus.loading));
+  /// Fetch candidates (resets to page 1) and pre-load top-6 countries & popular professions
+  Future<void> fetchCandidates({bool isRefresh = false}) async {
+    emit(state.copyWith(
+      status: isRefresh && state.candidates.isNotEmpty
+          ? state.status
+          : CandidateSearchStatus.loading,
+      currentPage: 1,
+      hasMore: true,
+      isLoadingMore: false,
+    ));
 
     // Also trigger lookups if not yet loaded
     if (state.topCountries.isEmpty || state.popularProfessions.isEmpty) {
@@ -35,47 +48,113 @@ class CandidateSearchCubit extends Cubit<CandidateSearchState> {
     if (state.activeFilter.hasActiveFilters) {
       if (state.activeFilter.searchQuery.trim().isNotEmpty &&
           state.activeFilter.activeFilterCount == 0) {
-        // Pure text search
-        final result = await searchCandidatesUseCase(state.activeFilter.searchQuery);
-        result.fold(
-          (failure) => emit(state.copyWith(
-            status: CandidateSearchStatus.failure,
-            errorMessage: failure.serverException.message,
-          )),
-          (candidates) => emit(state.copyWith(
-            status: CandidateSearchStatus.success,
-            candidates: candidates,
-          )),
+        // Pure text search (page 1)
+        final result = await searchCandidatesUseCase(
+          SearchCandidatesParams(
+            query: state.activeFilter.searchQuery.trim(),
+            page: 1,
+          ),
         );
+        _handleInitialFetchResult(result);
         return;
       }
 
-      // Filter query
-      final result = await filterCandidatesUseCase(state.activeFilter);
-      result.fold(
-        (failure) => emit(state.copyWith(
-          status: CandidateSearchStatus.failure,
-          errorMessage: failure.serverException.message,
-        )),
-        (candidates) => emit(state.copyWith(
-          status: CandidateSearchStatus.success,
-          candidates: candidates,
-        )),
+      // Filter query (page 1)
+      final result = await filterCandidatesUseCase(
+        FilterCandidatesParams(
+          filter: state.activeFilter,
+          page: 1,
+        ),
       );
+      _handleInitialFetchResult(result);
       return;
     }
 
-    // Default initial candidates
-    final result = await getInitialCandidatesUseCase(NoParams());
+    // Default initial candidates (page 1)
+    final result = await getInitialCandidatesUseCase(1);
+    _handleInitialFetchResult(result);
+  }
+
+  void _handleInitialFetchResult(Either<Failure, PaginatedCandidatesEntity> result) {
     result.fold(
       (failure) => emit(state.copyWith(
         status: CandidateSearchStatus.failure,
         errorMessage: failure.serverException.message,
+        isLoadingMore: false,
       )),
-      (candidates) => emit(state.copyWith(
+      (paginated) => emit(state.copyWith(
         status: CandidateSearchStatus.success,
-        candidates: candidates,
+        candidates: paginated.candidates,
+        currentPage: paginated.currentPage,
+        hasMore: paginated.hasMore && paginated.candidates.isNotEmpty,
+        totalCandidates: paginated.total,
+        isLoadingMore: false,
+        errorMessage: null,
       )),
+    );
+  }
+
+  /// Load more candidates for infinite scroll pagination
+  Future<void> loadMoreCandidates() async {
+    if (state.isLoadingMore || !state.hasMore || state.status == CandidateSearchStatus.loading) {
+      return;
+    }
+
+    emit(state.copyWith(isLoadingMore: true));
+    final nextPage = state.currentPage + 1;
+
+    if (state.activeFilter.hasActiveFilters) {
+      if (state.activeFilter.searchQuery.trim().isNotEmpty &&
+          state.activeFilter.activeFilterCount == 0) {
+        // Pure text search next page
+        final result = await searchCandidatesUseCase(
+          SearchCandidatesParams(
+            query: state.activeFilter.searchQuery.trim(),
+            page: nextPage,
+          ),
+        );
+        _handleLoadMoreResult(result, nextPage);
+        return;
+      }
+
+      // Filter query next page
+      final result = await filterCandidatesUseCase(
+        FilterCandidatesParams(
+          filter: state.activeFilter,
+          page: nextPage,
+        ),
+      );
+      _handleLoadMoreResult(result, nextPage);
+      return;
+    }
+
+    // Default initial candidates next page
+    final result = await getInitialCandidatesUseCase(nextPage);
+    _handleLoadMoreResult(result, nextPage);
+  }
+
+  void _handleLoadMoreResult(
+    Either<Failure, PaginatedCandidatesEntity> result,
+    int requestedPage,
+  ) {
+    result.fold(
+      (failure) {
+        emit(state.copyWith(isLoadingMore: false));
+      },
+      (paginated) {
+        final existingIds = state.candidates.map((c) => c.id).toSet();
+        final newCandidates = paginated.candidates
+            .where((c) => !existingIds.contains(c.id))
+            .toList();
+
+        emit(state.copyWith(
+          candidates: [...state.candidates, ...newCandidates],
+          currentPage: paginated.currentPage,
+          hasMore: paginated.hasMore && paginated.candidates.isNotEmpty,
+          totalCandidates: paginated.total ?? state.totalCandidates,
+          isLoadingMore: false,
+        ));
+      },
     );
   }
 
@@ -95,54 +174,32 @@ class CandidateSearchCubit extends Cubit<CandidateSearchState> {
     ));
   }
 
-  /// Triggered when typing in search bar
-  Future<void> updateSearchQuery(String query) async {
+  /// Triggered when typing in search bar (with 400ms debounce)
+  void updateSearchQuery(String query) {
+    _debounceTimer?.cancel();
     final updatedFilter = state.activeFilter.copyWith(searchQuery: query);
     emit(state.copyWith(activeFilter: updatedFilter));
 
-    if (query.trim().isEmpty && !updatedFilter.hasActiveFilters) {
-      await fetchCandidates();
+    if (query.trim().isEmpty) {
+      fetchCandidates();
       return;
     }
 
-    emit(state.copyWith(status: CandidateSearchStatus.loading));
-    if (updatedFilter.activeFilterCount > 0) {
-      // Both search query and filter criteria are active
-      final result = await filterCandidatesUseCase(updatedFilter);
-      result.fold(
-        (failure) => emit(state.copyWith(
-          status: CandidateSearchStatus.failure,
-          errorMessage: failure.serverException.message,
-        )),
-        (candidates) => emit(state.copyWith(
-          status: CandidateSearchStatus.success,
-          candidates: candidates,
-        )),
-      );
-    } else {
-      // Pure search
-      final result = await searchCandidatesUseCase(query.trim());
-      result.fold(
-        (failure) => emit(state.copyWith(
-          status: CandidateSearchStatus.failure,
-          errorMessage: failure.serverException.message,
-        )),
-        (candidates) => emit(state.copyWith(
-          status: CandidateSearchStatus.success,
-          candidates: candidates,
-        )),
-      );
-    }
+    _debounceTimer = Timer(const Duration(milliseconds: 400), () {
+      fetchCandidates();
+    });
   }
 
   /// Apply filter options from CandidateFilterBottomSheet
   Future<void> applyFilter(CandidateSearchFilterEntity filter) async {
+    _debounceTimer?.cancel();
     emit(state.copyWith(activeFilter: filter));
     await fetchCandidates();
   }
 
   /// Reset all filters
   Future<void> resetFilter() async {
+    _debounceTimer?.cancel();
     emit(state.copyWith(
       activeFilter: CandidateSearchFilterEntity(
         searchQuery: state.activeFilter.searchQuery,
@@ -167,5 +224,11 @@ class CandidateSearchCubit extends Cubit<CandidateSearchState> {
     }).toList();
 
     emit(state.copyWith(candidates: updatedCandidates));
+  }
+
+  @override
+  Future<void> close() {
+    _debounceTimer?.cancel();
+    return super.close();
   }
 }

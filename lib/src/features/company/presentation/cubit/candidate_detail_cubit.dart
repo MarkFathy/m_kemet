@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:m_kemet/src/core/helpers/cache_service.dart';
-import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
+import 'package:m_kemet/src/features/company/data/datasources/candidate_local_data_source.dart';
 import 'package:m_kemet/src/features/company/data/models/company_contact_request_model.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
 import 'package:m_kemet/src/features/company/domain/usecases/get_candidate_detail_usecase.dart';
@@ -10,28 +9,45 @@ import 'package:m_kemet/src/features/company/presentation/cubit/candidate_detail
 import 'package:m_kemet/src/features/company/presentation/cubit/company_requests_cubit.dart';
 
 class CandidateDetailCubit extends Cubit<CandidateDetailState> {
-  static const String _requestedCandidatesKey = 'cached_contact_requested_candidate_ids';
-  static const String _contactStatusPrefix = 'cached_contact_status_';
-
   final GetCandidateDetailUseCase getCandidateDetailUseCase;
   final SendContactRequestUseCase sendContactRequestUseCase;
+  final GetCompanyContactRequestsUseCase getCompanyContactRequestsUseCase;
+  final CandidateLocalDataSource localDataSource;
+  final CompanyRequestsCubit? companyRequestsCubit;
 
   CandidateDetailCubit({
     required this.getCandidateDetailUseCase,
     required this.sendContactRequestUseCase,
+    required this.getCompanyContactRequestsUseCase,
+    required this.localDataSource,
+    this.companyRequestsCubit,
     required CandidateEntity initialCandidate,
     bool initialIsBookmarked = false,
   }) : super(CandidateDetailState(
           candidate: initialCandidate.copyWith(isSaved: initialIsBookmarked),
-          isContactRequestSent: _isPreviouslyRequested(initialCandidate.id) ||
-              (initialCandidate.userId != null &&
-                  _isPreviouslyRequested('${initialCandidate.userId}')) ||
-              _isPreviouslyRequested(initialCandidate.name) ||
-              initialCandidate.isContactRequested,
-          contactRequestStatusLabel: _getCachedStatusLabel(initialCandidate.id) ??
-              _getCachedStatusLabel(initialCandidate.name) ??
-              (initialCandidate.isContactRequested ? 'طلب تواصل قيد الانتظار' : null),
+          isContactRequestSent: _checkInitiallyRequested(localDataSource, initialCandidate),
+          contactRequestStatusLabel: _getInitialStatusLabel(localDataSource, initialCandidate),
         ));
+
+  static bool _checkInitiallyRequested(
+    CandidateLocalDataSource dataSource,
+    CandidateEntity candidate,
+  ) {
+    return dataSource.isCandidateContactRequested(candidate.id) ||
+        (candidate.userId != null &&
+            dataSource.isCandidateContactRequested('${candidate.userId}')) ||
+        dataSource.isCandidateContactRequested(candidate.name) ||
+        candidate.isContactRequested;
+  }
+
+  static String? _getInitialStatusLabel(
+    CandidateLocalDataSource dataSource,
+    CandidateEntity candidate,
+  ) {
+    return dataSource.getCachedContactStatus(candidate.id) ??
+        dataSource.getCachedContactStatus(candidate.name) ??
+        (candidate.isContactRequested ? candidate.contactRequestStatus : null);
+  }
 
   static String _normalizeArabic(String text) {
     return text
@@ -46,59 +62,30 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
         .replaceAll(RegExp(r'\s+'), ' ');
   }
 
-  static bool _isPreviouslyRequested(String identifier) {
-    try {
-      if (identifier.trim().isEmpty) return false;
-      final cached = CacheStorage.read(_requestedCandidatesKey);
-      if (cached is List) {
-        final clean = _normalizeArabic(identifier);
-        return cached.any(
-          (e) => _normalizeArabic(e.toString()) == clean || e.toString() == identifier.trim(),
-        );
-      }
-    } catch (_) {}
-    return false;
+  bool _isLocallyRequested(CandidateEntity candidate, CandidateEntity detailedCandidate) {
+    return localDataSource.isCandidateContactRequested(candidate.id) ||
+        (candidate.userId != null &&
+            localDataSource.isCandidateContactRequested('${candidate.userId}')) ||
+        localDataSource.isCandidateContactRequested(candidate.name) ||
+        localDataSource.isCandidateContactRequested(detailedCandidate.name);
   }
 
-  static String? _getCachedStatusLabel(String identifier) {
-    try {
-      if (identifier.trim().isEmpty) return null;
-      final val = CacheStorage.read('$_contactStatusPrefix${identifier.trim()}');
-      return val?.toString();
-    } catch (_) {}
-    return null;
+  Future<void> _saveAllCandidateCache(CandidateEntity candidate, String label) async {
+    await localDataSource.cacheCandidateContactRequest(candidate.id, label);
+    await localDataSource.cacheCandidateContactRequest(state.candidate.name, label);
+    await localDataSource.cacheCandidateContactRequest(candidate.name, label);
+    if (candidate.userId != null) {
+      await localDataSource.cacheCandidateContactRequest('${candidate.userId}', label);
+    }
   }
 
-  static Future<void> _addToRequestedCache(String identifier, String label) async {
-    try {
-      final clean = identifier.trim();
-      if (clean.isEmpty) return;
-      final cached = CacheStorage.read(_requestedCandidatesKey);
-      List<String> list = [];
-      if (cached is List) {
-        list = cached.map((e) => e.toString()).toList();
-      }
-      if (!list.contains(clean)) {
-        list.add(clean);
-        await CacheStorage.write(_requestedCandidatesKey, list);
-      }
-      await CacheStorage.write('$_contactStatusPrefix$clean', label);
-    } catch (_) {}
-  }
-
-  static Future<void> _removeFromRequestedCache(String identifier) async {
-    try {
-      final clean = identifier.trim();
-      if (clean.isEmpty) return;
-      final cached = CacheStorage.read(_requestedCandidatesKey);
-      if (cached is List) {
-        final norm = _normalizeArabic(clean);
-        final list = cached.map((e) => e.toString()).toList();
-        list.removeWhere((e) => _normalizeArabic(e) == norm || e.trim() == clean);
-        await CacheStorage.write(_requestedCandidatesKey, list);
-      }
-      await CacheStorage.delete('$_contactStatusPrefix$clean');
-    } catch (_) {}
+  Future<void> _clearAllCandidateCache(CandidateEntity candidate) async {
+    await localDataSource.clearCandidateContactRequestCache(candidate.id);
+    await localDataSource.clearCandidateContactRequestCache(state.candidate.name);
+    await localDataSource.clearCandidateContactRequestCache(candidate.name);
+    if (candidate.userId != null) {
+      await localDataSource.clearCandidateContactRequestCache('${candidate.userId}');
+    }
   }
 
   Future<void> fetchCandidateDetail() async {
@@ -111,20 +98,16 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
         errorMessage: failure.serverException.message,
       )),
       (detailedCandidate) async {
-        final wasLocallyRequested = _isPreviouslyRequested(state.candidate.id) ||
-            (state.candidate.userId != null &&
-                _isPreviouslyRequested('${state.candidate.userId}')) ||
-            _isPreviouslyRequested(state.candidate.name) ||
-            _isPreviouslyRequested(detailedCandidate.name);
+        final wasLocallyRequested = _isLocallyRequested(state.candidate, detailedCandidate);
 
         // Check if candidate detail itself contains explicit rejection
         final status = detailedCandidate.contactRequestStatus.toLowerCase();
-        final isExplicitlyRejected = status == 'rejected' ||
+        final isDetailRejected = status == 'rejected' ||
             status == 'refused' ||
             status == 'declined' ||
             status.contains('مرفوض');
 
-        if (isExplicitlyRejected) {
+        if (isDetailRejected) {
           await _clearAllCandidateCache(detailedCandidate);
           emit(state.copyWith(
             status: CandidateDetailStatus.success,
@@ -135,9 +118,9 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
           return;
         }
 
-        // Check against the actual list of requests from the server (/api/my-requests)
+        // Check against the actual list of requests from the server via injected usecase
         try {
-          final requestsResult = await sl<GetCompanyContactRequestsUseCase>()();
+          final requestsResult = await getCompanyContactRequestsUseCase();
           CompanyContactRequestModel? matchingReq;
 
           requestsResult.fold((_) {}, (requests) {
@@ -171,7 +154,6 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
                   reqStatus.contains('مرفوض');
 
               if (isReqRejected) {
-                // Admin or candidate rejected -> unlock button!
                 _clearAllCandidateCache(detailedCandidate);
                 emit(state.copyWith(
                   status: CandidateDetailStatus.success,
@@ -180,10 +162,11 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
                   contactRequestStatusLabel: null,
                 ));
               } else {
-                // Request is ACTIVE on the server (pending, approved, etc.) -> keep locked!
                 final label = matchingReq!.statusLabel.isNotEmpty
                     ? matchingReq!.statusLabel
-                    : 'طلب تواصل قيد الانتظار';
+                    : (detailedCandidate.contactRequestStatus.isNotEmpty
+                        ? detailedCandidate.contactRequestStatus
+                        : 'طلب تواصل قيد الانتظار');
                 _saveAllCandidateCache(detailedCandidate, label);
                 emit(state.copyWith(
                   status: CandidateDetailStatus.success,
@@ -193,66 +176,38 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
                 ));
               }
             } else {
-              // Not in /api/my-requests:
-              // If it was previously requested by user, this means the admin DELETED it from the server!
               if (wasLocallyRequested) {
                 _clearAllCandidateCache(detailedCandidate);
-                emit(state.copyWith(
-                  status: CandidateDetailStatus.success,
-                  candidate: detailedCandidate.copyWith(isSaved: state.candidate.isSaved),
-                  isContactRequestSent: false,
-                  contactRequestStatusLabel: null,
-                ));
-              } else {
-                // Never requested
-                emit(state.copyWith(
-                  status: CandidateDetailStatus.success,
-                  candidate: detailedCandidate.copyWith(isSaved: state.candidate.isSaved),
-                  isContactRequestSent: false,
-                  contactRequestStatusLabel: null,
-                ));
               }
+              emit(state.copyWith(
+                status: CandidateDetailStatus.success,
+                candidate: detailedCandidate.copyWith(isSaved: state.candidate.isSaved),
+                isContactRequestSent: false,
+                contactRequestStatusLabel: null,
+              ));
             }
           });
           return;
         } catch (_) {}
 
-        // Fallback if requests check could not complete (e.g. offline):
-        // Keep the local state so the user cannot duplicate requests
-        final isSent = wasLocallyRequested || detailedCandidate.isContactRequested;
-        final label = state.contactRequestStatusLabel ??
-            _getCachedStatusLabel(state.candidate.id) ??
-            _getCachedStatusLabel(state.candidate.name) ??
-            'طلب تواصل قيد الانتظار';
+        // Fallback if requests check could not complete (e.g. offline)
+        final isRequested = wasLocallyRequested ||
+            detailedCandidate.isContactRequested ||
+            state.candidate.isContactRequested;
+        final label = localDataSource.getCachedContactStatus(state.candidate.id) ??
+            localDataSource.getCachedContactStatus(detailedCandidate.id) ??
+            (detailedCandidate.contactRequestStatus.isNotEmpty
+                ? detailedCandidate.contactRequestStatus
+                : state.contactRequestStatusLabel);
 
         emit(state.copyWith(
           status: CandidateDetailStatus.success,
           candidate: detailedCandidate.copyWith(isSaved: state.candidate.isSaved),
-          isContactRequestSent: isSent,
-          contactRequestStatusLabel: isSent ? label : null,
+          isContactRequestSent: isRequested,
+          contactRequestStatusLabel: isRequested ? label : null,
         ));
       },
     );
-  }
-
-  Future<void> _saveAllCandidateCache(CandidateEntity candidate, String label) async {
-    await _addToRequestedCache(state.candidate.id, label);
-    await _addToRequestedCache(candidate.id, label);
-    await _addToRequestedCache(state.candidate.name, label);
-    await _addToRequestedCache(candidate.name, label);
-    if (candidate.userId != null) {
-      await _addToRequestedCache('${candidate.userId}', label);
-    }
-  }
-
-  Future<void> _clearAllCandidateCache(CandidateEntity candidate) async {
-    await _removeFromRequestedCache(state.candidate.id);
-    await _removeFromRequestedCache(candidate.id);
-    await _removeFromRequestedCache(state.candidate.name);
-    await _removeFromRequestedCache(candidate.name);
-    if (candidate.userId != null) {
-      await _removeFromRequestedCache('${candidate.userId}');
-    }
   }
 
   Future<void> sendContactRequest() async {
@@ -270,7 +225,7 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
         ));
       },
       (data) async {
-        final message = data['message']?.toString() ?? 'تم إرسال طلب التواصل بنجاح';
+        final message = data['message']?.toString();
         String statusLabel = 'طلب تواصل قيد الانتظار';
         if (data['data'] is Map && data['data']['application'] is Map) {
           final app = data['data']['application'] as Map;
@@ -281,9 +236,7 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
 
         await _saveAllCandidateCache(state.candidate, statusLabel);
 
-        try {
-          sl<CompanyRequestsCubit>().fetchRequests(isRefresh: true);
-        } catch (_) {}
+        companyRequestsCubit?.fetchRequests(isRefresh: true);
 
         emit(state.copyWith(
           isSendingContactRequest: false,

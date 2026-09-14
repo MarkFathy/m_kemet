@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(count) => "${count} requests";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "acceptAndContinue":
@@ -80,6 +82,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Company Profile"),
         "completeAllFieldsHint": MessageLookupByLibrary.simpleMessage(
             "Please complete all fields, documents, and video to proceed"),
+        "confirmContactRequestMsg": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to send a contact request for this candidate? The request will be sent to the administration for review."),
+        "confirmContactRequestTitle":
+            MessageLookupByLibrary.simpleMessage("Confirm Contact Request"),
         "confirmCrop": MessageLookupByLibrary.simpleMessage("Confirm & Crop"),
         "confirmDeleteAction":
             MessageLookupByLibrary.simpleMessage("Delete Account Permanently"),
@@ -89,6 +95,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Confirm Password"),
         "confirmPasswordMismatch":
             MessageLookupByLibrary.simpleMessage("Passwords do not match"),
+        "confirmSendAction":
+            MessageLookupByLibrary.simpleMessage("Confirm Send"),
         "contactRequestPending":
             MessageLookupByLibrary.simpleMessage("Contact request pending"),
         "contactRequestRejected":
@@ -381,6 +389,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Request Approval Status"),
         "requestedDestination":
             MessageLookupByLibrary.simpleMessage("Target Destinations"),
+        "requestsCountBadge": m0,
         "requestsTitle":
             MessageLookupByLibrary.simpleMessage("Contact Requests"),
         "requiredBadge": MessageLookupByLibrary.simpleMessage("Required"),
@@ -433,6 +442,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "step3Title": MessageLookupByLibrary.simpleMessage("Final Approval"),
         "submissionDateLabel":
             MessageLookupByLibrary.simpleMessage("Submission Date:"),
+        "tapToWatchVideo":
+            MessageLookupByLibrary.simpleMessage("Tap to watch video"),
         "targetCountriesHint":
             MessageLookupByLibrary.simpleMessage("Select target countries"),
         "targetCountriesLabel": MessageLookupByLibrary.simpleMessage(

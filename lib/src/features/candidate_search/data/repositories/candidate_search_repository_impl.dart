@@ -5,8 +5,8 @@ import 'package:m_kemet/src/core/error/failure.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/country_entity.dart';
 import 'package:m_kemet/src/features/candidate_search/data/datasources/candidate_search_remote_data_source.dart';
 import 'package:m_kemet/src/features/candidate_search/domain/entities/candidate_search_filter_entity.dart';
+import 'package:m_kemet/src/features/candidate_search/domain/entities/paginated_candidates_entity.dart';
 import 'package:m_kemet/src/features/candidate_search/domain/repositories/candidate_search_repository.dart';
-import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/entities/profession_entity.dart';
 
 class CandidateSearchRepositoryImpl implements CandidateSearchRepository {
@@ -24,11 +24,21 @@ class CandidateSearchRepositoryImpl implements CandidateSearchRepository {
     return ServerFailure(ServerException(e.response?.statusCode ?? 500, defaultMessage, null));
   }
 
+  PaginatedCandidatesEntity _toEntity(PaginatedCandidatesModelResult modelResult) {
+    return PaginatedCandidatesEntity(
+      candidates: modelResult.candidates,
+      currentPage: modelResult.currentPage,
+      lastPage: modelResult.lastPage,
+      total: modelResult.total,
+      hasMore: modelResult.hasMore,
+    );
+  }
+
   @override
-  Future<Either<Failure, List<CandidateEntity>>> getInitialCandidates() async {
+  Future<Either<Failure, PaginatedCandidatesEntity>> getInitialCandidates({int page = 1}) async {
     try {
-      final result = await remoteDataSource.getInitialCandidates();
-      return Right(result);
+      final result = await remoteDataSource.getInitialCandidates(page: page);
+      return Right(_toEntity(result));
     } on ServerException catch (e) {
       return Left(ServerFailure(e));
     } on DioException catch (e) {
@@ -39,10 +49,10 @@ class CandidateSearchRepositoryImpl implements CandidateSearchRepository {
   }
 
   @override
-  Future<Either<Failure, List<CandidateEntity>>> searchCandidates(String query) async {
+  Future<Either<Failure, PaginatedCandidatesEntity>> searchCandidates(String query, {int page = 1}) async {
     try {
-      final result = await remoteDataSource.searchCandidates(query);
-      return Right(result);
+      final result = await remoteDataSource.searchCandidates(query, page: page);
+      return Right(_toEntity(result));
     } on ServerException catch (e) {
       return Left(ServerFailure(e));
     } on DioException catch (e) {
@@ -53,10 +63,13 @@ class CandidateSearchRepositoryImpl implements CandidateSearchRepository {
   }
 
   @override
-  Future<Either<Failure, List<CandidateEntity>>> filterCandidates(CandidateSearchFilterEntity filter) async {
+  Future<Either<Failure, PaginatedCandidatesEntity>> filterCandidates(
+    CandidateSearchFilterEntity filter, {
+    int page = 1,
+  }) async {
     try {
-      final result = await remoteDataSource.filterCandidates(filter);
-      return Right(result);
+      final result = await remoteDataSource.filterCandidates(filter, page: page);
+      return Right(_toEntity(result));
     } on ServerException catch (e) {
       return Left(ServerFailure(e));
     } on DioException catch (e) {

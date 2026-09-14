@@ -16,26 +16,8 @@ import 'package:m_kemet/src/features/company/presentation/cubit/company_requests
 import 'package:m_kemet/src/features/company/presentation/cubit/company_requests_state.dart';
 import 'package:m_kemet/src/features/company/presentation/widgets/requests/company_contact_request_card.dart';
 
-class RequestsTab extends StatefulWidget {
+class RequestsTab extends StatelessWidget {
   const RequestsTab({super.key});
-
-  @override
-  State<RequestsTab> createState() => _RequestsTabState();
-}
-
-class _RequestsTabState extends State<RequestsTab> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        final cubit = context.read<CompanyRequestsCubit>();
-        if (cubit.state.status == CompanyRequestsStatus.initial) {
-          cubit.fetchRequests();
-        }
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +57,7 @@ class _RequestsTabState extends State<RequestsTab> {
                           borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: Text(
-                          '${state.requests.length} طلبات',
+                          S.of(context).requestsCountBadge(state.requests.length),
                           style: getTextStyle().darkNavy.w700.s12,
                         ),
                       ),

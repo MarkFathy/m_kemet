@@ -11,22 +11,8 @@ import 'package:m_kemet/src/features/auth/presentation/cubit/auth_state.dart';
 import 'package:m_kemet/src/features/company/presentation/widgets/profile/company_profile_details_card.dart';
 import 'package:m_kemet/src/features/company/presentation/widgets/profile/company_profile_header_card.dart';
 
-class ProfileTab extends StatefulWidget {
+class ProfileTab extends StatelessWidget {
   const ProfileTab({super.key});
-
-  @override
-  State<ProfileTab> createState() => _ProfileTabState();
-}
-
-class _ProfileTabState extends State<ProfileTab> {
-  @override
-  void initState() {
-    super.initState();
-    final authCubit = context.read<AuthCubit>();
-    if (authCubit.state.user == null) {
-      authCubit.getProfile();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

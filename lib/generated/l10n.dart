@@ -2000,6 +2000,46 @@ class S {
     );
   }
 
+  /// `تأكيد طلب التواصل`
+  String get confirmContactRequestTitle {
+    return Intl.message(
+      'تأكيد طلب التواصل',
+      name: 'confirmContactRequestTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `هل أنت متأكد من رغبتك في إرسال طلب تواصل مع هذا المرشح؟ سيتم إرسال الطلب لإدارة المنصة للمراجعة.`
+  String get confirmContactRequestMsg {
+    return Intl.message(
+      'هل أنت متأكد من رغبتك في إرسال طلب تواصل مع هذا المرشح؟ سيتم إرسال الطلب لإدارة المنصة للمراجعة.',
+      name: 'confirmContactRequestMsg',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تأكيد الإرسال`
+  String get confirmSendAction {
+    return Intl.message(
+      'تأكيد الإرسال',
+      name: 'confirmSendAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اضغط لمشاهدة الفيديو`
+  String get tapToWatchVideo {
+    return Intl.message(
+      'اضغط لمشاهدة الفيديو',
+      name: 'tapToWatchVideo',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `طلبات التواصل`
   String get requestsTitle {
     return Intl.message(
@@ -2007,6 +2047,16 @@ class S {
       name: 'requestsTitle',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `{count} طلبات`
+  String requestsCountBadge(int count) {
+    return Intl.message(
+      '$count طلبات',
+      name: 'requestsCountBadge',
+      desc: '',
+      args: [count],
     );
   }
 
