@@ -17,6 +17,7 @@ class ApiEndpoints {
   static const String deleteAccount = '/api/delete-account';
 
   // Lookup endpoints
+  static const String terms = '/api/terms';
   static const String genders = '/api/genders';
   static const String countries = '/api/countries';
   static const String countriesTop6 = '/api/countries/top-6';

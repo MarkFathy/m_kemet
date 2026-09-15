@@ -116,19 +116,7 @@ class JobSeekerSettingsTab extends StatelessWidget {
 
           14.szH,
 
-          // 2. Company Contact Requests Tile
-          SettingActionTile(
-            icon: Icons.mark_email_read_outlined,
-            iconBgColor: AppColors.softBlueBg,
-            iconColor: AppColors.darkNavy,
-            title: 'طلبات التواصل',
-            subtitle: 'متابعة طلبات الشركات للربط والتواصل معك',
-            onTap: () => Go.toNamed(NamedRoutes.myContactRequests),
-          ),
-
-          14.szH,
-
-          // 3. Notifications Toggle
+          // 2. Notifications Toggle
           ValueListenableBuilder<bool>(
             valueListenable: _notificationsNotifier,
             builder: (context, notificationsEnabled, _) {
@@ -149,31 +137,7 @@ class JobSeekerSettingsTab extends StatelessWidget {
 
           14.szH,
 
-          // 3. Notifications History
-          SettingActionTile(
-            icon: Icons.notifications_none_rounded,
-            iconBgColor: AppColors.successBg,
-            iconColor: AppColors.successGreen,
-            title: S.of(context).notificationsTitle,
-            subtitle: S.of(context).notificationsHistorySub,
-            onTap: () => Go.toNamed(NamedRoutes.notifications),
-          ),
-
-          14.szH,
-
-          // 4. Terms & Privacy
-          SettingActionTile(
-            icon: Icons.description_outlined,
-            iconBgColor: AppColors.chipBg,
-            iconColor: AppColors.darkNavy,
-            title: S.of(context).termsScreenTitle,
-            subtitle: 'الشروط والأحكام وسياسة الخصوصية للاستخدام',
-            onTap: () => Go.toNamed(NamedRoutes.termsAndConditions),
-          ),
-
-          14.szH,
-
-          // 5. Language Switcher
+          // 3. Language Switcher
           const JobSeekerLanguageTile(),
 
           14.szH,

@@ -7,6 +7,7 @@ import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
+import 'package:m_kemet/src/core/services/session_manager.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
 import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
 import 'package:m_kemet/src/core/widgets/status_badge.dart';
@@ -113,7 +114,8 @@ class RejectedStatusCard extends StatelessWidget {
           // Resubmit Application Action Button
           CustomButton(
             text: S.of(context).resubmitRequest,
-            onPressed: () {
+            onPressed: () async {
+              await SessionManager.setJobSeekerProfileCompleted(false);
               Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
             },
             backgroundColor: AppColors.errorRed,
@@ -126,7 +128,7 @@ class RejectedStatusCard extends StatelessWidget {
             onPressed: () {
               CustomSnackBar.showInfo(
                 context,
-                message: 'فريق الدعم الفني جاهز لمساعدتك في استكمال ملفك',
+                message: S.of(context).supportReadyToHelp,
               );
             },
             style: OutlinedButton.styleFrom(

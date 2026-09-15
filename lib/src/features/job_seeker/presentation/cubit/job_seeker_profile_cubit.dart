@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:m_kemet/generated/l10n.dart';
 import 'package:m_kemet/src/core/services/session_manager.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/country_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/gender_entity.dart';
@@ -60,9 +61,12 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
     final profileResult = await getCandidateProfileUseCase();
     profileResult.fold(
       (failure) {
-        // Profile fetch might be 404 or empty on fresh registration, that's okay
+        // Profile not found (404) is expected for brand-new registrations.
+        // Treat it as success with an empty profile so the form is shown.
+        // Only a true network/server error on the lookups shows the error screen.
         emit(state.copyWith(
-          profileFetchStatus: LoadingStatus.failure,
+          profileFetchStatus: LoadingStatus.success,
+          profileDetail: () => null,
         ));
       },
       (profile) {
@@ -191,7 +195,7 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
         emit(state.copyWith(
           personalPhotoStatus: DocumentUploadStatus.success,
           uploadedPersonalPhoto: () => doc,
-          successMessage: () => 'تم رفع الصورة الشخصية بنجاح',
+          successMessage: () => S.current.uploadPersonalPhotoSuccess,
         ));
       },
     );
@@ -220,7 +224,7 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
         emit(state.copyWith(
           nationalIdStatus: DocumentUploadStatus.success,
           uploadedNationalId: () => doc,
-          successMessage: () => 'تم رفع بطاقة الهوية بنجاح',
+          successMessage: () => S.current.uploadNationalIdSuccess,
         ));
       },
     );
@@ -249,7 +253,7 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
         emit(state.copyWith(
           passportStatus: DocumentUploadStatus.success,
           uploadedPassport: () => doc,
-          successMessage: () => 'تم رفع جواز السفر بنجاح',
+          successMessage: () => S.current.uploadPassportSuccess,
         ));
       },
     );
@@ -278,7 +282,7 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
         emit(state.copyWith(
           cvStatus: DocumentUploadStatus.success,
           uploadedCv: () => doc,
-          successMessage: () => 'تم رفع السيرة الذاتية بنجاح',
+          successMessage: () => S.current.uploadCvSuccess,
         ));
       },
     );
@@ -315,7 +319,7 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
           videoStatus: DocumentUploadStatus.success,
           videoUploadProgress: 1.0,
           uploadedVideo: () => doc,
-          successMessage: () => 'تم رفع الفيديو التعريفي بنجاح',
+          successMessage: () => S.current.uploadVideoSuccess,
         ));
       },
     );
@@ -333,7 +337,7 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
   }) async {
     if (state.isAnyDocumentUploading) {
       emit(state.copyWith(
-        errorMessage: () => 'يرجى الانتظار حتى يكتمل رفع الملفات والوسائط بالكامل',
+        errorMessage: () => S.current.waitMediaUploadMsg,
       ));
       return;
     }
@@ -376,7 +380,7 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
         emit(state.copyWith(
           submitStatus: SubmissionStatus.success,
           profileDetail: () => profile,
-          successMessage: () => 'تم حفظ وإرسال الملف الشخصي بنجاح',
+          successMessage: () => S.current.submitProfileSuccessMsg,
         ));
       },
     );

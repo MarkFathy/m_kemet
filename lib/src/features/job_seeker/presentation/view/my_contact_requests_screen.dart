@@ -77,7 +77,7 @@ class _MyContactRequestsScreenState extends State<MyContactRequestsScreen> {
                 12.szW,
                 Expanded(
                   child: Text(
-                    'طلبات التواصل من الشركات',
+                    S.of(context).companyContactRequestsTitle,
                     style: getTextStyle().darkNavy.w700.s20,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -125,12 +125,12 @@ class _MyContactRequestsScreenState extends State<MyContactRequestsScreen> {
                   ),
                   16.szH,
                   Text(
-                    'لا توجد طلبات تواصل حالياً',
+                    S.of(context).noContactRequestsCurrently,
                     style: getTextStyle().darkNavy.w700.s16,
                   ),
                   6.szH,
                   Text(
-                    'عندما تطلب شركة التواصل معك ستظهر طلباتهم هنا',
+                    S.of(context).noContactRequestsSub,
                     style: getTextStyle().greyColor.w400.s13,
                     textAlign: TextAlign.center,
                   ),
@@ -215,7 +215,8 @@ class _MyContactRequestsScreenState extends State<MyContactRequestsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.employerName ?? 'طلب تواصل من شركة',
+                      item.employerName ??
+                          S.of(context).companyContactRequestFallback,
                       style: getTextStyle().darkNavy.w700.s16,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

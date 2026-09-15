@@ -5,9 +5,6 @@ import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
-import 'package:m_kemet/src/core/navigation/named_routes.dart';
-import 'package:m_kemet/src/core/navigation/navigator.dart';
-import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
 import 'package:m_kemet/src/core/widgets/status_badge.dart';
 
 class ApprovedStatusCard extends StatelessWidget {
@@ -84,24 +81,13 @@ class ApprovedStatusCard extends StatelessWidget {
             ),
             child: Column(
               children: [
-                _buildFeatureCheckRow('سيرتك الذاتية أصبحت متاحة للعرض أمام كبرى الشركات الدولية'),
+                _buildFeatureCheckRow(S.of(context).approvedFeature1),
                 10.szH,
-                _buildFeatureCheckRow('إمكانية التقديم المباشر والتواصل مع أصحاب العمل'),
+                _buildFeatureCheckRow(S.of(context).approvedFeature2),
                 10.szH,
-                _buildFeatureCheckRow('تفعيل التنبيهات الفورية للوظائف المتطابقة مع تخصصك'),
+                _buildFeatureCheckRow(S.of(context).approvedFeature3),
               ],
             ),
-          ),
-
-          20.szH,
-
-          CustomButton(
-            text: S.of(context).goToHome,
-            onPressed: () {
-              Go.offAllNamed(NamedRoutes.jobSeekerMain);
-            },
-            backgroundColor: AppColors.darkNavy,
-            textStyle: getTextStyle().whiteColor.w700.s16,
           ),
         ],
       ),

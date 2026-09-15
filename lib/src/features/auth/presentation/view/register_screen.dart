@@ -253,8 +253,8 @@ class _RegisterViewState extends State<_RegisterView> {
                       value,
                       emptyMessage: isEmployer ? S.of(context).companyNameHint : S.of(context).fullNameHint,
                       minLengthMessage: isEmployer
-                          ? 'اسم الشركة يجب ألا يقل عن حرفين'
-                          : 'الاسم الكامل يجب ألا يقل عن حرفين',
+                          ? S.of(context).companyNameMinLength
+                          : S.of(context).fullNameMinLength,
                     ),
                   ),
 
@@ -315,10 +315,6 @@ class _RegisterViewState extends State<_RegisterView> {
                       value,
                       emptyMessage: S.of(context).passwordHint,
                       minLengthMessage: S.of(context).passwordValidationMessage,
-                      requireMixedCase: true,
-                      requireSpecialChar: true,
-                      mixedCaseMessage: 'يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير على الأقل.',
-                      symbolMessage: 'يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل.',
                     ),
                   ),
 

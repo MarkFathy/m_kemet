@@ -179,7 +179,7 @@ class _JobSeekerProfileSetupViewState extends State<_JobSeekerProfileSetupView> 
     if (state.selectedExperienceLevel != null) {
       _experienceYearsController.text = state.selectedExperienceLevel!.name;
     } else if (profile.experienceYears != null) {
-      _experienceYearsController.text = '${profile.experienceYears} سنوات';
+      _experienceYearsController.text = '${profile.experienceYears}';
     }
     if (state.selectedQualification != null) {
       _qualificationController.text = state.selectedQualification!.name;
@@ -264,12 +264,14 @@ class _JobSeekerProfileSetupViewState extends State<_JobSeekerProfileSetupView> 
       listener: (context, state) {
         if (state.profileFetchStatus == LoadingStatus.success) {
           _populateProfileData(state);
-          // hasCompletedOrSubmittedProfile already returns false for rejected users
-          // so they stay on the form. Pending/approved users go to main.
-          if (state.profileDetail?.hasCompletedOrSubmittedProfile == true) {
-            SessionManager.setJobSeekerProfileCompleted(true);
-            Go.offAllNamed(NamedRoutes.jobSeekerMain);
-            return;
+          final profile = state.profileDetail;
+          if (profile != null) {
+            final status = profile.status?.toLowerCase().trim();
+            if (status == 'approved') {
+              SessionManager.setJobSeekerProfileCompleted(true);
+              Go.offAllNamed(NamedRoutes.jobSeekerMain);
+              return;
+            }
           }
         }
 
@@ -277,13 +279,15 @@ class _JobSeekerProfileSetupViewState extends State<_JobSeekerProfileSetupView> 
           SessionManager.setJobSeekerProfileCompleted(true);
           CustomSnackBar.showSuccess(
             context,
-            message: state.successMessage ?? 'تم حفظ وإرسال بيانات طلب التوظيف بنجاح',
+            message: state.successMessage ??
+                S.of(context).profileSubmittedSuccess,
           );
           Go.offAllNamed(NamedRoutes.requestStatus);
         } else if (state.submitStatus == SubmissionStatus.failure) {
           CustomSnackBar.showError(
             context,
-            message: state.errorMessage ?? 'حدث خطأ أثناء حفظ البيانات، يرجى المحاولة مرة أخرى',
+            message:
+                state.errorMessage ?? S.of(context).profileSubmitError,
           );
         } else if (state.errorMessage != null && state.submitStatus != SubmissionStatus.failure) {
           CustomSnackBar.showError(

@@ -2,16 +2,9 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as img;
-
-/// Helper class to apply CamScanner-style enhancement filters to scanned documents.
-/// Features:
-/// • Illumination normalization via smooth background division (turns background pure white)
-/// • Color preservation: colors (photos, stamps, seals) stay vivid and rich
-/// • Contrast & sharpness: text and signatures become crisp dark black
 class DocumentFilterHelper {
   DocumentFilterHelper._();
 
-  /// Processes the image at [inputPath] in a background isolate and returns the path to the enhanced image.
   static Future<String> processCamScannerImage(String inputPath) async {
     try {
       return await compute(_processCamScannerImageInternal, inputPath);
@@ -20,7 +13,6 @@ class DocumentFilterHelper {
     }
   }
 
-  /// Internal synchronous processing logic.
   static String _processCamScannerImageInternal(String inputPath) {
     try {
       final inputFile = File(inputPath);

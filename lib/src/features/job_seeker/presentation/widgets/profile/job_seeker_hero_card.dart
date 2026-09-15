@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:m_kemet/generated/l10n.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
@@ -105,7 +106,7 @@ class JobSeekerHeroCard extends StatelessWidget {
                   child: Text(
                     professionTitle?.isNotEmpty == true
                         ? professionTitle!
-                        : 'مرشح / باحث عن عمل',
+                        : S.of(context).candidateDefaultRole,
                     style: getTextStyle().darkNavy.w700.s11,
                   ),
                 ),

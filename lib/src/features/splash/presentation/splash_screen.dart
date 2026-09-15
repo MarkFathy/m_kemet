@@ -42,12 +42,8 @@ class _SplashScreenState extends State<SplashScreen> {
         if (userType == 'employer') {
           Go.offAllNamed(NamedRoutes.companyMain);
         } else {
-          final isProfileCompleted = await SessionManager.checkAndSyncJobSeekerProfileCompleted();
-          if (isProfileCompleted) {
-            Go.offAllNamed(NamedRoutes.jobSeekerMain);
-          } else {
-            Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
-          }
+          final destination = await SessionManager.getJobSeekerRouteDestination();
+          Go.offAllNamed(destination);
         }
       } else {
         bool isOnboardingCompleted = false;

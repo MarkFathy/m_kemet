@@ -1,4 +1,5 @@
 import 'package:m_kemet/src/core/helpers/cache_service.dart';
+import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/usecases/get_candidate_profile_usecase.dart';
 
@@ -48,6 +49,47 @@ class SessionManager {
 
   static Future<void> setJobSeekerProfileCompleted(bool completed) async {
     await SecureStorage.write(_kJobSeekerProfileCompleted, completed ? 'true' : 'false');
+  }
+
+  /// Checks backend status and returns the correct [NamedRoutes] the job seeker should land on:
+  /// - `approved`  → [NamedRoutes.jobSeekerMain]       (can see profile)
+  /// - `pending`   → [NamedRoutes.requestStatus]       (waiting for admin review)
+  /// - `rejected` / empty → [NamedRoutes.jobSeekerProfileSetup] (must resubmit)
+  static Future<NamedRoutes> getJobSeekerRouteDestination() async {
+    try {
+      final result = await sl<GetCandidateProfileUseCase>()();
+      return await result.fold(
+        // On network error: fallback to cached bool
+        (_) async {
+          final completed = await isJobSeekerProfileCompleted();
+          return completed
+              ? NamedRoutes.requestStatus
+              : NamedRoutes.jobSeekerProfileSetup;
+        },
+        (profile) async {
+          final status = profile.status?.toLowerCase().trim();
+          if (status == 'approved') {
+            await setJobSeekerProfileCompleted(true);
+            return NamedRoutes.jobSeekerMain;
+          } else if (profile.isRejected) {
+            await setJobSeekerProfileCompleted(false);
+            return NamedRoutes.jobSeekerProfileSetup;
+          } else if (profile.hasCompletedOrSubmittedProfile) {
+            // Submitted / pending review
+            await setJobSeekerProfileCompleted(true);
+            return NamedRoutes.requestStatus;
+          } else {
+            await setJobSeekerProfileCompleted(false);
+            return NamedRoutes.jobSeekerProfileSetup;
+          }
+        },
+      );
+    } catch (_) {
+      final completed = await isJobSeekerProfileCompleted();
+      return completed
+          ? NamedRoutes.requestStatus
+          : NamedRoutes.jobSeekerProfileSetup;
+    }
   }
 
   /// Checks both local cache and backend server to see if the candidate has

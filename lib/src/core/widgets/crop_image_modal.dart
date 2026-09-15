@@ -111,7 +111,7 @@ class _CropImageModalState extends State<CropImageModal> {
                 TextButton(
                   onPressed: () => Navigator.pop(context, widget.imageFile),
                   child: Text(
-                    'تخطي',
+                    S.of(context).skipAction,
                     style: getTextStyle().greyColor.w600.s14,
                   ),
                 ),
@@ -155,7 +155,7 @@ class _CropImageModalState extends State<CropImageModal> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildRatioChip(label: 'حر', ratio: null),
+                  _buildRatioChip(label: S.of(context).freeAspect, ratio: null),
                   SizedBox(width: 8.w),
                   _buildRatioChip(label: '1:1', ratio: 1.0),
                   SizedBox(width: 8.w),

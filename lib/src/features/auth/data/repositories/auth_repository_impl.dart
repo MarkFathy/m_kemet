@@ -8,6 +8,7 @@ import 'package:m_kemet/src/features/auth/data/models/user_model.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/auth_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/country_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/gender_entity.dart';
+import 'package:m_kemet/src/features/auth/domain/entities/term_entity.dart';
 import 'package:m_kemet/generated/l10n.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/features/auth/data/models/auth_response_model.dart';
@@ -477,6 +478,28 @@ class AuthRepositoryImpl implements AuthRepository {
           ServerException(
             e.response?.statusCode ?? 500,
             e.response?.data?['message']?.toString() ?? e.message ?? 'Failed to fetch countries',
+            null,
+          ),
+        ),
+      );
+    } catch (e) {
+      return Left(ServerFailure(ServerException(500, e.toString(), null)));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<TermEntity>>> fetchTerms() async {
+    try {
+      final result = await remoteDataSource.fetchTerms();
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e));
+    } on DioException catch (e) {
+      return Left(
+        ServerFailure(
+          ServerException(
+            e.response?.statusCode ?? 500,
+            e.response?.data?['message']?.toString() ?? e.message ?? 'Failed to fetch terms',
             null,
           ),
         ),

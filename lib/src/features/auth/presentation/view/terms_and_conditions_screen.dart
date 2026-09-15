@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:m_kemet/generated/l10n.dart';
 import 'package:m_kemet/src/config/res/app_sizes.dart';
@@ -6,38 +7,30 @@ import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
+import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_back_button.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
+import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:m_kemet/src/features/auth/presentation/cubit/auth_state.dart';
 
 class TermsAndConditionsScreen extends StatelessWidget {
   const TermsAndConditionsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final sections = [
-      {
-        'title': '1. الشروط العامة واستخدام التطبيق',
-        'content':
-            'تعتبر منصة كيميت وسيطاً تقنياً وتنظيمياً معتمداً لربط الكفاءات والباحثين عن عمل بأصحاب العمل والشركات الدولية. استخدامك للتطبيق يُعد موافقة صريحة على جميع الشروط واللوائح التنظيمية.',
-      },
-      {
-        'title': '2. سياسة الخصوصية وحماية البيانات الشخصية',
-        'content':
-            'نلتزم بحفظ كافة المستندات الرسمية، الهويات، والسير الذاتية ومقاطع الفيديو التوضيحية وتشفيرها بأعلى معايير الأمان. لن يتم مشاركة هذه البيانات إلا مع الجهات وأصحاب العمل الموثقين فقط.',
-      },
-      {
-        'title': '3. التزامات أصحاب العمل والشركات',
-        'content':
-            'تتعهد الشركات المسجلة بالجدية التامة في طلبات التواصل والاستقدام، والالتزام بالقوانين المنظمة للعمل في دولة الاستقدام وتوفير بيئة عمل آمنة ومناسبة.',
-      },
-      {
-        'title': '4. حقوق المستخدم والتعديلات',
-        'content':
-            'يحق للمستخدم تعديل بياناته الشخصية، إيقاف التنبيهات، أو طلب حذف حسابه نهائياً عبر صفحة الإعدادات في أي وقت وفقاً لسياسات التطبيق التنظيمية.',
-      },
-    ];
+    return BlocProvider<AuthCubit>(
+      create: (context) => sl<AuthCubit>()..fetchTerms(),
+      child: const _TermsAndConditionsView(),
+    );
+  }
+}
 
+class _TermsAndConditionsView extends StatelessWidget {
+  const _TermsAndConditionsView();
+
+  @override
+  Widget build(BuildContext context) {
     return AppScaffold(
       safeTop: true,
       safeBottom: true,
@@ -89,53 +82,102 @@ class TermsAndConditionsScreen extends StatelessWidget {
 
             16.szH,
 
-            // Scrollable Content Cards List
+            // Dynamic API Content
             Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: sections.length,
-                      separatorBuilder: (context, index) => 12.szH,
-                      itemBuilder: (context, index) {
-                        final sec = sections[index];
-                        return Container(
-                          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            borderRadius: BorderRadius.circular(16.r),
-                            border: Border.all(color: AppColors.borderGrey),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.03),
-                                blurRadius: 8.r,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
+              child: BlocBuilder<AuthCubit, AuthState>(
+                builder: (context, state) {
+                  if (state.termsLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(color: AppColors.darkNavy),
+                    );
+                  }
+
+                  if (state.errorMessage != null && state.terms.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.error_outline_rounded,
+                            size: 48.sp,
+                            color: AppColors.errorRed,
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                sec['title']!,
-                                style: getTextStyle().darkNavy.w700.s15,
-                              ),
-                              8.szH,
-                              Text(
-                                sec['content']!,
-                                style: getTextStyle().greyColor.w400.s13.copyWith(height: 1.5),
-                              ),
-                            ],
+                          12.szH,
+                          Text(
+                            state.errorMessage!,
+                            style: getTextStyle().darkNavy.w600.s14,
+                            textAlign: TextAlign.center,
                           ),
-                        );
-                      },
+                          16.szH,
+                          CustomButton(
+                            text: S.of(context).retryAction,
+                            onPressed: () => context.read<AuthCubit>().fetchTerms(),
+                            backgroundColor: AppColors.darkNavy,
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  final activeTerms = state.terms.where((t) => t.isActive).toList()
+                    ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+
+                  if (activeTerms.isEmpty) {
+                    return Center(
+                      child: Text(
+                        S.of(context).noRequestsTitle,
+                        style: getTextStyle().greyColor.w500.s14,
+                      ),
+                    );
+                  }
+
+                  return SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: activeTerms.length,
+                          separatorBuilder: (context, index) => 12.szH,
+                          itemBuilder: (context, index) {
+                            final term = activeTerms[index];
+                            return Container(
+                              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.circular(16.r),
+                                border: Border.all(color: AppColors.borderGrey),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.03),
+                                    blurRadius: 8.r,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    term.title,
+                                    style: getTextStyle().darkNavy.w700.s15,
+                                  ),
+                                  8.szH,
+                                  Text(
+                                    term.desc,
+                                    style: getTextStyle().greyColor.w400.s13.copyWith(height: 1.5),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        20.szH,
+                      ],
                     ),
-                    20.szH,
-                  ],
-                ),
+                  );
+                },
               ),
             ),
 

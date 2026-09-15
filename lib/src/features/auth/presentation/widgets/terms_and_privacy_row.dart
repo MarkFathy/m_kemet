@@ -42,9 +42,7 @@ class TermsAndPrivacyRow extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: S.of(context).termsAndConditions,
-                    style: getTextStyle().darkNavy.w700.s13.copyWith(
-                          decoration: TextDecoration.underline,
-                        ),
+                    style: getTextStyle().darkNavy.w700.s13,
                   ),
                 ],
               ),

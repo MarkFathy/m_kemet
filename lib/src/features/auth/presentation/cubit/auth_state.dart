@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/auth_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/country_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/gender_entity.dart';
+import 'package:m_kemet/src/features/auth/domain/entities/term_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/user_entity.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 
@@ -33,6 +34,9 @@ class AuthState extends Equatable {
   final List<CountryEntity> countries;
   final bool countriesLoading;
   final bool resendOtpLoading;
+  final bool resetPasswordLoading;
+  final List<TermEntity> terms;
+  final bool termsLoading;
 
   const AuthState({
     this.status = AuthStatus.initial,
@@ -47,6 +51,9 @@ class AuthState extends Equatable {
     this.countries = const [],
     this.countriesLoading = false,
     this.resendOtpLoading = false,
+    this.resetPasswordLoading = false,
+    this.terms = const [],
+    this.termsLoading = false,
   });
 
   bool get isLoading => status == AuthStatus.loading;
@@ -64,6 +71,9 @@ class AuthState extends Equatable {
     List<CountryEntity>? countries,
     bool? countriesLoading,
     bool? resendOtpLoading,
+    bool? resetPasswordLoading,
+    List<TermEntity>? terms,
+    bool? termsLoading,
   }) {
     return AuthState(
       status: status ?? this.status,
@@ -78,6 +88,9 @@ class AuthState extends Equatable {
       countries: countries ?? this.countries,
       countriesLoading: countriesLoading ?? this.countriesLoading,
       resendOtpLoading: resendOtpLoading ?? this.resendOtpLoading,
+      resetPasswordLoading: resetPasswordLoading ?? this.resetPasswordLoading,
+      terms: terms ?? this.terms,
+      termsLoading: termsLoading ?? this.termsLoading,
     );
   }
 
@@ -95,5 +108,8 @@ class AuthState extends Equatable {
         countries,
         countriesLoading,
         resendOtpLoading,
+        resetPasswordLoading,
+        terms,
+        termsLoading,
       ];
 }

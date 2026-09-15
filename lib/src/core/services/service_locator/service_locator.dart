@@ -16,6 +16,7 @@ import 'package:m_kemet/src/features/auth/domain/usecases/forgot_password_usecas
 import 'package:m_kemet/src/features/auth/domain/usecases/get_countries_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/get_genders_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/get_profile_usecase.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/get_terms_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/login_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/register_candidate_usecase.dart';
@@ -167,6 +168,7 @@ Future<void> setupServiceLocator() async {
     ..registerLazySingleton(() => DeleteAccountUseCase(sl()))
     ..registerLazySingleton(() => GetGendersUseCase(sl()))
     ..registerLazySingleton(() => GetCountriesUseCase(sl()))
+    ..registerLazySingleton(() => GetTermsUseCase(sl()))
     ..registerFactory(
       () => AuthCubit(
         registerCandidateUseCase: sl(),
@@ -182,6 +184,7 @@ Future<void> setupServiceLocator() async {
         deleteAccountUseCase: sl(),
         getGendersUseCase: sl(),
         getCountriesUseCase: sl(),
+        getTermsUseCase: sl(),
       ),
     )
 

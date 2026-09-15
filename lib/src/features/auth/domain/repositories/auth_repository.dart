@@ -3,6 +3,7 @@ import 'package:m_kemet/src/core/error/failure.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/auth_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/country_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/gender_entity.dart';
+import 'package:m_kemet/src/features/auth/domain/entities/term_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/user_entity.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 
@@ -69,4 +70,6 @@ abstract class AuthRepository {
   Future<Either<Failure, List<GenderEntity>>> fetchGenders();
 
   Future<Either<Failure, List<CountryEntity>>> fetchCountries();
+
+  Future<Either<Failure, List<TermEntity>>> fetchTerms();
 }

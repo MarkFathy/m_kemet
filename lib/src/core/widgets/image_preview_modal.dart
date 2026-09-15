@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:m_kemet/generated/l10n.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
@@ -88,7 +89,7 @@ class ImagePreviewModal extends StatelessWidget {
                       size: 18.sp,
                     ),
                     label: Text(
-                      'تغيير',
+                      S.of(context).changeImageAction,
                       style: getTextStyle().w600.s14.copyWith(
                         color: AppColors.skyBlue,
                       ),
@@ -116,7 +117,7 @@ class ImagePreviewModal extends StatelessWidget {
                 child: InteractiveViewer(
                   minScale: 0.8,
                   maxScale: 4.0,
-                  child: Center(child: _buildImage()),
+                  child: Center(child: _buildImage(context)),
                 ),
               ),
             ),
@@ -126,7 +127,7 @@ class ImagePreviewModal extends StatelessWidget {
     );
   }
 
-  Widget _buildImage() {
+  Widget _buildImage(BuildContext context) {
     if (file != null && file!.existsSync()) {
       return Image.file(file!, fit: BoxFit.contain);
     }
@@ -147,7 +148,7 @@ class ImagePreviewModal extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              'تعذر تحميل الصورة',
+              S.of(context).failedToLoadImage,
               style: getTextStyle().whiteColor.w500.s14,
             ),
           ],
@@ -156,7 +157,7 @@ class ImagePreviewModal extends StatelessWidget {
     }
     return Center(
       child: Text(
-        'لا توجد صورة للعرض',
+        S.of(context).noImageToDisplay,
         style: getTextStyle().whiteColor.w500.s14,
       ),
     );

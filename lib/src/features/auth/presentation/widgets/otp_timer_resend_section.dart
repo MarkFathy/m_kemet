@@ -55,7 +55,7 @@ class OtpTimerResendSection extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'لم تصلك الرسالة؟',
+                      S.of(context).didNotReceiveCode,
                       style: getTextStyle().greyColor.w400.s14,
                     ),
                     TextButton(

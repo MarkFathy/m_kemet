@@ -296,7 +296,7 @@ class _VideoPreviewModalState extends State<VideoPreviewModal>
                   color: AppColors.errorRed, size: 48.sp),
               SizedBox(height: 12.h),
               Text(
-                'تعذر تشغيل ملف الفيديو',
+                S.of(context).cannotPlayVideo,
                 style: getTextStyle().whiteColor.w600.s15,
               ),
             ],
@@ -313,7 +313,7 @@ class _VideoPreviewModalState extends State<VideoPreviewModal>
             const CircularProgressIndicator(color: AppColors.skyBlue),
             SizedBox(height: 14.h),
             Text(
-              'جاري تجهيز مشغل الفيديو...',
+              S.of(context).preparingVideoPlayer,
               style: getTextStyle().whiteColor.w500.s14,
             ),
           ],

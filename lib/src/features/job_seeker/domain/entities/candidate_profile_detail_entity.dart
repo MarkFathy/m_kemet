@@ -55,27 +55,15 @@ class CandidateProfileDetailEntity extends Equatable {
   /// True if candidate's application was rejected by admin.
   bool get isRejected => status?.toLowerCase().trim() == 'rejected';
 
-  /// Returns true if the candidate has previously filled the form or submitted documents/requests.
+  /// Returns true if the candidate has previously submitted documents (e.g. CV) or intro video or profession.
   /// NOTE: Rejected candidates are NOT considered completed — they must resubmit.
+  /// NOTE: A newly registered user with only basic info (name/phone/email) is NOT completed.
   bool get hasCompletedOrSubmittedProfile {
-    // Rejected users must refill the form
     if (isRejected) return false;
-    if (documents.isNotEmpty) return true;
-    if (videoUrl != null && videoUrl!.trim().isNotEmpty) return true;
-    if (professionId != null || qualificationId != null) return true;
-    if (subSpecialization != null && subSpecialization!.trim().isNotEmpty) {
-      return true;
-    }
-    if ((completionPercentage ?? 0) > 0) return true;
-    if (status != null &&
-        status!.trim().isNotEmpty &&
-        status != 'new' &&
-        status != 'active' &&
-        status != 'inactive' &&
-        status != 'unverified') {
-      return true;
-    }
-    return false;
+    final hasDocs = documents.isNotEmpty;
+    final hasVideo = videoUrl != null && videoUrl!.trim().isNotEmpty;
+    final hasProfession = professionId != null;
+    return hasDocs || hasVideo || hasProfession;
   }
 
   @override

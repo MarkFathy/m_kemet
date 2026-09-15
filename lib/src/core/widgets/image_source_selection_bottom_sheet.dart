@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:m_kemet/generated/l10n.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
@@ -69,7 +70,7 @@ class ImageSourceSelectionBottomSheet extends StatelessWidget {
 
           // ── Title ────────────────────────────────────────────────
           Text(
-            title ?? 'اختيار مصدر الصورة',
+            title ?? S.of(context).chooseImageSourceTitle,
             style: getTextStyle().darkNavy.w700.s18,
           ),
           20.szH,
@@ -113,7 +114,7 @@ class ImageSourceSelectionBottomSheet extends StatelessWidget {
                         ),
                         10.szH,
                         Text(
-                          cameraLabel ?? 'الكاميرا',
+                          cameraLabel ?? S.of(context).camera,
                           textAlign: TextAlign.center,
                           style: getTextStyle().darkNavy.w700.s16,
                         ),
@@ -122,7 +123,7 @@ class ImageSourceSelectionBottomSheet extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: 16.w),
+              16.szW,
 
               // ── Gallery Option ────────────────────────────────────
               Expanded(
@@ -160,7 +161,7 @@ class ImageSourceSelectionBottomSheet extends StatelessWidget {
                         ),
                         10.szH,
                         Text(
-                          galleryLabel ?? 'المعرض',
+                          galleryLabel ?? S.of(context).gallery,
                           textAlign: TextAlign.center,
                           style: getTextStyle().darkNavy.w700.s16,
                         ),

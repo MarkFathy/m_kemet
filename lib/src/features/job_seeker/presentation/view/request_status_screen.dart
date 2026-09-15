@@ -9,7 +9,9 @@ import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
+import 'package:m_kemet/src/core/services/session_manager.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
+import 'package:m_kemet/src/core/widgets/buttons/custom_back_button.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/usecases/get_candidate_profile_usecase.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/request_status/approved_status_card.dart';
@@ -32,6 +34,7 @@ class RequestStatusScreen extends StatefulWidget {
 
 class _RequestStatusScreenState extends State<RequestStatusScreen> {
   late RequestApprovalStatus _currentStatus;
+  int? _requestId;
   bool _isLoading = true;
 
   @override
@@ -58,6 +61,7 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
       (profile) {
         final backendStatus = profile.status?.toLowerCase().trim();
         setState(() {
+          _requestId = profile.id;
           if (backendStatus == 'approved') {
             _currentStatus = RequestApprovalStatus.approved;
           } else if (backendStatus == 'rejected') {
@@ -96,10 +100,27 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Screen Title (no back button - this is a terminal screen after submission)
-              Text(
-                S.of(context).requestStatusScreenTitle,
-                style: getTextStyle().darkNavy.w700.s20,
+              // Screen Header with CustomBackButton
+              Row(
+                children: [
+                  CustomBackButton(
+                    onPressed: () {
+                      if (Go.canPop) {
+                        Go.back();
+                      } else {
+                        Go.offAllNamed(NamedRoutes.jobSeekerMain);
+                      }
+                    },
+                  ),
+                  8.szW,
+                  Expanded(
+                    child: Text(
+                      S.of(context).requestStatusScreenTitle,
+                      style: getTextStyle().darkNavy.w700.s20,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
 
               20.szH,
@@ -121,15 +142,8 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
 
               20.szH,
 
-              // Home Action Button (الرئيسية)
-              CustomButton(
-                text: 'الرئيسية (صفحة البروفايل)',
-                onPressed: () {
-                  Go.offAllNamed(NamedRoutes.jobSeekerMain);
-                },
-                backgroundColor: AppColors.darkNavy,
-                textStyle: getTextStyle().whiteColor.w700.s16,
-              ),
+              // Context-aware action button
+              if (!_isLoading) _buildActionButton(context),
 
               16.szH,
             ],
@@ -139,11 +153,36 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
     );
   }
 
+  Widget _buildActionButton(BuildContext context) {
+    if (_currentStatus == RequestApprovalStatus.rejected) {
+      // Rejected: clear flag and send to resubmit form
+      return CustomButton(
+        text: S.of(context).resubmitProfileAction,
+        onPressed: () async {
+          await SessionManager.setJobSeekerProfileCompleted(false);
+          Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
+        },
+        backgroundColor: AppColors.darkNavy,
+        textStyle: getTextStyle().whiteColor.w700.s16,
+      );
+    }
+    // Pending or Approved: go to profile via Home button
+    return CustomButton(
+      text: S.of(context).goToHome,
+      onPressed: () {
+        Go.offAllNamed(NamedRoutes.jobSeekerMain, arguments: 0);
+      },
+      backgroundColor: AppColors.darkNavy,
+      textStyle: getTextStyle().whiteColor.w700.s16,
+    );
+  }
+
   Widget _buildStatusCardContent(BuildContext context) {
     switch (_currentStatus) {
       case RequestApprovalStatus.pending:
-        return const PendingStatusCard(
-          key: ValueKey('pending_view'),
+        return PendingStatusCard(
+          key: const ValueKey('pending_view'),
+          requestId: _requestId,
         );
       case RequestApprovalStatus.approved:
         return const ApprovedStatusCard(

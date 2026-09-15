@@ -34,10 +34,6 @@ class Validators {
     int minLength = 8,
     String? emptyMessage,
     String? minLengthMessage,
-    String? mixedCaseMessage,
-    String? symbolMessage,
-    bool requireMixedCase = false,
-    bool requireSpecialChar = false,
   }) {
     if (value == null || value.trim().isEmpty) {
       return emptyMessage ?? minLengthMessage ?? 'كلمة المرور يجب ألا تقل عن $minLength أحرف';

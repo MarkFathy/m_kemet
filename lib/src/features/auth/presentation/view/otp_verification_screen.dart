@@ -77,7 +77,7 @@ class _OtpVerificationView extends StatefulWidget {
 class _OtpVerificationViewState extends State<_OtpVerificationView> {
   final _pinController = TextEditingController();
   late Timer _timer;
-  int _secondsRemaining = 60;
+  int _secondsRemaining = 120;
   bool _isCheckingProfile = false;
 
   String get _email => widget.args?.email ?? '';
@@ -90,7 +90,7 @@ class _OtpVerificationViewState extends State<_OtpVerificationView> {
   }
 
   void _startTimer() {
-    _secondsRemaining = 60;
+    _secondsRemaining = 120;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_secondsRemaining > 0) {
         setState(() => _secondsRemaining--);
@@ -110,7 +110,7 @@ class _OtpVerificationViewState extends State<_OtpVerificationView> {
   void _onVerifyPressed() {
     final code = _pinController.text.trim();
     if (code.length != 6) {
-      CustomSnackBar.showError(context, message: 'يرجى إدخال رمز التحقق كاملاً (6 أرقام)');
+      CustomSnackBar.showError(context, message: S.of(context).otpIncomplete);
       return;
     }
 
@@ -132,7 +132,7 @@ class _OtpVerificationViewState extends State<_OtpVerificationView> {
   void _showNewPasswordSheet() {
     NewPasswordBottomSheet.show(
       context,
-      isLoading: context.read<AuthCubit>().state.isLoading,
+      userType: widget.userType,
       onConfirm: (password, confirmPassword) {
         context.read<AuthCubit>().resetPassword(
               ResetPasswordParams(
@@ -159,17 +159,20 @@ class _OtpVerificationViewState extends State<_OtpVerificationView> {
         } else if (state.status == AuthStatus.otpVerified) {
           final targetType = state.userType ?? widget.userType;
           if (targetType == UserType.jobSeeker) {
-            setState(() => _isCheckingProfile = true);
-            SessionManager.checkAndSyncJobSeekerProfileCompleted().then((isCompleted) {
-              if (mounted) {
-                setState(() => _isCheckingProfile = false);
-                if (isCompleted) {
-                  Go.offAllNamed(NamedRoutes.jobSeekerMain);
-                } else {
-                  Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
+            if (_isPasswordReset) {
+              // Login OTP — check profile status to decide destination
+              setState(() => _isCheckingProfile = true);
+              SessionManager.getJobSeekerRouteDestination().then((destination) {
+                if (mounted) {
+                  setState(() => _isCheckingProfile = false);
+                  Go.offAllNamed(destination);
                 }
-              }
-            });
+              });
+            } else {
+              // Registration OTP — always go to profile setup form (fresh registration)
+              SessionManager.setJobSeekerProfileCompleted(false);
+              Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
+            }
           } else {
             Go.offAllNamed(NamedRoutes.companyMain);
           }

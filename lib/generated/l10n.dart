@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -18,8 +19,10 @@ class S {
   static S? _current;
 
   static S get current {
-    assert(_current != null,
-        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+    assert(
+      _current != null,
+      'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.',
+    );
     return _current!;
   }
 
@@ -41,8 +44,10 @@ class S {
 
   static S of(BuildContext context) {
     final instance = S.maybeOf(context);
-    assert(instance != null,
-        'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
+    assert(
+      instance != null,
+      'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?',
+    );
     return instance!;
   }
 
@@ -122,32 +127,17 @@ class S {
 
   /// `تخطي`
   String get skip {
-    return Intl.message(
-      'تخطي',
-      name: 'skip',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('تخطي', name: 'skip', desc: '', args: []);
   }
 
   /// `التالي`
   String get next {
-    return Intl.message(
-      'التالي',
-      name: 'next',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('التالي', name: 'next', desc: '', args: []);
   }
 
   /// `ابدأ الآن`
   String get getStarted {
-    return Intl.message(
-      'ابدأ الآن',
-      name: 'getStarted',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('ابدأ الآن', name: 'getStarted', desc: '', args: []);
   }
 
   /// `مسار للتوظيف`
@@ -262,22 +252,12 @@ class S {
 
   /// `المتابعة`
   String get continueAction {
-    return Intl.message(
-      'المتابعة',
-      name: 'continueAction',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('المتابعة', name: 'continueAction', desc: '', args: []);
   }
 
   /// `تسجيل الدخول`
   String get loginTitle {
-    return Intl.message(
-      'تسجيل الدخول',
-      name: 'loginTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('تسجيل الدخول', name: 'loginTitle', desc: '', args: []);
   }
 
   /// `مرحباً بك مجدداً! يرجى إدخال بياناتك للمتابعة`
@@ -392,12 +372,7 @@ class S {
 
   /// `رقم الهاتف`
   String get phoneLabel {
-    return Intl.message(
-      'رقم الهاتف',
-      name: 'phoneLabel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('رقم الهاتف', name: 'phoneLabel', desc: '', args: []);
   }
 
   /// `أدخل رقم الهاتف`
@@ -492,42 +467,22 @@ class S {
 
   /// `الجنس`
   String get genderLabel {
-    return Intl.message(
-      'الجنس',
-      name: 'genderLabel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('الجنس', name: 'genderLabel', desc: '', args: []);
   }
 
   /// `اختر الجنس`
   String get genderHint {
-    return Intl.message(
-      'اختر الجنس',
-      name: 'genderHint',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('اختر الجنس', name: 'genderHint', desc: '', args: []);
   }
 
   /// `ذكر`
   String get male {
-    return Intl.message(
-      'ذكر',
-      name: 'male',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('ذكر', name: 'male', desc: '', args: []);
   }
 
   /// `أنثى`
   String get female {
-    return Intl.message(
-      'أنثى',
-      name: 'female',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('أنثى', name: 'female', desc: '', args: []);
   }
 
   /// `نسيت كلمة المرور؟`
@@ -622,22 +577,12 @@ class S {
 
   /// `سجل الآن`
   String get signUpNow {
-    return Intl.message(
-      'سجل الآن',
-      name: 'signUpNow',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('سجل الآن', name: 'signUpNow', desc: '', args: []);
   }
 
   /// `سجل الدخول`
   String get signInNow {
-    return Intl.message(
-      'سجل الدخول',
-      name: 'signInNow',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('سجل الدخول', name: 'signInNow', desc: '', args: []);
   }
 
   /// `هذا الحساب مسجل كشركة، يرجى تسجيل الدخول من بوابة أصحاب الأعمال والشركات.`
@@ -970,10 +915,10 @@ class S {
     );
   }
 
-  /// `اختر اللغات`
+  /// `مثال: العربية، الإنجليزية`
   String get languagesHint {
     return Intl.message(
-      'اختر اللغات',
+      'مثال: العربية، الإنجليزية',
       name: 'languagesHint',
       desc: '',
       args: [],
@@ -990,10 +935,10 @@ class S {
     );
   }
 
-  /// `أدخل مهاراتك الرئيسية`
+  /// `مثال: قيادة، كهرباء، صيانة`
   String get skillsHint {
     return Intl.message(
-      'أدخل مهاراتك الرئيسية',
+      'مثال: قيادة، كهرباء، صيانة',
       name: 'skillsHint',
       desc: '',
       args: [],
@@ -1182,22 +1127,12 @@ class S {
 
   /// `تم الرفع`
   String get uploadedBadge {
-    return Intl.message(
-      'تم الرفع',
-      name: 'uploadedBadge',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('تم الرفع', name: 'uploadedBadge', desc: '', args: []);
   }
 
   /// `مطلوب`
   String get requiredBadge {
-    return Intl.message(
-      'مطلوب',
-      name: 'requiredBadge',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('مطلوب', name: 'requiredBadge', desc: '', args: []);
   }
 
   /// `قيد الرفع`
@@ -1272,32 +1207,17 @@ class S {
 
   /// `عرض الصورة`
   String get viewPhoto {
-    return Intl.message(
-      'عرض الصورة',
-      name: 'viewPhoto',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('عرض الصورة', name: 'viewPhoto', desc: '', args: []);
   }
 
   /// `تغيير`
   String get changeMedia {
-    return Intl.message(
-      'تغيير',
-      name: 'changeMedia',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('تغيير', name: 'changeMedia', desc: '', args: []);
   }
 
   /// `رفع`
   String get uploadAction {
-    return Intl.message(
-      'رفع',
-      name: 'uploadAction',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('رفع', name: 'uploadAction', desc: '', args: []);
   }
 
   /// `قص وتعديل الصورة`
@@ -1312,12 +1232,7 @@ class S {
 
   /// `تأكيد وقص`
   String get confirmCrop {
-    return Intl.message(
-      'تأكيد وقص',
-      name: 'confirmCrop',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('تأكيد وقص', name: 'confirmCrop', desc: '', args: []);
   }
 
   /// `+5 ثواني`
@@ -1392,12 +1307,7 @@ class S {
 
   /// `تم الرفض`
   String get statusRejected {
-    return Intl.message(
-      'تم الرفض',
-      name: 'statusRejected',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('تم الرفض', name: 'statusRejected', desc: '', args: []);
   }
 
   /// `طلبك قيد الدراسة والمراجعة`
@@ -1580,14 +1490,9 @@ class S {
     );
   }
 
-  /// `الانتقال إلى الرئيسية`
+  /// `الرئيسية`
   String get goToHome {
-    return Intl.message(
-      'الانتقال إلى الرئيسية',
-      name: 'goToHome',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('الرئيسية', name: 'goToHome', desc: '', args: []);
   }
 
   /// `البحث عن عمالة`
@@ -1602,22 +1507,12 @@ class S {
 
   /// `الطلبات`
   String get navRequests {
-    return Intl.message(
-      'الطلبات',
-      name: 'navRequests',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('الطلبات', name: 'navRequests', desc: '', args: []);
   }
 
   /// `المحفوظين`
   String get navSaved {
-    return Intl.message(
-      'المحفوظين',
-      name: 'navSaved',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('المحفوظين', name: 'navSaved', desc: '', args: []);
   }
 
   /// `الإشعارات`
@@ -1632,22 +1527,12 @@ class S {
 
   /// `الملف الشخصي`
   String get navProfile {
-    return Intl.message(
-      'الملف الشخصي',
-      name: 'navProfile',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('الملف الشخصي', name: 'navProfile', desc: '', args: []);
   }
 
   /// `الإعدادات`
   String get navSettings {
-    return Intl.message(
-      'الإعدادات',
-      name: 'navSettings',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('الإعدادات', name: 'navSettings', desc: '', args: []);
   }
 
   /// `البحث عن المرشحين`
@@ -1692,12 +1577,7 @@ class S {
 
   /// `إعادة ضبط`
   String get resetFilters {
-    return Intl.message(
-      'إعادة ضبط',
-      name: 'resetFilters',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('إعادة ضبط', name: 'resetFilters', desc: '', args: []);
   }
 
   /// `الدول الأكثر طلباً`
@@ -1722,12 +1602,7 @@ class S {
 
   /// `الكل`
   String get allOptions {
-    return Intl.message(
-      'الكل',
-      name: 'allOptions',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('الكل', name: 'allOptions', desc: '', args: []);
   }
 
   /// `الفلاتر النشطة`
@@ -1752,12 +1627,7 @@ class S {
 
   /// `العمر`
   String get ageLabel {
-    return Intl.message(
-      'العمر',
-      name: 'ageLabel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('العمر', name: 'ageLabel', desc: '', args: []);
   }
 
   /// `حالة جواز السفر`
@@ -1772,12 +1642,7 @@ class S {
 
   /// `جواز ساري`
   String get validPassport {
-    return Intl.message(
-      'جواز ساري',
-      name: 'validPassport',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('جواز ساري', name: 'validPassport', desc: '', args: []);
   }
 
   /// `غير ساري`
@@ -1832,12 +1697,7 @@ class S {
 
   /// `الخبرة`
   String get experienceLabel {
-    return Intl.message(
-      'الخبرة',
-      name: 'experienceLabel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('الخبرة', name: 'experienceLabel', desc: '', args: []);
   }
 
   /// `الموقع الحالي`
@@ -1862,12 +1722,7 @@ class S {
 
   /// `محقق`
   String get verifiedBadge {
-    return Intl.message(
-      'محقق',
-      name: 'verifiedBadge',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('محقق', name: 'verifiedBadge', desc: '', args: []);
   }
 
   /// `غير محقق`
@@ -1922,12 +1777,7 @@ class S {
 
   /// `سنة`
   String get yearsOld {
-    return Intl.message(
-      'سنة',
-      name: 'yearsOld',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('سنة', name: 'yearsOld', desc: '', args: []);
   }
 
   /// `طلب تواصل`
@@ -2082,12 +1932,7 @@ class S {
 
   /// `مكتمل`
   String get statusCompleted {
-    return Intl.message(
-      'مكتمل',
-      name: 'statusCompleted',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('مكتمل', name: 'statusCompleted', desc: '', args: []);
   }
 
   /// `المرشحين المحفوظين`
@@ -2392,12 +2237,7 @@ class S {
 
   /// `تسجيل الخروج`
   String get logout {
-    return Intl.message(
-      'تسجيل الخروج',
-      name: 'logout',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('تسجيل الخروج', name: 'logout', desc: '', args: []);
   }
 
   /// `تسجيل الخروج من الحساب الحالي`
@@ -2542,12 +2382,7 @@ class S {
 
   /// `إلغاء`
   String get cancel {
-    return Intl.message(
-      'إلغاء',
-      name: 'cancel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('إلغاء', name: 'cancel', desc: '', args: []);
   }
 
   /// `لا يوجد اتصال بالإنترنت`
@@ -2685,6 +2520,581 @@ class S {
     return Intl.message(
       'حاول مرة أخرى',
       name: 'retryAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إعادة تقديم الطلب`
+  String get resubmitProfileAction {
+    return Intl.message(
+      'إعادة تقديم الطلب',
+      name: 'resubmitProfileAction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `طلبات التواصل من الشركات`
+  String get companyContactRequestsTitle {
+    return Intl.message(
+      'طلبات التواصل من الشركات',
+      name: 'companyContactRequestsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد طلبات تواصل حالياً`
+  String get noContactRequestsCurrently {
+    return Intl.message(
+      'لا توجد طلبات تواصل حالياً',
+      name: 'noContactRequestsCurrently',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `عندما تطلب شركة التواصل معك ستظهر طلباتهم هنا`
+  String get noContactRequestsSub {
+    return Intl.message(
+      'عندما تطلب شركة التواصل معك ستظهر طلباتهم هنا',
+      name: 'noContactRequestsSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `طلب تواصل من شركة`
+  String get companyContactRequestFallback {
+    return Intl.message(
+      'طلب تواصل من شركة',
+      name: 'companyContactRequestFallback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `طلبات التواصل`
+  String get contactRequestsSettingsTitle {
+    return Intl.message(
+      'طلبات التواصل',
+      name: 'contactRequestsSettingsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `متابعة طلبات الشركات للربط والتواصل معك`
+  String get contactRequestsSettingsSub {
+    return Intl.message(
+      'متابعة طلبات الشركات للربط والتواصل معك',
+      name: 'contactRequestsSettingsSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الشروط والأحكام وسياسة الخصوصية للاستخدام`
+  String get termsAndPrivacySettingsSub {
+    return Intl.message(
+      'الشروط والأحكام وسياسة الخصوصية للاستخدام',
+      name: 'termsAndPrivacySettingsSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اضغط لمتابعة مراحل مراجعة واعتماد ملفك`
+  String get requestStatusTileSubtitle {
+    return Intl.message(
+      'اضغط لمتابعة مراحل مراجعة واعتماد ملفك',
+      name: 'requestStatusTileSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `بيانات الحساب والملف الشخصي`
+  String get accountAndProfileDetailsTitle {
+    return Intl.message(
+      'بيانات الحساب والملف الشخصي',
+      name: 'accountAndProfileDetailsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `مرشح / باحث عن عمل`
+  String get candidateDefaultRole {
+    return Intl.message(
+      'مرشح / باحث عن عمل',
+      name: 'candidateDefaultRole',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختيار الفيديو التعريفي`
+  String get chooseIntroVideo {
+    return Intl.message(
+      'اختيار الفيديو التعريفي',
+      name: 'chooseIntroVideo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تسجيل بالكاميرا`
+  String get recordCamera {
+    return Intl.message(
+      'تسجيل بالكاميرا',
+      name: 'recordCamera',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الكاميرا`
+  String get camera {
+    return Intl.message('الكاميرا', name: 'camera', desc: '', args: []);
+  }
+
+  /// `المعرض`
+  String get gallery {
+    return Intl.message('المعرض', name: 'gallery', desc: '', args: []);
+  }
+
+  /// `يرجى رفع فيديو لا يتجاوز دقيقة واحدة (60 ثانية)`
+  String get videoMaxDurationError {
+    return Intl.message(
+      'يرجى رفع فيديو لا يتجاوز دقيقة واحدة (60 ثانية)',
+      name: 'videoMaxDurationError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فيديو تعريفي لا يتجاوز دقيقة واحدة (60 ثانية)`
+  String get introVideoDurationLimit {
+    return Intl.message(
+      'فيديو تعريفي لا يتجاوز دقيقة واحدة (60 ثانية)',
+      name: 'introVideoDurationLimit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `جاري رفع الفيديو التعريفي...`
+  String get uploadingIntroVideo {
+    return Intl.message(
+      'جاري رفع الفيديو التعريفي...',
+      name: 'uploadingIntroVideo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `جاري رفع الفيديو التعريفي... ({progress}%)`
+  String uploadingIntroVideoWithProgress(int progress) {
+    return Intl.message(
+      'جاري رفع الفيديو التعريفي... ($progress%)',
+      name: 'uploadingIntroVideoWithProgress',
+      desc: '',
+      args: [progress],
+    );
+  }
+
+  /// `اختر فيديو أو قم بالتسجيل`
+  String get chooseVideoOrRecord {
+    return Intl.message(
+      'اختر فيديو أو قم بالتسجيل',
+      name: 'chooseVideoOrRecord',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تعذر مسح جواز السفر، يرجى التأكد من صلاحية الكاميرا والمحاولة مرة أخرى`
+  String get passportScanError {
+    return Intl.message(
+      'تعذر مسح جواز السفر، يرجى التأكد من صلاحية الكاميرا والمحاولة مرة أخرى',
+      name: 'passportScanError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `صورة شخصية حديثة بخلفية بيضاء`
+  String get personalPhotoSubtitle {
+    return Intl.message(
+      'صورة شخصية حديثة بخلفية بيضاء',
+      name: 'personalPhotoSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `صورة وجهي البطاقة الشخصية`
+  String get nationalIdSubtitle {
+    return Intl.message(
+      'صورة وجهي البطاقة الشخصية',
+      name: 'nationalIdSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد مؤهلات دراسية متاحة حالياً`
+  String get noQualificationsAvailable {
+    return Intl.message(
+      'لا توجد مؤهلات دراسية متاحة حالياً',
+      name: 'noQualificationsAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد مستويات خبرة متاحة حالياً`
+  String get noExperienceLevelsAvailable {
+    return Intl.message(
+      'لا توجد مستويات خبرة متاحة حالياً',
+      name: 'noExperienceLevelsAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم حفظ وإرسال بيانات طلب التوظيف بنجاح`
+  String get profileSubmittedSuccess {
+    return Intl.message(
+      'تم حفظ وإرسال بيانات طلب التوظيف بنجاح',
+      name: 'profileSubmittedSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `حدث خطأ أثناء حفظ البيانات، يرجى المحاولة مرة أخرى`
+  String get profileSubmitError {
+    return Intl.message(
+      'حدث خطأ أثناء حفظ البيانات، يرجى المحاولة مرة أخرى',
+      name: 'profileSubmitError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تمت العملية بنجاح`
+  String get timelineStepCompletedSub {
+    return Intl.message(
+      'تمت العملية بنجاح',
+      name: 'timelineStepCompletedSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `جارٍ الفحص والمراجعة الحالية`
+  String get timelineStepUnderReviewSub {
+    return Intl.message(
+      'جارٍ الفحص والمراجعة الحالية',
+      name: 'timelineStepUnderReviewSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `بانتظار اكتمال الفحص`
+  String get timelineStepPendingReviewSub {
+    return Intl.message(
+      'بانتظار اكتمال الفحص',
+      name: 'timelineStepPendingReviewSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فريق الدعم متاح على مدار الساعة عبر البريد أو الوتساب`
+  String get supportAvailable247 {
+    return Intl.message(
+      'فريق الدعم متاح على مدار الساعة عبر البريد أو الوتساب',
+      name: 'supportAvailable247',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `سيرتك الذاتية أصبحت متاحة للعرض أمام كبرى الشركات الدولية`
+  String get approvedFeature1 {
+    return Intl.message(
+      'سيرتك الذاتية أصبحت متاحة للعرض أمام كبرى الشركات الدولية',
+      name: 'approvedFeature1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `إمكانية التقديم المباشر والتواصل مع أصحاب العمل`
+  String get approvedFeature2 {
+    return Intl.message(
+      'إمكانية التقديم المباشر والتواصل مع أصحاب العمل',
+      name: 'approvedFeature2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تفعيل التنبيهات الفورية للوظائف المتطابقة مع تخصصك`
+  String get approvedFeature3 {
+    return Intl.message(
+      'تفعيل التنبيهات الفورية للوظائف المتطابقة مع تخصصك',
+      name: 'approvedFeature3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `فريق الدعم الفني جاهز لمساعدتك في استكمال ملفك`
+  String get supportReadyToHelp {
+    return Intl.message(
+      'فريق الدعم الفني جاهز لمساعدتك في استكمال ملفك',
+      name: 'supportReadyToHelp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم رفع الصورة الشخصية بنجاح`
+  String get uploadPersonalPhotoSuccess {
+    return Intl.message(
+      'تم رفع الصورة الشخصية بنجاح',
+      name: 'uploadPersonalPhotoSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم رفع بطاقة الهوية بنجاح`
+  String get uploadNationalIdSuccess {
+    return Intl.message(
+      'تم رفع بطاقة الهوية بنجاح',
+      name: 'uploadNationalIdSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم رفع جواز السفر بنجاح`
+  String get uploadPassportSuccess {
+    return Intl.message(
+      'تم رفع جواز السفر بنجاح',
+      name: 'uploadPassportSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم رفع السيرة الذاتية بنجاح`
+  String get uploadCvSuccess {
+    return Intl.message(
+      'تم رفع السيرة الذاتية بنجاح',
+      name: 'uploadCvSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم رفع الفيديو التعريفي بنجاح`
+  String get uploadVideoSuccess {
+    return Intl.message(
+      'تم رفع الفيديو التعريفي بنجاح',
+      name: 'uploadVideoSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `يرجى الانتظار حتى يكتمل رفع الملفات والوسائط بالكامل`
+  String get waitMediaUploadMsg {
+    return Intl.message(
+      'يرجى الانتظار حتى يكتمل رفع الملفات والوسائط بالكامل',
+      name: 'waitMediaUploadMsg',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم حفظ وإرسال الملف الشخصي بنجاح`
+  String get submitProfileSuccessMsg {
+    return Intl.message(
+      'تم حفظ وإرسال الملف الشخصي بنجاح',
+      name: 'submitProfileSuccessMsg',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تعيين كلمة مرور جديدة`
+  String get setNewPasswordTitle {
+    return Intl.message(
+      'تعيين كلمة مرور جديدة',
+      name: 'setNewPasswordTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `يرجى كتابة كلمة المرور الجديدة وتأكيدها للمتابعة`
+  String get setNewPasswordSub {
+    return Intl.message(
+      'يرجى كتابة كلمة المرور الجديدة وتأكيدها للمتابعة',
+      name: 'setNewPasswordSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تأكيد وحفظ كلمة المرور`
+  String get confirmAndSavePassword {
+    return Intl.message(
+      'تأكيد وحفظ كلمة المرور',
+      name: 'confirmAndSavePassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لم تصلك الرسالة؟`
+  String get didNotReceiveCode {
+    return Intl.message(
+      'لم تصلك الرسالة؟',
+      name: 'didNotReceiveCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `يرجى إدخال رمز التحقق كاملاً (6 أرقام)`
+  String get otpIncomplete {
+    return Intl.message(
+      'يرجى إدخال رمز التحقق كاملاً (6 أرقام)',
+      name: 'otpIncomplete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اسم الشركة يجب ألا يقل عن حرفين`
+  String get companyNameMinLength {
+    return Intl.message(
+      'اسم الشركة يجب ألا يقل عن حرفين',
+      name: 'companyNameMinLength',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `الاسم الكامل يجب ألا يقل عن حرفين`
+  String get fullNameMinLength {
+    return Intl.message(
+      'الاسم الكامل يجب ألا يقل عن حرفين',
+      name: 'fullNameMinLength',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `اختيار مصدر الصورة`
+  String get chooseImageSourceTitle {
+    return Intl.message(
+      'اختيار مصدر الصورة',
+      name: 'chooseImageSourceTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تغيير`
+  String get changeImageAction {
+    return Intl.message('تغيير', name: 'changeImageAction', desc: '', args: []);
+  }
+
+  /// `تعذر تحميل الصورة`
+  String get failedToLoadImage {
+    return Intl.message(
+      'تعذر تحميل الصورة',
+      name: 'failedToLoadImage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `لا توجد صورة للعرض`
+  String get noImageToDisplay {
+    return Intl.message(
+      'لا توجد صورة للعرض',
+      name: 'noImageToDisplay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تخطي`
+  String get skipAction {
+    return Intl.message('تخطي', name: 'skipAction', desc: '', args: []);
+  }
+
+  /// `حر`
+  String get freeAspect {
+    return Intl.message('حر', name: 'freeAspect', desc: '', args: []);
+  }
+
+  /// `تعذر تشغيل ملف الفيديو`
+  String get cannotPlayVideo {
+    return Intl.message(
+      'تعذر تشغيل ملف الفيديو',
+      name: 'cannotPlayVideo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `جاري تجهيز مشغل الفيديو...`
+  String get preparingVideoPlayer {
+    return Intl.message(
+      'جاري تجهيز مشغل الفيديو...',
+      name: 'preparingVideoPlayer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `بيانات الجوال`
+  String get cellularData {
+    return Intl.message(
+      'بيانات الجوال',
+      name: 'cellularData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `وضع الطيران`
+  String get airplaneMode {
+    return Intl.message(
+      'وضع الطيران',
+      name: 'airplaneMode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `تم إعادة تعيين كلمة المرور بنجاح! يمكنك الآن تسجيل الدخول.`
+  String get passwordResetSuccessMessage {
+    return Intl.message(
+      'تم إعادة تعيين كلمة المرور بنجاح! يمكنك الآن تسجيل الدخول.',
+      name: 'passwordResetSuccessMessage',
       desc: '',
       args: [],
     );

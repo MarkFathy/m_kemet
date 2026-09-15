@@ -5,6 +5,7 @@ import 'package:m_kemet/src/core/network/dio_client.dart';
 import 'package:m_kemet/src/features/auth/data/models/auth_response_model.dart';
 import 'package:m_kemet/src/features/auth/data/models/country_model.dart';
 import 'package:m_kemet/src/features/auth/data/models/gender_model.dart';
+import 'package:m_kemet/src/features/auth/data/models/term_model.dart';
 import 'package:m_kemet/src/features/auth/data/models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
@@ -63,6 +64,8 @@ abstract class AuthRemoteDataSource {
   Future<List<GenderModel>> fetchGenders();
 
   Future<List<CountryModel>> fetchCountries();
+
+  Future<List<TermModel>> fetchTerms();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -314,5 +317,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           .toList();
     }
     throw const ServerException(500, 'Invalid countries response', null);
+  }
+
+  @override
+  Future<List<TermModel>> fetchTerms() async {
+    final response = await _dioClient.dio.get(ApiEndpoints.terms);
+
+    if (response.data is Map<String, dynamic>) {
+      final data = response.data as Map<String, dynamic>;
+      final list = data['data'] as List<dynamic>? ?? [];
+      return list
+          .whereType<Map<String, dynamic>>()
+          .map(TermModel.fromJson)
+          .toList();
+    }
+    throw const ServerException(500, 'Invalid terms response', null);
   }
 }

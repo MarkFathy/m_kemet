@@ -4,6 +4,7 @@ import 'package:m_kemet/src/features/auth/domain/usecases/forgot_password_usecas
 import 'package:m_kemet/src/features/auth/domain/usecases/get_countries_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/get_genders_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/get_profile_usecase.dart';
+import 'package:m_kemet/src/features/auth/domain/usecases/get_terms_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/login_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/register_candidate_usecase.dart';
@@ -31,6 +32,7 @@ class AuthCubit extends Cubit<AuthState> {
   final DeleteAccountUseCase deleteAccountUseCase;
   final GetGendersUseCase getGendersUseCase;
   final GetCountriesUseCase getCountriesUseCase;
+  final GetTermsUseCase getTermsUseCase;
 
   AuthCubit({
     required this.registerCandidateUseCase,
@@ -46,6 +48,7 @@ class AuthCubit extends Cubit<AuthState> {
     required this.deleteAccountUseCase,
     required this.getGendersUseCase,
     required this.getCountriesUseCase,
+    required this.getTermsUseCase,
   }) : super(const AuthState());
 
   S get _l10n {
@@ -281,17 +284,19 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> resetPassword(ResetPasswordParams params) async {
-    emit(state.copyWith(status: AuthStatus.loading));
+    emit(state.copyWith(resetPasswordLoading: true));
     final result = await resetPasswordUseCase(params);
     result.fold(
       (failure) => emit(
         state.copyWith(
+          resetPasswordLoading: false,
           status: AuthStatus.error,
           errorMessage: failure.serverException.message,
         ),
       ),
       (msg) => emit(
         state.copyWith(
+          resetPasswordLoading: false,
           status: AuthStatus.passwordResetSuccess,
           successMessage: msg,
         ),
@@ -378,6 +383,25 @@ class AuthCubit extends Cubit<AuthState> {
         state.copyWith(
           countriesLoading: false,
           countries: countries,
+        ),
+      ),
+    );
+  }
+
+  Future<void> fetchTerms() async {
+    emit(state.copyWith(termsLoading: true));
+    final result = await getTermsUseCase();
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          termsLoading: false,
+          errorMessage: failure.serverException.message,
+        ),
+      ),
+      (terms) => emit(
+        state.copyWith(
+          termsLoading: false,
+          terms: terms,
         ),
       ),
     );

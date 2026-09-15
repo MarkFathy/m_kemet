@@ -55,7 +55,10 @@ class JobSeekerDetailsCard extends StatelessWidget {
                 child: Icon(Icons.badge_outlined, color: AppColors.darkNavy, size: 16.sp),
               ),
               8.szW,
-              Text('بيانات الحساب والملف الشخصي', style: getTextStyle().darkNavy.w700.s15),
+              Text(
+                S.of(context).accountAndProfileDetailsTitle,
+                style: getTextStyle().darkNavy.w700.s15,
+              ),
             ],
           ),
           14.szH,

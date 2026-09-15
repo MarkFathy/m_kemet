@@ -10,65 +10,71 @@ import 'package:m_kemet/src/core/widgets/status_badge.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/request_status/application_timeline_step.dart';
 
 class PendingStatusCard extends StatelessWidget {
-  const PendingStatusCard({super.key});
+  final int? requestId;
+
+  const PendingStatusCard({
+    super.key,
+    this.requestId,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: AppColors.warningAmber.withValues(alpha: 0.5), width: 1.5.w),
+        border: Border.all(color: AppColors.borderGrey),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 14.r,
-            offset: const Offset(0, 4),
+            blurRadius: 16.r,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Hourglass Animated Badge Icon
-          Container(
-            width: 64.w,
-            height: 64.w,
-            decoration: BoxDecoration(
-              color: AppColors.warningBg,
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.warningAmber, width: 2.w),
-            ),
-            child: Icon(
-              Icons.hourglass_top_rounded,
-              color: AppColors.warningAmber,
-              size: 32.sp,
-            ),
+          // Header Row with Icon & Badge
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: EdgeInsets.all(12.w),
+                decoration: BoxDecoration(
+                  color: AppColors.warningBg,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Icon(
+                  Icons.hourglass_top_rounded,
+                  color: AppColors.warningAmber,
+                  size: 32.sp,
+                ),
+              ),
+              StatusBadge(
+                label: S.of(context).statusPending,
+                color: AppColors.warningAmber,
+                bgColor: AppColors.warningBg,
+              ),
+            ],
           ),
 
-          14.szH,
+          16.szH,
 
-          StatusBadge(
-            label: S.of(context).statusPending,
-            color: AppColors.warningAmber,
-            bgColor: AppColors.warningBg,
-          ),
-
-          14.szH,
-
+          // Main Card Title
           Text(
             S.of(context).pendingHeaderTitle,
-            textAlign: TextAlign.center,
-            style: getTextStyle().darkNavy.w700.s18,
+            style: getTextStyle().darkNavy.w700.s20,
           ),
 
-          6.szH,
+          8.szH,
 
+          // Descriptive Notice Message
           Text(
             S.of(context).pendingHeaderDesc,
-            textAlign: TextAlign.center,
-            style: getTextStyle().greyColor.w400.s13.copyWith(height: 1.4),
+            style: getTextStyle().greyColor.w400.s14.copyWith(height: 1.5),
           ),
 
           20.szH,
@@ -86,7 +92,7 @@ class PendingStatusCard extends StatelessWidget {
                 ApplicationTimelineStep(
                   stepNum: '1',
                   title: S.of(context).step1Title,
-                  subtitle: 'تمت العملية بنجاح',
+                  subtitle: S.of(context).timelineStepCompletedSub,
                   isCompleted: true,
                   isActive: false,
                 ),
@@ -94,7 +100,7 @@ class PendingStatusCard extends StatelessWidget {
                 ApplicationTimelineStep(
                   stepNum: '2',
                   title: S.of(context).step2Title,
-                  subtitle: 'جارٍ الفحص والمراجعة الحالية',
+                  subtitle: S.of(context).timelineStepUnderReviewSub,
                   isCompleted: false,
                   isActive: true,
                 ),
@@ -102,7 +108,7 @@ class PendingStatusCard extends StatelessWidget {
                 ApplicationTimelineStep(
                   stepNum: '3',
                   title: S.of(context).step3Title,
-                  subtitle: 'بانتظار اكتمال الفحص',
+                  subtitle: S.of(context).timelineStepPendingReviewSub,
                   isCompleted: false,
                   isActive: false,
                 ),
@@ -112,7 +118,7 @@ class PendingStatusCard extends StatelessWidget {
 
           16.szH,
 
-          // Request Reference Summary Box
+          // Request Reference Summary Box (Only real data, no dummy values)
           Container(
             padding: EdgeInsets.all(14.w),
             decoration: BoxDecoration(
@@ -121,18 +127,14 @@ class PendingStatusCard extends StatelessWidget {
             ),
             child: Column(
               children: [
-                _buildInfoRow(
-                  icon: Icons.tag_rounded,
-                  label: S.of(context).requestIdLabel,
-                  value: '#MSR-84920',
-                ),
-                Divider(height: 16.h, color: AppColors.borderGrey),
-                _buildInfoRow(
-                  icon: Icons.calendar_today_rounded,
-                  label: S.of(context).submissionDateLabel,
-                  value: '17 أغسطس 2026',
-                ),
-                Divider(height: 16.h, color: AppColors.borderGrey),
+                if (requestId != null) ...[
+                  _buildInfoRow(
+                    icon: Icons.tag_rounded,
+                    label: S.of(context).requestIdLabel,
+                    value: '#$requestId',
+                  ),
+                  Divider(height: 16.h, color: AppColors.borderGrey),
+                ],
                 _buildInfoRow(
                   icon: Icons.timer_outlined,
                   label: S.of(context).estimatedTimeLabel,
@@ -149,12 +151,11 @@ class PendingStatusCard extends StatelessWidget {
             onPressed: () {
               CustomSnackBar.showInfo(
                 context,
-                message: 'فريق الدعم متاح على مدار الساعة عبر البريد أو الوتساب',
+                message: S.of(context).supportAvailable247,
               );
             },
             style: OutlinedButton.styleFrom(
               minimumSize: Size(double.infinity, 48.h),
-              foregroundColor: AppColors.darkNavy,
               side: const BorderSide(color: AppColors.darkNavy),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),
@@ -163,7 +164,11 @@ class PendingStatusCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.headset_mic_outlined, size: 18.sp, color: AppColors.darkNavy),
+                Icon(
+                  Icons.support_agent_rounded,
+                  color: AppColors.darkNavy,
+                  size: 20.sp,
+                ),
                 8.szW,
                 Text(
                   S.of(context).contactSupport,
@@ -184,16 +189,13 @@ class PendingStatusCard extends StatelessWidget {
   }) {
     return Row(
       children: [
-        Icon(icon, size: 18.sp, color: AppColors.darkNavy),
+        Icon(icon, size: 16.sp, color: AppColors.darkNavy),
         8.szW,
-        Expanded(
-          child: Text(
-            label,
-            style: getTextStyle().darkNavy.w600.s13,
-            overflow: TextOverflow.ellipsis,
-          ),
+        Text(
+          label,
+          style: getTextStyle().greyColor.w500.s13,
         ),
-        8.szW,
+        const Spacer(),
         Text(
           value,
           style: getTextStyle().darkNavy.w700.s13,

@@ -107,7 +107,7 @@ class JobSeekerRequestStatusTile extends StatelessWidget {
                       ),
                       4.szH,
                       Text(
-                        'اضغط لمتابعة مراحل مراجعة واعتماد ملفك',
+                        S.of(context).requestStatusTileSubtitle,
                         style: getTextStyle().greyColor.w400.s12,
                       ),
                     ],

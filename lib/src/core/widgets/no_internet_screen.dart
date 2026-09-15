@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -170,18 +170,11 @@ class _NoInternetScreenState extends State<NoInternetScreen>
 class _ConnectionHintsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final isAr = Localizations.localeOf(context).languageCode == 'ar';
-    final hints = isAr
-        ? [
-            (Icons.wifi_rounded, 'Wi-Fi'),
-            (Icons.cell_tower_rounded, 'بيانات الجوال'),
-            (Icons.airplanemode_active_rounded, 'وضع الطيران'),
-          ]
-        : [
-            (Icons.wifi_rounded, 'Wi-Fi'),
-            (Icons.cell_tower_rounded, 'Mobile Data'),
-            (Icons.airplanemode_active_rounded, 'Flight Mode'),
-          ];
+    final hints = [
+      (Icons.wifi_rounded, 'Wi-Fi'),
+      (Icons.cell_tower_rounded, S.of(context).cellularData),
+      (Icons.airplanemode_active_rounded, S.of(context).airplaneMode),
+    ];
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:m_kemet/src/config/res/app_sizes.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
+import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/core/extensions/context_extension.dart';
 import 'package:m_kemet/src/core/helpers/validators.dart';
 import 'package:flutter/material.dart';
@@ -220,6 +221,32 @@ class DefaultTextFieldState extends State<DefaultTextField> with SingleTickerPro
                   fontWeight: FontWeight.w600,
                 ),
             cursorColor: const Color(0xFF073B62),
+            contextMenuBuilder: (context, editableTextState) {
+              return Theme(
+                data: Theme.of(context).copyWith(
+                  colorScheme: Theme.of(context).colorScheme.copyWith(
+                    brightness: Brightness.light,
+                    surface: Colors.white,
+                    surfaceContainer: Colors.white,
+                    surfaceContainerHighest: const Color(0xFFF1F5F9),
+                    onSurface: const Color(0xFF073B62),
+                  ),
+                  textButtonTheme: TextButtonThemeData(
+                    style: TextButton.styleFrom(
+                      foregroundColor: const Color(0xFF073B62),
+                      textStyle: const TextStyle(
+                        fontFamily: FontManager.fontFamilyCairo,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ),
+                child: AdaptiveTextSelectionToolbar.editableText(
+                  editableTextState: editableTextState,
+                ),
+              );
+            },
             decoration: InputDecoration(
               isDense: true,
               contentPadding: widget.contentPadding ??
