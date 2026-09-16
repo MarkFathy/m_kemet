@@ -7,6 +7,7 @@ class SessionManager {
   SessionManager._();
 
   static const String _kAccessToken = 'access_token';
+  static const String _kRefreshToken = 'refresh_token';
   static const String _kUserId = 'user_id';
   static const String _kUserEmail = 'user_email';
   static const String _kUserType = 'user_type';
@@ -14,11 +15,15 @@ class SessionManager {
 
   static Future<void> saveSession({
     required String token,
+    String? refreshToken,
     String? userId,
     String? email,
     String? userType,
   }) async {
     await SecureStorage.write(_kAccessToken, token);
+    if (refreshToken != null && refreshToken.isNotEmpty) {
+      await SecureStorage.write(_kRefreshToken, refreshToken);
+    }
     if (userId != null) {
       await SecureStorage.write(_kUserId, userId);
     }
@@ -31,6 +36,8 @@ class SessionManager {
   }
 
   static Future<String?> getToken() async => SecureStorage.read(_kAccessToken);
+
+  static Future<String?> getRefreshToken() async => SecureStorage.read(_kRefreshToken);
 
   static Future<String?> getUserId() async => SecureStorage.read(_kUserId);
 
@@ -126,6 +133,7 @@ class SessionManager {
 
   static Future<void> clearSession() async {
     await SecureStorage.delete(_kAccessToken);
+    await SecureStorage.delete(_kRefreshToken);
     await SecureStorage.delete(_kUserId);
     await SecureStorage.delete(_kUserEmail);
     await SecureStorage.delete(_kUserType);

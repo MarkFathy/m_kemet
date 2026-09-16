@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:m_kemet/src/config/res/app_sizes.dart';
 import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
-import 'package:m_kemet/src/core/extensions/context_extension.dart';
 import 'package:m_kemet/src/core/helpers/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -210,6 +209,10 @@ class DefaultTextFieldState extends State<DefaultTextField> with SingleTickerPro
             onTap: widget.onTap,
             obscureText: widget.isPassword ?? false ? _isSecure : widget.secure,
             keyboardType: widget.isPhone ?? false ? TextInputType.phone : widget.inputType,
+            inputFormatters: widget.inputFormatters ??
+                (widget.isPhone ?? false
+                    ? [FilteringTextInputFormatter.digitsOnly]
+                    : null),
             maxLength: widget.maxLength,
             maxLines: widget.inputType == TextInputType.multiline ? widget.maxLines ?? 7 : 1,
             readOnly: widget.readOnly,
@@ -288,8 +291,6 @@ class DefaultTextFieldState extends State<DefaultTextField> with SingleTickerPro
                         color: const Color(0xFF6B7280),
                       ),
                     )
-                  : widget.isPhone ?? false
-                  ? _suffixIconWhenPhoneType(context)
                   : widget.suffixIcon,
 
               enabledBorder: OutlineInputBorder(
@@ -326,22 +327,3 @@ class DefaultTextFieldState extends State<DefaultTextField> with SingleTickerPro
     return fieldWidget;
   }
 }
-
-/// Phone suffix
-Widget _suffixIconWhenPhoneType(BuildContext context) => SizedBox(
-  width: AppSize.sW90,
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Text(
-        '+966',
-        style: context.textTheme.bodyMedium?.copyWith(
-          color: context.colors.onSurface,
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
-      SizedBox(width: AppSize.sW8),
-    ],
-  ),
-);

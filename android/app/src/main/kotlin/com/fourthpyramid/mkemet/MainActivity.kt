@@ -1,4 +1,4 @@
-package com.example.m_kemet
+package com.fourthpyramid.mkemet
 
 import io.flutter.embedding.android.FlutterActivity
 

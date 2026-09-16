@@ -109,18 +109,19 @@ class _CountrySelectionBottomSheetState extends State<CountrySelectionBottomShee
                           style: getTextStyle().greyColor.w400.s14,
                         ),
                       )
-                    : ListView.separated(
+                    : ListView.builder(
                         physics: const BouncingScrollPhysics(),
                         itemCount: filtered.length,
-                        separatorBuilder: (context, index) => const Divider(height: 1),
                         itemBuilder: (context, index) {
                           final country = filtered[index];
                           final isSelected = widget.selectedCountryId == country.id;
                           return ListTile(
+                            dense: true,
+                            contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                             leading: country.flag != null
                                 ? Text(
                                     country.flag!,
-                                    style: TextStyle(fontSize: 24.sp),
+                                    style: TextStyle(fontSize: 22.sp),
                                   )
                                 : null,
                             title: Text(

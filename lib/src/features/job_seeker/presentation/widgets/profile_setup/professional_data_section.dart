@@ -106,14 +106,15 @@ class ProfessionalDataSection extends StatelessWidget {
                                 style: getTextStyle().greyColor.w400.s14,
                               ),
                             )
-                          : ListView.separated(
+                          : ListView.builder(
                               physics: const BouncingScrollPhysics(),
                               itemCount: filtered.length,
-                              separatorBuilder: (context, index) => const Divider(height: 1),
                               itemBuilder: (context, index) {
                                 final item = filtered[index];
                                 final isSelected = professionController.text == item.name;
                                 return ListTile(
+                                  dense: true,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                                   title: Text(
                                     item.name,
                                     style: isSelected
@@ -183,15 +184,16 @@ class ProfessionalDataSection extends StatelessWidget {
               ),
               16.szH,
               Flexible(
-                child: ListView.separated(
+                child: ListView.builder(
                   shrinkWrap: true,
                   physics: const BouncingScrollPhysics(),
                   itemCount: options.length,
-                  separatorBuilder: (context, index) => const Divider(height: 1),
                   itemBuilder: (context, index) {
                     final item = options[index];
                     final isSelected = experienceYearsController.text == item.name;
                     return ListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                       title: Text(
                         item.name,
                         style: isSelected
@@ -257,15 +259,16 @@ class ProfessionalDataSection extends StatelessWidget {
                           ),
                         ),
                       )
-                    : ListView.separated(
+                    : ListView.builder(
                         shrinkWrap: true,
                         physics: const BouncingScrollPhysics(),
                         itemCount: qualifications.length,
-                        separatorBuilder: (context, index) => const Divider(height: 1),
                         itemBuilder: (context, index) {
                           final item = qualifications[index];
                           final isSelected = qualificationController.text == item.name;
                           return ListTile(
+                            dense: true,
+                            contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                             title: Text(
                               item.name,
                               style: isSelected
@@ -325,15 +328,16 @@ class ProfessionalDataSection extends StatelessWidget {
               ),
               16.szH,
               Flexible(
-                child: ListView.separated(
+                child: ListView.builder(
                   shrinkWrap: true,
                   physics: const BouncingScrollPhysics(),
                   itemCount: options.length,
-                  separatorBuilder: (context, index) => const Divider(height: 1),
                   itemBuilder: (context, index) {
                     final item = options[index];
                     final isSelected = controller.text == item;
                     return ListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                       title: Text(
                         item,
                         style: isSelected
@@ -420,14 +424,15 @@ class ProfessionalDataSection extends StatelessWidget {
                                 style: getTextStyle().greyColor.w400.s14,
                               ),
                             )
-                          : ListView.separated(
+                          : ListView.builder(
                               physics: const BouncingScrollPhysics(),
                               itemCount: filtered.length,
-                              separatorBuilder: (context, index) => const Divider(height: 1),
                               itemBuilder: (context, index) {
                                 final item = filtered[index];
                                 final isChecked = selectedCountries.any((c) => c.id == item.id);
                                 return CheckboxListTile(
+                                  dense: true,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0),
                                   activeColor: AppColors.darkNavy,
                                   title: Row(
                                     children: [
