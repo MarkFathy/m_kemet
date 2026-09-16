@@ -6,14 +6,14 @@ import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
+import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
 import 'package:m_kemet/src/core/widgets/text_fields/default_text_field.dart';
+import 'package:m_kemet/src/features/auth/domain/entities/country_entity.dart';
+import 'package:m_kemet/src/features/job_seeker/domain/entities/experience_level_entity.dart';
+import 'package:m_kemet/src/features/job_seeker/domain/entities/profession_entity.dart';
+import 'package:m_kemet/src/features/job_seeker/domain/entities/qualification_entity.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_cubit.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_state.dart';
-import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/sheets/experience_level_selection_sheet.dart';
-import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/sheets/profession_selection_sheet.dart';
-import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/sheets/qualification_selection_sheet.dart';
-import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/sheets/single_selection_sheet.dart';
-import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/sheets/target_countries_selection_sheet.dart';
 
 class ProfessionalDataSection extends StatelessWidget {
   final TextEditingController professionController;
@@ -47,6 +47,435 @@ class ProfessionalDataSection extends StatelessWidget {
     '12000+',
   ];
 
+  void _showProfessionBottomSheet(BuildContext context, List<ProfessionEntity> professions) {
+    final cubit = context.read<JobSeekerProfileCubit>();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      backgroundColor: AppColors.whiteColor,
+      builder: (modalCtx) {
+        String searchQuery = '';
+        return StatefulBuilder(
+          builder: (builderCtx, setModalState) {
+            final filtered = professions
+                .where((item) => item.name.toLowerCase().contains(searchQuery.toLowerCase()))
+                .toList();
+
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(modalCtx).viewInsets.bottom,
+              ),
+              child: Container(
+                height: MediaQuery.of(modalCtx).size.height * 0.7,
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 40.w,
+                      height: 4.h,
+                      decoration: BoxDecoration(
+                        color: AppColors.borderGrey,
+                        borderRadius: BorderRadius.circular(2.r),
+                      ),
+                    ),
+                    12.szH,
+                    Text(
+                      S.of(modalCtx).professionLabel,
+                      style: getTextStyle().darkNavy.w700.s18,
+                    ),
+                    16.szH,
+                    DefaultTextField(
+                      hint: S.of(modalCtx).searchProfessionHint,
+                      prefixIcon: Icon(Icons.search_rounded, color: AppColors.greyColor, size: 20.sp),
+                      onChanged: (val) {
+                        setModalState(() {
+                          searchQuery = val ?? '';
+                        });
+                      },
+                    ),
+                    12.szH,
+                    Expanded(
+                      child: filtered.isEmpty
+                          ? Center(
+                              child: Text(
+                                S.of(modalCtx).noCountryFound,
+                                style: getTextStyle().greyColor.w400.s14,
+                              ),
+                            )
+                          : ListView.separated(
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: filtered.length,
+                              separatorBuilder: (context, index) => const Divider(height: 1),
+                              itemBuilder: (context, index) {
+                                final item = filtered[index];
+                                final isSelected = professionController.text == item.name;
+                                return ListTile(
+                                  title: Text(
+                                    item.name,
+                                    style: isSelected
+                                        ? getTextStyle().darkNavy.w700.s15
+                                        : getTextStyle().darkNavy.w500.s15,
+                                  ),
+                                  trailing: isSelected
+                                      ? const Icon(Icons.check_circle_rounded, color: AppColors.darkNavy)
+                                      : null,
+                                  onTap: () {
+                                    professionController.text = item.name;
+                                    if (item.id != 0) {
+                                      cubit.selectProfession(item);
+                                    }
+                                    Navigator.pop(modalCtx);
+                                  },
+                                );
+                              },
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showExperienceLevelBottomSheet(BuildContext context, List<ExperienceLevelEntity> levels) {
+    final cubit = context.read<JobSeekerProfileCubit>();
+
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      backgroundColor: AppColors.whiteColor,
+      builder: (modalCtx) {
+        final options = levels.isNotEmpty
+            ? levels
+            : [
+                const ExperienceLevelEntity(id: 1, name: 'أقل من سنة (Less than 1 year)'),
+                const ExperienceLevelEntity(id: 2, name: 'من سنة إلى 5 سنوات (1 - 5 years)'),
+                const ExperienceLevelEntity(id: 3, name: 'من 5 إلى 8 سنوات (5 - 8 years)'),
+                const ExperienceLevelEntity(id: 4, name: 'أكثر من 8 سنوات (8+ years)'),
+              ];
+
+        return Container(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: AppColors.borderGrey,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              16.szH,
+              Text(
+                S.of(modalCtx).experienceYearsLabel,
+                style: getTextStyle().darkNavy.w700.s18,
+              ),
+              16.szH,
+              Flexible(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: options.length,
+                  separatorBuilder: (context, index) => const Divider(height: 1),
+                  itemBuilder: (context, index) {
+                    final item = options[index];
+                    final isSelected = experienceYearsController.text == item.name;
+                    return ListTile(
+                      title: Text(
+                        item.name,
+                        style: isSelected
+                            ? getTextStyle().darkNavy.w700.s15
+                            : getTextStyle().darkNavy.w500.s15,
+                      ),
+                      trailing: isSelected
+                          ? const Icon(Icons.check_circle_rounded, color: AppColors.darkNavy)
+                          : null,
+                      onTap: () {
+                        experienceYearsController.text = item.name;
+                        cubit.selectExperienceLevel(item);
+                        Navigator.pop(modalCtx);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showQualificationBottomSheet(BuildContext context, List<QualificationEntity> qualifications) {
+    final cubit = context.read<JobSeekerProfileCubit>();
+
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      backgroundColor: AppColors.whiteColor,
+      builder: (modalCtx) {
+        return Container(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: AppColors.borderGrey,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              16.szH,
+              Text(
+                S.of(modalCtx).qualificationLabel,
+                style: getTextStyle().darkNavy.w700.s18,
+              ),
+              16.szH,
+              Flexible(
+                child: qualifications.isEmpty
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(vertical: 24.h),
+                        child: Center(
+                          child: Text(
+                            'لا توجد مؤهلات دراسية متاحة حالياً',
+                            style: getTextStyle().greyColor.w400.s14,
+                          ),
+                        ),
+                      )
+                    : ListView.separated(
+                        shrinkWrap: true,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: qualifications.length,
+                        separatorBuilder: (context, index) => const Divider(height: 1),
+                        itemBuilder: (context, index) {
+                          final item = qualifications[index];
+                          final isSelected = qualificationController.text == item.name;
+                          return ListTile(
+                            title: Text(
+                              item.name,
+                              style: isSelected
+                                  ? getTextStyle().darkNavy.w700.s15
+                                  : getTextStyle().darkNavy.w500.s15,
+                            ),
+                            trailing: isSelected
+                                ? const Icon(Icons.check_circle_rounded, color: AppColors.darkNavy)
+                                : null,
+                            onTap: () {
+                              qualificationController.text = item.name;
+                              cubit.selectQualification(item);
+                              Navigator.pop(modalCtx);
+                            },
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showSingleSelectionBottomSheet(
+    BuildContext context, {
+    required String title,
+    required List<String> options,
+    required TextEditingController controller,
+    void Function(String selected)? onSelected,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      backgroundColor: AppColors.whiteColor,
+      builder: (modalCtx) {
+        return Container(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: AppColors.borderGrey,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              16.szH,
+              Text(
+                title,
+                style: getTextStyle().darkNavy.w700.s18,
+              ),
+              16.szH,
+              Flexible(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: options.length,
+                  separatorBuilder: (context, index) => const Divider(height: 1),
+                  itemBuilder: (context, index) {
+                    final item = options[index];
+                    final isSelected = controller.text == item;
+                    return ListTile(
+                      title: Text(
+                        item,
+                        style: isSelected
+                            ? getTextStyle().darkNavy.w700.s15
+                            : getTextStyle().darkNavy.w500.s15,
+                      ),
+                      trailing: isSelected
+                          ? const Icon(Icons.check_circle_rounded, color: AppColors.darkNavy)
+                          : null,
+                      onTap: () {
+                        controller.text = item;
+                        onSelected?.call(item);
+                        Navigator.pop(modalCtx);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showTargetCountriesBottomSheet(BuildContext context, List<CountryEntity> countries) {
+    final cubit = context.read<JobSeekerProfileCubit>();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      backgroundColor: AppColors.whiteColor,
+      builder: (modalCtx) {
+        String searchQuery = '';
+        return StatefulBuilder(
+          builder: (builderCtx, setModalState) {
+            final selectedCountries = cubit.state.selectedTargetCountries;
+
+            final filtered = countries
+                .where((c) => c.name.toLowerCase().contains(searchQuery.toLowerCase()))
+                .toList();
+
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(modalCtx).viewInsets.bottom,
+              ),
+              child: Container(
+                height: MediaQuery.of(modalCtx).size.height * 0.75,
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 40.w,
+                      height: 4.h,
+                      decoration: BoxDecoration(
+                        color: AppColors.borderGrey,
+                        borderRadius: BorderRadius.circular(2.r),
+                      ),
+                    ),
+                    12.szH,
+                    Text(
+                      S.of(modalCtx).targetCountriesLabel,
+                      style: getTextStyle().darkNavy.w700.s18,
+                    ),
+                    16.szH,
+                    DefaultTextField(
+                      hint: S.of(modalCtx).searchCountryHint,
+                      prefixIcon: Icon(Icons.search_rounded, color: AppColors.greyColor, size: 20.sp),
+                      onChanged: (val) {
+                        setModalState(() {
+                          searchQuery = val ?? '';
+                        });
+                      },
+                    ),
+                    12.szH,
+                    Expanded(
+                      child: filtered.isEmpty
+                          ? Center(
+                              child: Text(
+                                S.of(modalCtx).noCountryFound,
+                                style: getTextStyle().greyColor.w400.s14,
+                              ),
+                            )
+                          : ListView.separated(
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: filtered.length,
+                              separatorBuilder: (context, index) => const Divider(height: 1),
+                              itemBuilder: (context, index) {
+                                final item = filtered[index];
+                                final isChecked = selectedCountries.any((c) => c.id == item.id);
+                                return CheckboxListTile(
+                                  activeColor: AppColors.darkNavy,
+                                  title: Row(
+                                    children: [
+                                      if (item.flag != null && item.flag!.isNotEmpty) ...[
+                                        Text(item.flag!, style: TextStyle(fontSize: 18.sp)),
+                                        8.szW,
+                                      ],
+                                      Expanded(
+                                        child: Text(
+                                          item.name,
+                                          style: isChecked
+                                              ? getTextStyle().darkNavy.w700.s15
+                                              : getTextStyle().darkNavy.w500.s15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  value: isChecked,
+                                  onChanged: (_) {
+                                    cubit.toggleTargetCountry(item);
+                                    setModalState(() {});
+                                  },
+                                );
+                              },
+                            ),
+                    ),
+                    12.szH,
+                    CustomButton(
+                      text: S.of(modalCtx).continueAction,
+                      onPressed: () {
+                        final updatedSelected = cubit.state.selectedTargetCountries;
+                        targetCountriesController.text =
+                            updatedSelected.map((c) => c.name).join(', ');
+                        Navigator.pop(modalCtx);
+                      },
+                      backgroundColor: AppColors.darkNavy,
+                      textStyle: getTextStyle().whiteColor.w700.s16,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<JobSeekerProfileCubit, JobSeekerProfileState>(
@@ -70,11 +499,7 @@ class ProfessionalDataSection extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(
-                    Icons.work_outline_rounded,
-                    color: AppColors.darkNavy,
-                    size: 22.sp,
-                  ),
+                  Icon(Icons.work_outline_rounded, color: AppColors.darkNavy, size: 22.sp),
                   8.szW,
                   Text(
                     S.of(context).professionalSectionTitle,
@@ -91,21 +516,9 @@ class ProfessionalDataSection extends StatelessWidget {
                 label: S.of(context).professionLabel,
                 hint: S.of(context).professionHint,
                 readOnly: true,
-                onTap: () => ProfessionSelectionSheet.show(
-                  context,
-                  professions: state.professions,
-                  controller: professionController,
-                ),
-                prefixIcon: Icon(
-                  Icons.engineering_outlined,
-                  color: AppColors.greyColor,
-                  size: 20.sp,
-                ),
-                suffixIcon: Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: AppColors.darkNavy,
-                  size: 24.sp,
-                ),
+                onTap: () => _showProfessionBottomSheet(context, state.professions),
+                prefixIcon: Icon(Icons.engineering_outlined, color: AppColors.greyColor, size: 20.sp),
+                suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkNavy, size: 24.sp),
               ),
 
               16.szH,
@@ -115,11 +528,7 @@ class ProfessionalDataSection extends StatelessWidget {
                 controller: specializationController,
                 label: S.of(context).specializationLabel,
                 hint: S.of(context).specializationHint,
-                prefixIcon: Icon(
-                  Icons.category_outlined,
-                  color: AppColors.greyColor,
-                  size: 20.sp,
-                ),
+                prefixIcon: Icon(Icons.category_outlined, color: AppColors.greyColor, size: 20.sp),
               ),
 
               16.szH,
@@ -130,21 +539,9 @@ class ProfessionalDataSection extends StatelessWidget {
                 label: S.of(context).experienceYearsLabel,
                 hint: S.of(context).experienceYearsHint,
                 readOnly: true,
-                onTap: () => ExperienceLevelSelectionSheet.show(
-                  context,
-                  levels: state.experienceLevels,
-                  controller: experienceYearsController,
-                ),
-                prefixIcon: Icon(
-                  Icons.history_toggle_off_rounded,
-                  color: AppColors.greyColor,
-                  size: 20.sp,
-                ),
-                suffixIcon: Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: AppColors.darkNavy,
-                  size: 24.sp,
-                ),
+                onTap: () => _showExperienceLevelBottomSheet(context, state.experienceLevels),
+                prefixIcon: Icon(Icons.history_toggle_off_rounded, color: AppColors.greyColor, size: 20.sp),
+                suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkNavy, size: 24.sp),
               ),
 
               16.szH,
@@ -155,21 +552,9 @@ class ProfessionalDataSection extends StatelessWidget {
                 label: S.of(context).qualificationLabel,
                 hint: S.of(context).qualificationHint,
                 readOnly: true,
-                onTap: () => QualificationSelectionSheet.show(
-                  context,
-                  qualifications: state.qualifications,
-                  controller: qualificationController,
-                ),
-                prefixIcon: Icon(
-                  Icons.school_outlined,
-                  color: AppColors.greyColor,
-                  size: 20.sp,
-                ),
-                suffixIcon: Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: AppColors.darkNavy,
-                  size: 24.sp,
-                ),
+                onTap: () => _showQualificationBottomSheet(context, state.qualifications),
+                prefixIcon: Icon(Icons.school_outlined, color: AppColors.greyColor, size: 20.sp),
+                suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkNavy, size: 24.sp),
               ),
 
               16.szH,
@@ -178,12 +563,8 @@ class ProfessionalDataSection extends StatelessWidget {
               DefaultTextField(
                 controller: languagesController,
                 label: S.of(context).languagesLabel,
-                hint: S.of(context).languagesHint,
-                prefixIcon: Icon(
-                  Icons.translate_rounded,
-                  color: AppColors.greyColor,
-                  size: 20.sp,
-                ),
+                hint: 'مثال: العربية، الإنجليزية',
+                prefixIcon: Icon(Icons.translate_rounded, color: AppColors.greyColor, size: 20.sp),
                 onChanged: (val) {
                   final cubit = context.read<JobSeekerProfileCubit>();
                   if (val == null || val.trim().isEmpty) {
@@ -206,12 +587,8 @@ class ProfessionalDataSection extends StatelessWidget {
               DefaultTextField(
                 controller: skillsController,
                 label: S.of(context).skillsLabel,
-                hint: S.of(context).skillsHint,
-                prefixIcon: Icon(
-                  Icons.star_outline_rounded,
-                  color: AppColors.greyColor,
-                  size: 20.sp,
-                ),
+                hint: 'مثال: قيادة، كهرباء، صيانة',
+                prefixIcon: Icon(Icons.star_outline_rounded, color: AppColors.greyColor, size: 20.sp),
                 onChanged: (val) {
                   final cubit = context.read<JobSeekerProfileCubit>();
                   if (val == null || val.trim().isEmpty) {
@@ -237,11 +614,7 @@ class ProfessionalDataSection extends StatelessWidget {
                 hint: S.of(context).previousExperienceHint,
                 inputType: TextInputType.multiline,
                 maxLines: 3,
-                prefixIcon: Icon(
-                  Icons.description_outlined,
-                  color: AppColors.greyColor,
-                  size: 20.sp,
-                ),
+                prefixIcon: Icon(Icons.description_outlined, color: AppColors.greyColor, size: 20.sp),
               ),
 
               16.szH,
@@ -252,47 +625,27 @@ class ProfessionalDataSection extends StatelessWidget {
                 label: S.of(context).expectedSalaryLabel,
                 hint: S.of(context).expectedSalaryHint,
                 readOnly: true,
-                onTap: () => SingleSelectionSheet.show(
+                onTap: () => _showSingleSelectionBottomSheet(
                   context,
                   title: S.of(context).expectedSalaryLabel,
                   options: _expectedSalaryOptions,
                   controller: expectedSalaryController,
                 ),
-                prefixIcon: Icon(
-                  Icons.attach_money_rounded,
-                  color: AppColors.greyColor,
-                  size: 20.sp,
-                ),
-                suffixIcon: Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: AppColors.darkNavy,
-                  size: 24.sp,
-                ),
+                prefixIcon: Icon(Icons.attach_money_rounded, color: AppColors.greyColor, size: 20.sp),
+                suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkNavy, size: 24.sp),
               ),
 
               16.szH,
 
-              // 9. Target Countries
+              // Target Countries
               DefaultTextField(
                 controller: targetCountriesController,
                 label: S.of(context).targetCountriesLabel,
                 hint: S.of(context).targetCountriesHint,
                 readOnly: true,
-                onTap: () => TargetCountriesSelectionSheet.show(
-                  context,
-                  countries: state.countries,
-                  controller: targetCountriesController,
-                ),
-                prefixIcon: Icon(
-                  Icons.travel_explore_rounded,
-                  color: AppColors.greyColor,
-                  size: 20.sp,
-                ),
-                suffixIcon: Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: AppColors.darkNavy,
-                  size: 24.sp,
-                ),
+                onTap: () => _showTargetCountriesBottomSheet(context, state.countries),
+                prefixIcon: Icon(Icons.travel_explore_rounded, color: AppColors.greyColor, size: 20.sp),
+                suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkNavy, size: 24.sp),
               ),
             ],
           ),

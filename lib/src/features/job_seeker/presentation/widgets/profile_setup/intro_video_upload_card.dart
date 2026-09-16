@@ -19,10 +19,9 @@ class IntroVideoUploadCard extends StatelessWidget {
   const IntroVideoUploadCard({super.key});
 
   void _previewVideo(BuildContext context, JobSeekerProfileState state) {
-    final file =
-        state.localVideoPath != null && state.localVideoPath!.isNotEmpty
-            ? File(state.localVideoPath!)
-            : null;
+    final file = state.localVideoPath != null && state.localVideoPath!.isNotEmpty
+        ? File(state.localVideoPath!)
+        : null;
     final url = state.uploadedVideo?.fileUrl ??
         state.uploadedVideo?.filePath ??
         state.profileDetail?.videoUrl;
@@ -39,9 +38,9 @@ class IntroVideoUploadCard extends StatelessWidget {
   Future<void> _pickAndUploadVideo(BuildContext context) async {
     ImageSourceSelectionBottomSheet.show(
       context,
-      title: S.of(context).chooseIntroVideo,
-      cameraLabel: S.of(context).recordCamera,
-      galleryLabel: S.of(context).gallery,
+      title: 'اختيار الفيديو التعريفي',
+      cameraLabel: 'تسجيل بالكاميرا',
+      galleryLabel: 'المعرض',
       cameraIcon: Icons.videocam_rounded,
       galleryIcon: Icons.video_library_rounded,
       onSourceSelected: (source) async {
@@ -65,7 +64,7 @@ class IntroVideoUploadCard extends StatelessWidget {
             if (context.mounted) {
               CustomSnackBar.showError(
                 context,
-                message: S.of(context).videoMaxDurationError,
+                message: 'يرجى رفع فيديو لا يتجاوز دقيقة واحدة (60 ثانية)',
               );
             }
             return;
@@ -119,18 +118,12 @@ class IntroVideoUploadCard extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(10.w),
                     decoration: BoxDecoration(
-                      color: isUploaded
-                          ? AppColors.successBg
-                          : AppColors.warningBg,
+                      color: isUploaded ? AppColors.successBg : AppColors.warningBg,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Icon(
-                      isUploaded
-                          ? Icons.check_circle_outline_rounded
-                          : Icons.videocam_rounded,
-                      color: isUploaded
-                          ? AppColors.successGreen
-                          : AppColors.warningAmber,
+                      isUploaded ? Icons.check_circle_outline_rounded : Icons.videocam_rounded,
+                      color: isUploaded ? AppColors.successGreen : AppColors.warningAmber,
                       size: 22.sp,
                     ),
                   ),
@@ -145,7 +138,7 @@ class IntroVideoUploadCard extends StatelessWidget {
                         ),
                         4.szH,
                         Text(
-                          S.of(context).introVideoDurationLimit,
+                          'فيديو تعريفي لا يتجاوز دقيقة واحدة (60 ثانية)',
                           style: getTextStyle().greyColor.w600.s12,
                         ),
                       ],
@@ -153,38 +146,26 @@ class IntroVideoUploadCard extends StatelessWidget {
                   ),
                   if (isUploaded)
                     Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 4.h,
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                       decoration: BoxDecoration(
                         color: AppColors.successBg,
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Text(
                         S.of(context).uploadedBadge,
-                        style: getTextStyle()
-                            .w600
-                            .s11
-                            .copyWith(color: AppColors.successGreen),
+                        style: getTextStyle().w600.s11.copyWith(color: AppColors.successGreen),
                       ),
                     )
                   else
                     Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 4.h,
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                       decoration: BoxDecoration(
                         color: AppColors.errorBg,
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Text(
                         S.of(context).requiredBadge,
-                        style: getTextStyle()
-                            .w600
-                            .s11
-                            .copyWith(color: AppColors.errorRed),
+                        style: getTextStyle().w600.s11.copyWith(color: AppColors.errorRed),
                       ),
                     ),
                 ],
@@ -198,26 +179,16 @@ class IntroVideoUploadCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.pageBg,
                   borderRadius: BorderRadius.circular(10.r),
-                  border: Border.all(
-                    color: AppColors.warningAmber.withValues(alpha: 0.4),
-                  ),
+                  border: Border.all(color: AppColors.warningAmber.withValues(alpha: 0.4)),
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.lightbulb_outline_rounded,
-                      color: AppColors.warningAmber,
-                      size: 20.sp,
-                    ),
+                    Icon(Icons.lightbulb_outline_rounded, color: AppColors.warningAmber, size: 20.sp),
                     8.szW,
                     Expanded(
                       child: Text(
                         S.of(context).introVideoDesc,
-                        style: getTextStyle()
-                            .darkNavy
-                            .w500
-                            .s13
-                            .copyWith(height: 1.4),
+                        style: getTextStyle().darkNavy.w500.s13.copyWith(height: 1.4),
                       ),
                     ),
                   ],
@@ -234,23 +205,17 @@ class IntroVideoUploadCard extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(6.r),
                         child: LinearProgressIndicator(
-                          value: state.videoUploadProgress > 0
-                              ? state.videoUploadProgress
-                              : null,
+                          value: state.videoUploadProgress > 0 ? state.videoUploadProgress : null,
                           minHeight: 8.h,
                           backgroundColor: AppColors.borderGrey,
-                          valueColor: const AlwaysStoppedAnimation<Color>(
-                            AppColors.darkNavy,
-                          ),
+                          valueColor: const AlwaysStoppedAnimation<Color>(AppColors.darkNavy),
                         ),
                       ),
                       8.szH,
                       Text(
                         state.videoUploadProgress > 0
-                            ? S.of(context).uploadingIntroVideoWithProgress(
-                                (state.videoUploadProgress * 100).toInt(),
-                              )
-                            : S.of(context).uploadingIntroVideo,
+                            ? 'جاري رفع الفيديو التعريفي... (${(state.videoUploadProgress * 100).toInt()}%)'
+                            : 'جاري رفع الفيديو التعريفي...',
                         style: getTextStyle().darkNavy.w500.s13,
                       ),
                     ],
@@ -264,11 +229,7 @@ class IntroVideoUploadCard extends StatelessWidget {
                       flex: 3,
                       child: ElevatedButton.icon(
                         onPressed: () => _previewVideo(context, state),
-                        icon: Icon(
-                          Icons.play_circle_fill_rounded,
-                          color: Colors.white,
-                          size: 20.sp,
-                        ),
+                        icon: Icon(Icons.play_circle_fill_rounded, color: Colors.white, size: 20.sp),
                         label: Text(
                           S.of(context).watchVideo,
                           style: getTextStyle().whiteColor.w700.s14,
@@ -276,9 +237,7 @@ class IntroVideoUploadCard extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.darkNavy,
                           padding: EdgeInsets.symmetric(vertical: 12.h),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
                         ),
                       ),
                     ),
@@ -288,11 +247,7 @@ class IntroVideoUploadCard extends StatelessWidget {
                       flex: 2,
                       child: OutlinedButton.icon(
                         onPressed: () => _pickAndUploadVideo(context),
-                        icon: Icon(
-                          Icons.refresh_rounded,
-                          color: AppColors.darkNavy,
-                          size: 18.sp,
-                        ),
+                        icon: Icon(Icons.refresh_rounded, color: AppColors.darkNavy, size: 18.sp),
                         label: Text(
                           S.of(context).changeMedia,
                           style: getTextStyle().darkNavy.w600.s13,
@@ -300,9 +255,7 @@ class IntroVideoUploadCard extends StatelessWidget {
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: AppColors.darkNavy),
                           padding: EdgeInsets.symmetric(vertical: 12.h),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
                         ),
                       ),
                     ),
@@ -312,11 +265,7 @@ class IntroVideoUploadCard extends StatelessWidget {
                 8.szH,
                 Row(
                   children: [
-                    Icon(
-                      Icons.attachment_rounded,
-                      size: 14.sp,
-                      color: AppColors.greyColor,
-                    ),
+                    Icon(Icons.attachment_rounded, size: 14.sp, color: AppColors.greyColor),
                     4.szW,
                     Expanded(
                       child: Text(
@@ -335,8 +284,7 @@ class IntroVideoUploadCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12.r),
                   child: Container(
                     width: double.infinity,
-                    padding:
-                        EdgeInsets.symmetric(vertical: 14.h, horizontal: 14.w),
+                    padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 14.w),
                     decoration: BoxDecoration(
                       color: AppColors.softBlueBg,
                       borderRadius: BorderRadius.circular(12.r),
@@ -355,7 +303,7 @@ class IntroVideoUploadCard extends StatelessWidget {
                         ),
                         8.szW,
                         Text(
-                          S.of(context).chooseVideoOrRecord,
+                          'اختر فيديو أو قم بالتسجيل',
                           style: getTextStyle().darkNavy.w700.s14,
                         ),
                       ],

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_mlkit_document_scanner/google_mlkit_document_scanner.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:m_kemet/generated/l10n.dart';
@@ -10,14 +11,12 @@ import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/core/helpers/document_filter_helper.dart';
-import 'package:m_kemet/src/core/widgets/crop_image_modal.dart';
-import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
-import 'package:m_kemet/src/core/widgets/image_preview_modal.dart';
-import 'package:m_kemet/src/core/widgets/image_source_selection_bottom_sheet.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_cubit.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_state.dart';
-import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/widgets/cv_upload_card.dart';
-import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/widgets/document_upload_card.dart';
+
+import 'package:m_kemet/src/core/widgets/crop_image_modal.dart';
+import 'package:m_kemet/src/core/widgets/image_preview_modal.dart';
+import 'package:m_kemet/src/core/widgets/image_source_selection_bottom_sheet.dart';
 
 class DocumentsUploadSection extends StatelessWidget {
   const DocumentsUploadSection({super.key});
@@ -31,8 +30,8 @@ class DocumentsUploadSection extends StatelessWidget {
     ImageSourceSelectionBottomSheet.show(
       context,
       title: title ?? S.of(context).cropPhoto,
-      cameraLabel: S.of(context).camera,
-      galleryLabel: S.of(context).gallery,
+      cameraLabel: 'الكاميرا',
+      galleryLabel: 'المعرض',
       onSourceSelected: (source) async {
         final picker = ImagePicker();
         final picked = await picker.pickImage(
@@ -67,6 +66,7 @@ class DocumentsUploadSection extends StatelessWidget {
     required BuildContext context,
     required Future<void> Function(File file) uploadFn,
   }) async {
+    // If not running on Android (e.g. iOS), fallback to regular image picker with crop
     if (!Platform.isAndroid) {
       await _pickAndUploadImage(
         context: context,
@@ -97,15 +97,23 @@ class DocumentsUploadSection extends StatelessWidget {
     } catch (e) {
       debugPrint('Error scanning passport: $e');
       if (context.mounted) {
-        CustomSnackBar.showError(
-          context,
-          message: S.of(context).passportScanError,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'تعذر مسح جواز السفر، يرجى التأكد من صلاحية الكاميرا والمحاولة مرة أخرى',
+              style: getTextStyle().white.w500.s14,
+            ),
+            backgroundColor: AppColors.errorRed,
+          ),
         );
       }
     } finally {
       documentScanner.close();
     }
   }
+
+
+
 
   Future<void> _pickAndUploadPdf({
     required BuildContext context,
@@ -127,6 +135,22 @@ class DocumentsUploadSection extends StatelessWidget {
       builder: (context, state) {
         final cubit = context.read<JobSeekerProfileCubit>();
 
+        final isPersonalPhotoUploaded = state.isPersonalPhotoUploaded;
+        final isPersonalPhotoUploading =
+            state.personalPhotoStatus == DocumentUploadStatus.uploading;
+
+        final isNationalIdUploaded = state.isNationalIdUploaded;
+        final isNationalIdUploading =
+            state.nationalIdStatus == DocumentUploadStatus.uploading;
+
+        final isPassportUploaded = state.isPassportUploaded;
+        final isPassportUploading =
+            state.passportStatus == DocumentUploadStatus.uploading;
+
+        final isCvUploaded = state.isCvUploaded;
+        final isCvUploading =
+            state.cvStatus == DocumentUploadStatus.uploading;
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -138,18 +162,16 @@ class DocumentsUploadSection extends StatelessWidget {
             12.szH,
 
             // Item 1: Personal Photo
-            DocumentUploadCard(
+            _buildDocumentCard(
+              context: context,
               title: S.of(context).personalPhotoTitle,
-              subtitle: S.of(context).personalPhotoSubtitle,
+              subtitle: 'صورة شخصية حديثة بخلفية بيضاء',
               icon: Icons.add_a_photo_outlined,
               iconBgColor: AppColors.softBlueBg,
-              isUploaded: state.isPersonalPhotoUploaded,
-              isUploading:
-                  state.personalPhotoStatus == DocumentUploadStatus.uploading,
+              isUploaded: isPersonalPhotoUploaded,
+              isUploading: isPersonalPhotoUploading,
               fileName: state.uploadedPersonalPhoto?.originalName ??
-                  state.localPersonalPhotoPath
-                      ?.split(Platform.pathSeparator)
-                      .last,
+                  state.localPersonalPhotoPath?.split(Platform.pathSeparator).last,
               onUploadTap: () => _pickAndUploadImage(
                 context: context,
                 uploadFn: cubit.uploadPersonalPhoto,
@@ -180,18 +202,16 @@ class DocumentsUploadSection extends StatelessWidget {
             12.szH,
 
             // Item 2: National ID Card
-            DocumentUploadCard(
+            _buildDocumentCard(
+              context: context,
               title: S.of(context).idCardTitle,
-              subtitle: S.of(context).nationalIdSubtitle,
+              subtitle: 'صورة وجهي البطاقة الشخصية',
               icon: Icons.credit_card_rounded,
               iconBgColor: AppColors.softBlueBg,
-              isUploaded: state.isNationalIdUploaded,
-              isUploading:
-                  state.nationalIdStatus == DocumentUploadStatus.uploading,
+              isUploaded: isNationalIdUploaded,
+              isUploading: isNationalIdUploading,
               fileName: state.uploadedNationalId?.originalName ??
-                  state.localNationalIdPath
-                      ?.split(Platform.pathSeparator)
-                      .last,
+                  state.localNationalIdPath?.split(Platform.pathSeparator).last,
               onUploadTap: () => _pickAndUploadImage(
                 context: context,
                 uploadFn: cubit.uploadNationalId,
@@ -222,13 +242,13 @@ class DocumentsUploadSection extends StatelessWidget {
             12.szH,
 
             // Item 3: Passport Copy Card
-            DocumentUploadCard(
+            _buildDocumentCard(
+              context: context,
               title: S.of(context).passportCopyTitle,
               icon: Icons.badge_outlined,
               iconBgColor: AppColors.softBlueBg,
-              isUploaded: state.isPassportUploaded,
-              isUploading:
-                  state.passportStatus == DocumentUploadStatus.uploading,
+              isUploaded: isPassportUploaded,
+              isUploading: isPassportUploading,
               fileName: state.uploadedPassport?.originalName ??
                   state.localPassportPath?.split(Platform.pathSeparator).last,
               onUploadTap: () => _scanAndUploadPassport(
@@ -257,9 +277,10 @@ class DocumentsUploadSection extends StatelessWidget {
             12.szH,
 
             // Item 4: CV Upload Dropzone
-            CvUploadCard(
-              isUploaded: state.isCvUploaded,
-              isUploading: state.cvStatus == DocumentUploadStatus.uploading,
+            _buildCvUploadCard(
+              context: context,
+              isUploaded: isCvUploaded,
+              isUploading: isCvUploading,
               fileName: state.uploadedCv?.originalName ??
                   state.localCvPath?.split(Platform.pathSeparator).last,
               onUploadTap: () => _pickAndUploadPdf(
@@ -270,6 +291,299 @@ class DocumentsUploadSection extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  Widget _buildDocumentCard({
+    required BuildContext context,
+    required String title,
+    String? subtitle,
+    required IconData icon,
+    required Color iconBgColor,
+    required bool isUploaded,
+    required bool isUploading,
+    String? fileName,
+    required VoidCallback onUploadTap,
+    VoidCallback? onPreviewTap,
+  }) {
+    return InkWell(
+      onTap: isUploaded ? onPreviewTap : onUploadTap,
+      borderRadius: BorderRadius.circular(16.r),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: isUploaded ? AppColors.successGreen : AppColors.borderGrey,
+            width: isUploaded ? 1.5.w : 1.w,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 10.r,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 22.r,
+                  backgroundColor: isUploaded ? AppColors.successBg : iconBgColor,
+                  child: Icon(
+                    isUploaded ? Icons.check_circle_outline_rounded : icon,
+                    color: isUploaded ? AppColors.successGreen : AppColors.darkNavy,
+                    size: 20.sp,
+                  ),
+                ),
+                12.szW,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: getTextStyle().darkNavy.w700.s16,
+                      ),
+                      if (subtitle != null && subtitle.isNotEmpty) ...[
+                        4.szH,
+                        Text(
+                          subtitle,
+                          style: getTextStyle().greyColor.w400.s12,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                if (isUploading)
+                  SizedBox(
+                    width: 24.w,
+                    height: 24.w,
+                    child: const CircularProgressIndicator(strokeWidth: 2),
+                  )
+                else if (isUploaded)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (onPreviewTap != null)
+                        InkWell(
+                          onTap: onPreviewTap,
+                          borderRadius: BorderRadius.circular(8.r),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+                            decoration: BoxDecoration(
+                              color: AppColors.softBlueBg,
+                              borderRadius: BorderRadius.circular(8.r),
+                              border: Border.all(color: AppColors.darkNavy.withValues(alpha: 0.2)),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.visibility_outlined, color: AppColors.darkNavy, size: 16.sp),
+                                4.szW,
+                                Text(
+                                  S.of(context).viewPhoto,
+                                  style: getTextStyle().darkNavy.w600.s12,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      6.szW,
+                      InkWell(
+                        onTap: onUploadTap,
+                        borderRadius: BorderRadius.circular(8.r),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF1F5F9),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.refresh_rounded, color: AppColors.greyColor, size: 16.sp),
+                              4.szW,
+                              Text(
+                                S.of(context).changeMedia,
+                                style: getTextStyle().greyColor.w600.s12,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  OutlinedButton(
+                    onPressed: onUploadTap,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.darkNavy,
+                      side: const BorderSide(color: AppColors.darkNavy),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                    ),
+                    child: Text(
+                      S.of(context).uploadAction,
+                      style: getTextStyle().darkNavy.w600.s13,
+                    ),
+                  ),
+              ],
+            ),
+            if (isUploaded && fileName != null) ...[
+              8.szH,
+              Row(
+                children: [
+                  Icon(Icons.attachment_rounded, size: 14.sp, color: AppColors.greyColor),
+                  4.szW,
+                  Expanded(
+                    child: Text(
+                      fileName,
+                      style: getTextStyle().greyColor.w500.s12,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCvUploadCard({
+    required BuildContext context,
+    required bool isUploaded,
+    required bool isUploading,
+    String? fileName,
+    required VoidCallback onUploadTap,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: isUploaded ? AppColors.successGreen : AppColors.borderGrey,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 10.r,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(10.w),
+                decoration: BoxDecoration(
+                  color: isUploaded ? AppColors.successBg : AppColors.borderGrey,
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(
+                  Icons.description_outlined,
+                  color: isUploaded ? AppColors.successGreen : AppColors.darkNavy,
+                  size: 22.sp,
+                ),
+              ),
+              12.szW,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      S.of(context).cvTitle,
+                      style: getTextStyle().darkNavy.w700.s16,
+                    ),
+                    4.szH,
+                    Text(
+                      S.of(context).cvDesc,
+                      style: getTextStyle().greyColor.w400.s12,
+                    ),
+                  ],
+                ),
+              ),
+              if (isUploaded)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.successBg,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Text(
+                    S.of(context).uploadedBadge,
+                    style: getTextStyle().w600.s11.copyWith(color: AppColors.successGreen),
+                  ),
+                )
+              else
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.errorBg,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Text(
+                    S.of(context).requiredBadge,
+                    style: getTextStyle().w600.s11.copyWith(color: AppColors.errorRed),
+                  ),
+                ),
+            ],
+          ),
+
+          14.szH,
+
+          if (isUploading)
+            Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                child: const CircularProgressIndicator(),
+              ),
+            )
+          else
+            InkWell(
+              onTap: onUploadTap,
+              borderRadius: BorderRadius.circular(12.r),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 14.w),
+                decoration: BoxDecoration(
+                  color: isUploaded ? AppColors.successBg.withValues(alpha: 0.3) : AppColors.pageBg,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: isUploaded ? AppColors.successGreen : AppColors.darkNavy.withValues(alpha: 0.3),
+                    width: 1.5.w,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Icon(
+                      isUploaded ? Icons.check_circle_outline_rounded : Icons.cloud_upload_outlined,
+                      size: 28.sp,
+                      color: isUploaded ? AppColors.successGreen : AppColors.darkNavy,
+                    ),
+                    8.szH,
+                    Text(
+                      isUploaded && fileName != null ? fileName : S.of(context).dragAndDropHint,
+                      textAlign: TextAlign.center,
+                      style: isUploaded
+                          ? getTextStyle().darkNavy.w600.s13
+                          : getTextStyle().darkNavy.w600.s13,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
