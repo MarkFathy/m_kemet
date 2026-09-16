@@ -9,6 +9,8 @@ class CandidateDocumentModel extends CandidateDocumentEntity {
     super.mimeType,
     super.fileSize,
     super.fileUrl,
+    super.isApproved,
+    super.rejectionReason,
   });
 
   factory CandidateDocumentModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,8 @@ class CandidateDocumentModel extends CandidateDocumentEntity {
           ? json['file_size'] as int
           : int.tryParse(json['file_size']?.toString() ?? ''),
       fileUrl: json['file_url']?.toString() ?? json['url']?.toString(),
+      isApproved: json['is_approved'] == true || json['is_approved'] == 1,
+      rejectionReason: json['rejection_reason']?.toString(),
     );
   }
 
@@ -37,5 +41,7 @@ class CandidateDocumentModel extends CandidateDocumentEntity {
     'mime_type': mimeType,
     'file_size': fileSize,
     'file_url': fileUrl,
+    'is_approved': isApproved,
+    'rejection_reason': rejectionReason,
   };
 }

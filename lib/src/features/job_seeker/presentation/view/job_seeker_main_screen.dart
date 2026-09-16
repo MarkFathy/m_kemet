@@ -54,33 +54,33 @@ class _JobSeekerMainScreenState extends State<JobSeekerMainScreen> {
           context.read<JobSeekerProfileCubit>().loadInitialData();
         },
         child: AppScaffold(
-        safeTop: true,
-        safeBottom: true,
-        extendBody: true,
-        backgroundColor: AppColors.pageBg,
-        body: IndexedStack(
-          index: _currentIndex,
-          children: const [
-            JobSeekerProfileTab(),
-            JobSeekerSettingsTab(),
-          ],
-        ),
-        bottomNavigationBar: FloatingBottomNavBar(
-          currentIndex: _currentIndex,
-          onTap: (index) => setState(() => _currentIndex = index),
-          items: [
-            FloatingNavItem(
-              icon: Icons.person_outline_rounded,
-              activeIcon: Icons.person_rounded,
-              label: S.of(context).navProfile,
-            ),
-            FloatingNavItem(
-              icon: Icons.settings_outlined,
-              activeIcon: Icons.settings_rounded,
-              label: S.of(context).navSettings,
-            ),
-          ],
-        ),
+          safeTop: true,
+          safeBottom: true,
+          extendBody: true,
+          backgroundColor: AppColors.pageBg,
+          body: IndexedStack(
+            index: _currentIndex,
+            children: const [
+              JobSeekerProfileTab(),
+              JobSeekerSettingsTab(),
+            ],
+          ),
+          bottomNavigationBar: FloatingBottomNavBar(
+            currentIndex: _currentIndex,
+            onTap: (index) => setState(() => _currentIndex = index),
+            items: [
+              FloatingNavItem(
+                icon: Icons.person_outline_rounded,
+                activeIcon: Icons.person_rounded,
+                label: S.of(context).navProfile,
+              ),
+              FloatingNavItem(
+                icon: Icons.settings_outlined,
+                activeIcon: Icons.settings_rounded,
+                label: S.of(context).navSettings,
+              ),
+            ],
+          ),
         ),
       ),
     );

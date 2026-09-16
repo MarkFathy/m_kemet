@@ -87,10 +87,10 @@ class _LoginViewState extends State<_LoginView> {
           final targetType = state.userType ?? widget.userType;
           if (targetType == UserType.jobSeeker) {
             setState(() => _isCheckingProfile = true);
-            SessionManager.getJobSeekerRouteDestination().then((destination) {
+            SessionManager.getJobSeekerRouteDestination().then((dest) {
               if (mounted) {
                 setState(() => _isCheckingProfile = false);
-                Go.offAllNamed(destination);
+                Go.offAllNamed(dest.route, arguments: dest.tabIndex);
               }
             });
           } else {

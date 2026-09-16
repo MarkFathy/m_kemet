@@ -77,6 +77,17 @@ import 'package:m_kemet/src/features/user_type_selection/data/repositories/user_
 import 'package:m_kemet/src/features/user_type_selection/domain/repositories/user_type_repository.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/usecases/save_user_type_usecase.dart';
 import 'package:m_kemet/src/features/user_type_selection/presentation/cubit/user_type_cubit.dart';
+import 'package:m_kemet/src/features/notifications/data/datasources/notifications_remote_data_source.dart';
+import 'package:m_kemet/src/features/notifications/data/repositories/notifications_repository_impl.dart';
+import 'package:m_kemet/src/features/notifications/domain/repositories/notifications_repository.dart';
+import 'package:m_kemet/src/features/notifications/domain/usecases/get_notifications_usecase.dart';
+import 'package:m_kemet/src/features/notifications/domain/usecases/mark_notification_as_read_usecase.dart';
+import 'package:m_kemet/src/features/notifications/domain/usecases/mark_all_notifications_as_read_usecase.dart';
+import 'package:m_kemet/src/features/notifications/domain/usecases/delete_notification_usecase.dart';
+import 'package:m_kemet/src/features/notifications/domain/usecases/delete_all_notifications_usecase.dart';
+import 'package:m_kemet/src/features/notifications/domain/usecases/get_notification_status_usecase.dart';
+import 'package:m_kemet/src/features/notifications/domain/usecases/set_notification_status_usecase.dart';
+import 'package:m_kemet/src/features/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.instance;
@@ -286,6 +297,32 @@ Future<void> setupServiceLocator() async {
       () => BookmarksCubit(
         getBookmarksUseCase: sl(),
         toggleBookmarkUseCase: sl(),
+      ),
+    )
+
+    // ─── Notifications Feature ──────────────────────────────────────────────
+    ..registerLazySingleton<NotificationsRemoteDataSource>(
+      () => NotificationsRemoteDataSourceImpl(sl()),
+    )
+    ..registerLazySingleton<NotificationsRepository>(
+      () => NotificationsRepositoryImpl(remoteDataSource: sl()),
+    )
+    ..registerLazySingleton(() => GetNotificationsUseCase(sl()))
+    ..registerLazySingleton(() => MarkNotificationAsReadUseCase(sl()))
+    ..registerLazySingleton(() => MarkAllNotificationsAsReadUseCase(sl()))
+    ..registerLazySingleton(() => DeleteNotificationUseCase(sl()))
+    ..registerLazySingleton(() => DeleteAllNotificationsUseCase(sl()))
+    ..registerLazySingleton(() => GetNotificationStatusUseCase(sl()))
+    ..registerLazySingleton(() => SetNotificationStatusUseCase(sl()))
+    ..registerLazySingleton(
+      () => NotificationsCubit(
+        getNotificationsUseCase: sl(),
+        markNotificationAsReadUseCase: sl(),
+        markAllNotificationsAsReadUseCase: sl(),
+        deleteNotificationUseCase: sl(),
+        deleteAllNotificationsUseCase: sl(),
+        getNotificationStatusUseCase: sl(),
+        setNotificationStatusUseCase: sl(),
       ),
     );
 }

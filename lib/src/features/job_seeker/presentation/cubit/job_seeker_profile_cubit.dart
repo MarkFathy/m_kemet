@@ -31,6 +31,7 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
   }) : super(const JobSeekerProfileState());
 
   Future<void> loadInitialData() async {
+    if (isClosed) return;
     emit(state.copyWith(
       lookupsStatus: LoadingStatus.loading,
       profileFetchStatus: LoadingStatus.loading,
@@ -38,38 +39,47 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
 
     // 1. Load Lookups
     final lookupsResult = await getJobSeekerLookupsUseCase();
+    if (isClosed) return;
     lookupsResult.fold(
       (failure) {
-        emit(state.copyWith(
-          lookupsStatus: LoadingStatus.failure,
-          errorMessage: () => failure.serverException.message,
-        ));
+        if (!isClosed) {
+          emit(state.copyWith(
+            lookupsStatus: LoadingStatus.failure,
+            errorMessage: () => failure.serverException.message,
+          ));
+        }
       },
       (lookups) {
-        emit(state.copyWith(
-          lookupsStatus: LoadingStatus.success,
-          professions: lookups.professions,
-          experienceLevels: lookups.experienceLevels,
-          qualifications: lookups.qualifications,
-          countries: lookups.countries,
-          genders: lookups.genders,
-        ));
+        if (!isClosed) {
+          emit(state.copyWith(
+            lookupsStatus: LoadingStatus.success,
+            professions: lookups.professions,
+            experienceLevels: lookups.experienceLevels,
+            qualifications: lookups.qualifications,
+            countries: lookups.countries,
+            genders: lookups.genders,
+          ));
+        }
       },
     );
 
     // 2. Load Existing Candidate Profile
     final profileResult = await getCandidateProfileUseCase();
+    if (isClosed) return;
     profileResult.fold(
       (failure) {
         // Profile not found (404) is expected for brand-new registrations.
         // Treat it as success with an empty profile so the form is shown.
         // Only a true network/server error on the lookups shows the error screen.
-        emit(state.copyWith(
-          profileFetchStatus: LoadingStatus.success,
-          profileDetail: () => null,
-        ));
+        if (!isClosed) {
+          emit(state.copyWith(
+            profileFetchStatus: LoadingStatus.success,
+            profileDetail: () => null,
+          ));
+        }
       },
       (profile) {
+        if (isClosed) return;
         ProfessionEntity? selectedProf;
         if (profile.professionId != null) {
           final matched = state.professions.where((p) => p.id == profile.professionId);
@@ -114,22 +124,24 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
         final passport = profile.documents.where((d) => d.documentType == 'passport').firstOrNull;
         final cv = profile.documents.where((d) => d.documentType == 'cv').firstOrNull;
 
-        emit(state.copyWith(
-          profileFetchStatus: LoadingStatus.success,
-          profileDetail: () => profile,
-          selectedProfession: () => selectedProf,
-          selectedExperienceLevel: () => selectedExp,
-          selectedQualification: () => selectedQual,
-          selectedCurrentCountry: () => selectedCountry,
-          selectedGender: () => selectedGen,
-          selectedTargetCountries: selectedTargets,
-          languages: profile.languages,
-          skills: profile.skills,
-          uploadedPersonalPhoto: () => personalPhoto,
-          uploadedNationalId: () => nationalId,
-          uploadedPassport: () => passport,
-          uploadedCv: () => cv,
-        ));
+        if (!isClosed) {
+          emit(state.copyWith(
+            profileFetchStatus: LoadingStatus.success,
+            profileDetail: () => profile,
+            selectedProfession: () => selectedProf,
+            selectedExperienceLevel: () => selectedExp,
+            selectedQualification: () => selectedQual,
+            selectedCurrentCountry: () => selectedCountry,
+            selectedGender: () => selectedGen,
+            selectedTargetCountries: selectedTargets,
+            languages: profile.languages,
+            skills: profile.skills,
+            uploadedPersonalPhoto: () => personalPhoto,
+            uploadedNationalId: () => nationalId,
+            uploadedPassport: () => passport,
+            uploadedCv: () => cv,
+          ));
+        }
       },
     );
   }

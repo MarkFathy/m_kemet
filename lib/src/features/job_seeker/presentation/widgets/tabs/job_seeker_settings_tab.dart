@@ -15,12 +15,13 @@ import 'package:m_kemet/src/features/job_seeker/presentation/widgets/settings/jo
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
 
+import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
+import 'package:m_kemet/src/features/notifications/presentation/cubit/notifications_cubit.dart';
+import 'package:m_kemet/src/features/notifications/presentation/cubit/notifications_state.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/settings/job_seeker_request_status_tile.dart';
 
 class JobSeekerSettingsTab extends StatelessWidget {
   const JobSeekerSettingsTab({super.key});
-
-  static final ValueNotifier<bool> _notificationsNotifier = ValueNotifier<bool>(true);
 
   void _showLogoutWarningSheet(BuildContext context) {
     showConfirmActionBottomSheet(
@@ -117,22 +118,24 @@ class JobSeekerSettingsTab extends StatelessWidget {
           14.szH,
 
           // 2. Notifications Toggle
-          ValueListenableBuilder<bool>(
-            valueListenable: _notificationsNotifier,
-            builder: (context, notificationsEnabled, _) {
-              return JobSeekerNotificationToggleTile(
-                value: notificationsEnabled,
-                onChanged: (val) {
-                  _notificationsNotifier.value = val;
-                  CustomSnackBar.showSuccess(
-                    context,
-                    message: val
-                        ? S.of(context).notificationsEnabledMsg
-                        : S.of(context).notificationsDisabledMsg,
-                  );
-                },
-              );
-            },
+          BlocProvider.value(
+            value: sl<NotificationsCubit>()..loadNotificationStatus(),
+            child: BlocBuilder<NotificationsCubit, NotificationsState>(
+              builder: (context, state) {
+                return JobSeekerNotificationToggleTile(
+                  value: state.notificationsEnabled,
+                  onChanged: (val) {
+                    context.read<NotificationsCubit>().toggleNotificationStatus(val);
+                    CustomSnackBar.showSuccess(
+                      context,
+                      message: val
+                          ? S.of(context).notificationsEnabledMsg
+                          : S.of(context).notificationsDisabledMsg,
+                    );
+                  },
+                );
+              },
+            ),
           ),
 
           14.szH,

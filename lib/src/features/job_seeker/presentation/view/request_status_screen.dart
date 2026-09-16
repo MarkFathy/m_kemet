@@ -14,6 +14,7 @@ import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_back_button.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/usecases/get_candidate_profile_usecase.dart';
+import 'package:m_kemet/src/features/job_seeker/domain/entities/candidate_document_entity.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/request_status/approved_status_card.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/request_status/pending_status_card.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/request_status/rejected_status_card.dart';
@@ -36,6 +37,7 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
   late RequestApprovalStatus _currentStatus;
   int? _requestId;
   bool _isLoading = true;
+  List<CandidateDocumentEntity> _documents = [];
 
   @override
   void initState() {
@@ -62,6 +64,7 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
         final backendStatus = profile.status?.toLowerCase().trim();
         setState(() {
           _requestId = profile.id;
+          _documents = profile.documents;
           if (backendStatus == 'approved') {
             _currentStatus = RequestApprovalStatus.approved;
           } else if (backendStatus == 'rejected') {
@@ -142,8 +145,10 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
 
               20.szH,
 
-              // Context-aware action button
-              if (!_isLoading) _buildActionButton(context),
+              // Context-aware action button (only for non-rejected states)
+              // Rejected state has its own buttons inside RejectedStatusCard
+              if (!_isLoading && _currentStatus != RequestApprovalStatus.rejected)
+                _buildActionButton(context),
 
               16.szH,
             ],
@@ -189,8 +194,9 @@ class _RequestStatusScreenState extends State<RequestStatusScreen> {
           key: ValueKey('approved_view'),
         );
       case RequestApprovalStatus.rejected:
-        return const RejectedStatusCard(
-          key: ValueKey('rejected_view'),
+        return RejectedStatusCard(
+          key: const ValueKey('rejected_view'),
+          documents: _documents,
         );
     }
   }

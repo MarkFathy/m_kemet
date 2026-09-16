@@ -16,6 +16,7 @@ import 'package:m_kemet/src/features/candidate_search/presentation/widgets/candi
 import 'package:m_kemet/src/features/candidate_search/presentation/widgets/candidate_card.dart';
 import 'package:m_kemet/src/features/candidate_search/presentation/widgets/candidate_search_bar.dart';
 import 'package:m_kemet/src/features/company/domain/entities/candidate_entity.dart';
+import 'package:m_kemet/src/features/notifications/presentation/widgets/notification_bell_button.dart';
 
 class CandidateSearchTab extends StatefulWidget {
   final TextEditingController searchController;
@@ -96,9 +97,15 @@ class _CandidateSearchTabState extends State<CandidateSearchTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  S.of(context).employerSearchTitle,
-                  style: getTextStyle().darkNavy.w700.s24,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      S.of(context).employerSearchTitle,
+                      style: getTextStyle().darkNavy.w700.s24,
+                    ),
+                    const NotificationBellButton(),
+                  ],
                 ),
 
                 14.szH,

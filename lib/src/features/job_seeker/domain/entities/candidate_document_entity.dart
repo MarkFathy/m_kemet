@@ -8,6 +8,8 @@ class CandidateDocumentEntity extends Equatable {
   final String? mimeType;
   final int? fileSize;
   final String? fileUrl;
+  final bool isApproved;
+  final String? rejectionReason;
 
   const CandidateDocumentEntity({
     required this.id,
@@ -17,6 +19,8 @@ class CandidateDocumentEntity extends Equatable {
     this.mimeType,
     this.fileSize,
     this.fileUrl,
+    this.isApproved = true,
+    this.rejectionReason,
   });
 
   @override
@@ -28,5 +32,7 @@ class CandidateDocumentEntity extends Equatable {
         mimeType,
         fileSize,
         fileUrl,
+        isApproved,
+        rejectionReason,
       ];
 }

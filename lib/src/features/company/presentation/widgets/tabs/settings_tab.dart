@@ -14,17 +14,13 @@ import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
 import 'package:m_kemet/src/core/widgets/setting_action_tile.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:m_kemet/src/features/notifications/presentation/cubit/notifications_cubit.dart';
+import 'package:m_kemet/src/features/notifications/presentation/cubit/notifications_state.dart';
 
-class SettingsTab extends StatefulWidget {
+class SettingsTab extends StatelessWidget {
   const SettingsTab({super.key});
-
-  @override
-  State<SettingsTab> createState() => _SettingsTabState();
-}
-
-class _SettingsTabState extends State<SettingsTab> {
-  bool _notificationsEnabled = true;
 
   void _showLogoutWarningSheet(BuildContext context) {
     showConfirmActionBottomSheet(
@@ -116,60 +112,70 @@ class _SettingsTabState extends State<SettingsTab> {
           20.szH,
 
           // 1. Notifications Toggle
-          Container(
-            padding: EdgeInsets.all(16.w),
-            decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-              borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: AppColors.borderGrey),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 10.r,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(10.w),
+          BlocProvider.value(
+            value: sl<NotificationsCubit>()..loadNotificationStatus(),
+            child: BlocBuilder<NotificationsCubit, NotificationsState>(
+              builder: (context, state) {
+                return Container(
+                  padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    color: AppColors.softBlueBg,
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Icon(Icons.notifications_active_outlined, color: AppColors.darkNavy, size: 24.sp),
-                ),
-                12.szW,
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(S.of(context).notificationsToggleTitle, style: getTextStyle().darkNavy.w700.s15),
-                      4.szH,
-                      Text(S.of(context).notificationsToggleSub, style: getTextStyle().greyColor.w400.s12),
+                    color: AppColors.whiteColor,
+                    borderRadius: BorderRadius.circular(16.r),
+                    border: Border.all(color: AppColors.borderGrey),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 10.r,
+                        offset: const Offset(0, 4),
+                      ),
                     ],
                   ),
-                ),
-                Switch(
-                  value: _notificationsEnabled,
-                  activeTrackColor: AppColors.switchActiveTrack,
-                  activeThumbColor: AppColors.darkNavy,
-                  inactiveTrackColor: AppColors.switchInactiveTrack,
-                  inactiveThumbColor: AppColors.switchInactiveThumb,
-                  onChanged: (val) {
-                    setState(() {
-                      _notificationsEnabled = val;
-                    });
-                    CustomSnackBar.showSuccess(
-                      context,
-                      message: val
-                          ? S.of(context).notificationsEnabledMsg
-                          : S.of(context).notificationsDisabledMsg,
-                    );
-                  },
-                ),
-              ],
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(10.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.softBlueBg,
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Icon(Icons.notifications_active_outlined,
+                            color: AppColors.darkNavy, size: 24.sp),
+                      ),
+                      12.szW,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(S.of(context).notificationsToggleTitle,
+                                style: getTextStyle().darkNavy.w700.s15),
+                            4.szH,
+                            Text(S.of(context).notificationsToggleSub,
+                                style: getTextStyle().greyColor.w400.s12),
+                          ],
+                        ),
+                      ),
+                      Switch(
+                        value: state.notificationsEnabled,
+                        activeTrackColor: AppColors.switchActiveTrack,
+                        activeThumbColor: AppColors.darkNavy,
+                        inactiveTrackColor: AppColors.switchInactiveTrack,
+                        inactiveThumbColor: AppColors.switchInactiveThumb,
+                        onChanged: (val) {
+                          context
+                              .read<NotificationsCubit>()
+                              .toggleNotificationStatus(val);
+                          CustomSnackBar.showSuccess(
+                            context,
+                            message: val
+                                ? S.of(context).notificationsEnabledMsg
+                                : S.of(context).notificationsDisabledMsg,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
 
@@ -187,19 +193,7 @@ class _SettingsTabState extends State<SettingsTab> {
 
           14.szH,
 
-          // 3. Notifications
-          SettingActionTile(
-            icon: Icons.notifications_none_rounded,
-            iconBgColor: AppColors.successBg,
-            iconColor: AppColors.successGreen,
-            title: S.of(context).notificationsTitle,
-            subtitle: S.of(context).notificationsHistorySub,
-            onTap: () => Go.toNamed(NamedRoutes.notifications),
-          ),
-
-          14.szH,
-
-          // 4. Language Switcher
+          // 3. Language Switcher
           Container(
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(

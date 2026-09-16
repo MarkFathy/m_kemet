@@ -46,4 +46,16 @@ class ApiEndpoints {
       '/api/job-seekers/$id/contact-request';
   static String jobSeekerBookmark(dynamic id) =>
       '/api/job-seekers/$id/bookmark';
+
+  // Notifications / FCM endpoints
+  static const String fcmToken = '/api/fcm-token';
+  static const String fcmTokenUser = '/api/fcm-token-user';
+  static const String notificationStatus = '/api/notification/status';
+  static const String notificationTurnOn = '/api/notification/turn-on';
+  static const String notificationTurnOff = '/api/notification/turn-off';
+  static const String notifications = '/api/notifications';
+  static const String notificationsReadAll = '/api/notifications/read-all';
+  static String notificationRead(dynamic id) => '/api/notifications/$id/read';
+  static const String notificationsDeleteAll = '/api/notifications/delete-all';
+  static String notificationDelete(dynamic id) => '/api/notifications/$id/delete';
 }

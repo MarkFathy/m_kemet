@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:m_kemet/src/core/services/notification_service.dart';
+import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/delete_account_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/forgot_password_usecase.dart';
 import 'package:m_kemet/src/features/auth/domain/usecases/get_countries_usecase.dart';
@@ -168,6 +172,7 @@ class AuthCubit extends Cubit<AuthState> {
             successMessage: authEntity.message ?? _l10n.loginSuccessMessage,
           ),
         );
+        unawaited(sl<NotificationService>().syncFcmToken());
       },
     );
   }
@@ -215,6 +220,7 @@ class AuthCubit extends Cubit<AuthState> {
             successMessage: authEntity.message ?? _l10n.otpVerifiedSuccessMessage,
           ),
         );
+        unawaited(sl<NotificationService>().syncFcmToken());
       },
     );
   }
@@ -328,6 +334,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(status: AuthStatus.loading));
     await logoutUseCase();
     emit(const AuthState(status: AuthStatus.unauthenticated));
+    unawaited(sl<NotificationService>().syncFcmToken());
   }
 
   Future<bool> deleteAccount() async {

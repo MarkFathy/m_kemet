@@ -59,10 +59,11 @@ class SessionManager {
   }
 
   /// Checks backend status and returns the correct [NamedRoutes] the job seeker should land on:
-  /// - `approved`  → [NamedRoutes.jobSeekerMain]       (can see profile)
-  /// - `pending`   → [NamedRoutes.requestStatus]       (waiting for admin review)
-  /// - `rejected` / empty → [NamedRoutes.jobSeekerProfileSetup] (must resubmit)
-  static Future<NamedRoutes> getJobSeekerRouteDestination() async {
+  /// - Any candidate with a completed/submitted/pending/approved/rejected profile
+  ///   → [NamedRoutes.jobSeekerMain] index 0 (Profile tab)
+  /// - Empty/new candidate who has never filled or submitted the form
+  ///   → [NamedRoutes.jobSeekerProfileSetup] (must fill form first)
+  static Future<({NamedRoutes route, int? tabIndex})> getJobSeekerRouteDestination() async {
     try {
       final result = await sl<GetCandidateProfileUseCase>()();
       return await result.fold(
@@ -70,50 +71,50 @@ class SessionManager {
         (_) async {
           final completed = await isJobSeekerProfileCompleted();
           return completed
-              ? NamedRoutes.requestStatus
-              : NamedRoutes.jobSeekerProfileSetup;
+              ? (route: NamedRoutes.jobSeekerMain, tabIndex: 0)
+              : (route: NamedRoutes.jobSeekerProfileSetup, tabIndex: null);
         },
         (profile) async {
           final status = profile.status?.toLowerCase().trim();
-          if (status == 'approved') {
+          final hasProfile = status == 'approved' ||
+              status == 'pending' ||
+              profile.isRejected ||
+              profile.hasCompletedOrSubmittedProfile;
+
+          if (hasProfile) {
             await setJobSeekerProfileCompleted(true);
-            return NamedRoutes.jobSeekerMain;
-          } else if (profile.isRejected) {
-            await setJobSeekerProfileCompleted(false);
-            return NamedRoutes.jobSeekerProfileSetup;
-          } else if (profile.hasCompletedOrSubmittedProfile) {
-            // Submitted / pending review
-            await setJobSeekerProfileCompleted(true);
-            return NamedRoutes.requestStatus;
+            // Land on Profile tab (index 0)
+            return (route: NamedRoutes.jobSeekerMain, tabIndex: 0);
           } else {
             await setJobSeekerProfileCompleted(false);
-            return NamedRoutes.jobSeekerProfileSetup;
+            return (route: NamedRoutes.jobSeekerProfileSetup, tabIndex: null);
           }
         },
       );
     } catch (_) {
       final completed = await isJobSeekerProfileCompleted();
       return completed
-          ? NamedRoutes.requestStatus
-          : NamedRoutes.jobSeekerProfileSetup;
+          ? (route: NamedRoutes.jobSeekerMain, tabIndex: 0)
+          : (route: NamedRoutes.jobSeekerProfileSetup, tabIndex: null);
     }
   }
 
   /// Checks both local cache and backend server to see if the candidate has
   /// already submitted their documents, video, or request.
-  /// Returns false for rejected candidates so they are redirected to refill the form.
+  /// Returns false only for candidates that have never submitted (empty profile).
   static Future<bool> checkAndSyncJobSeekerProfileCompleted() async {
     try {
       final result = await sl<GetCandidateProfileUseCase>()();
       return await result.fold(
         (_) async => isJobSeekerProfileCompleted(),
         (profile) async {
-          // Rejected candidates must refill the form
-          if (profile.isRejected) {
-            await setJobSeekerProfileCompleted(false);
-            return false;
-          }
-          if (profile.hasCompletedOrSubmittedProfile) {
+          final status = profile.status?.toLowerCase().trim();
+          final hasProfile = status == 'approved' ||
+              status == 'pending' ||
+              profile.isRejected ||
+              profile.hasCompletedOrSubmittedProfile;
+
+          if (hasProfile) {
             await setJobSeekerProfileCompleted(true);
             return true;
           }

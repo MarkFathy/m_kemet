@@ -42,7 +42,14 @@ class JobSeekerRequestStatusTile extends StatelessWidget {
         }
 
         return InkWell(
-          onTap: () => Go.toNamed(NamedRoutes.requestStatus),
+          onTap: () async {
+            await Go.toNamed(NamedRoutes.requestStatus);
+            // Reload profile from backend so the status badge is always up-to-date
+            // (e.g. pending after resubmit, approved after admin action)
+            if (context.mounted) {
+              context.read<JobSeekerProfileCubit>().loadInitialData();
+            }
+          },
           borderRadius: BorderRadius.circular(16.r),
           child: Container(
             padding: EdgeInsets.all(16.w),

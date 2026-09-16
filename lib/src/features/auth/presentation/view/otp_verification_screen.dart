@@ -162,10 +162,10 @@ class _OtpVerificationViewState extends State<_OtpVerificationView> {
             if (_isPasswordReset) {
               // Login OTP — check profile status to decide destination
               setState(() => _isCheckingProfile = true);
-              SessionManager.getJobSeekerRouteDestination().then((destination) {
+              SessionManager.getJobSeekerRouteDestination().then((dest) {
                 if (mounted) {
                   setState(() => _isCheckingProfile = false);
-                  Go.offAllNamed(destination);
+                  Go.offAllNamed(dest.route, arguments: dest.tabIndex);
                 }
               });
             } else {

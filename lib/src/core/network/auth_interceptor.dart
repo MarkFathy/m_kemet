@@ -42,7 +42,8 @@ class AuthInterceptor extends QueuedInterceptor {
         path.contains(ApiEndpoints.registerCompany) ||
         path.contains(ApiEndpoints.forgotPassword) ||
         path.contains(ApiEndpoints.verifyOtp) ||
-        path.contains(ApiEndpoints.resetPassword);
+        path.contains(ApiEndpoints.resetPassword) ||
+        path.contains(ApiEndpoints.fcmToken);
 
     if (isAuthEndpoint) {
       return handler.next(err);
