@@ -36,6 +36,9 @@ class NotificationService {
   static const String channelKey = 'basic_channel';
   static const String notificationSettingKey = 'user_notifications_enabled';
 
+  /// Notifier triggered whenever a push notification is received to allow real-time UI updates
+  static final ValueNotifier<int> notificationTriggerNotifier = ValueNotifier<int>(0);
+
   bool isSplashActive = false;
   NamedRoutes? _pendingNotificationRoute;
 
@@ -120,6 +123,7 @@ class NotificationService {
             sl<NotificationsCubit>().loadNotifications();
           }
         } catch (_) {}
+        notificationTriggerNotifier.value++;
       });
 
       // Handle message when app opened from background state

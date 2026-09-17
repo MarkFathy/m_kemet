@@ -16,6 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
 
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
+import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_cubit.dart';
 import 'package:m_kemet/src/features/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:m_kemet/src/features/notifications/presentation/cubit/notifications_state.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/settings/job_seeker_request_status_tile.dart';
@@ -99,76 +100,85 @@ class JobSeekerSettingsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.symmetric(
-        horizontal: AppPadding.pW12,
-        vertical: AppPadding.pH12,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(S.of(context).navSettings, style: getTextStyle().darkNavy.w700.s24),
+    return RefreshIndicator(
+      onRefresh: () async {
+        await context.read<JobSeekerProfileCubit>().refreshProfile();
+      },
+      color: AppColors.darkNavy,
+      backgroundColor: AppColors.whiteColor,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppPadding.pW12,
+          vertical: AppPadding.pH12,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(S.of(context).navSettings, style: getTextStyle().darkNavy.w700.s24),
 
-          20.szH,
+            20.szH,
 
-          // 1. Application Request Status Highlight Tile
-          const JobSeekerRequestStatusTile(),
+            // 1. Application Request Status Highlight Tile
+            const JobSeekerRequestStatusTile(),
 
-          14.szH,
+            14.szH,
 
-          // 2. Notifications Toggle
-          BlocProvider.value(
-            value: sl<NotificationsCubit>()..loadNotificationStatus(),
-            child: BlocBuilder<NotificationsCubit, NotificationsState>(
-              builder: (context, state) {
-                return JobSeekerNotificationToggleTile(
-                  value: state.notificationsEnabled,
-                  onChanged: (val) {
-                    context.read<NotificationsCubit>().toggleNotificationStatus(val);
-                    CustomSnackBar.showSuccess(
-                      context,
-                      message: val
-                          ? S.of(context).notificationsEnabledMsg
-                          : S.of(context).notificationsDisabledMsg,
-                    );
-                  },
-                );
-              },
+            // 2. Notifications Toggle
+            BlocProvider.value(
+              value: sl<NotificationsCubit>()..loadNotificationStatus(),
+              child: BlocBuilder<NotificationsCubit, NotificationsState>(
+                builder: (context, state) {
+                  return JobSeekerNotificationToggleTile(
+                    value: state.notificationsEnabled,
+                    onChanged: (val) {
+                      context.read<NotificationsCubit>().toggleNotificationStatus(val);
+                      CustomSnackBar.showSuccess(
+                        context,
+                        message: val
+                            ? S.of(context).notificationsEnabledMsg
+                            : S.of(context).notificationsDisabledMsg,
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
 
-          14.szH,
+            14.szH,
 
-          // 3. Language Switcher
-          const JobSeekerLanguageTile(),
+            // 3. Language Switcher
+            const JobSeekerLanguageTile(),
 
-          14.szH,
+            14.szH,
 
-          // 6. Logout
-          SettingActionTile(
-            icon: Icons.logout_rounded,
-            iconBgColor: AppColors.softBlueBg,
-            iconColor: AppColors.darkNavy,
-            title: S.of(context).logout,
-            subtitle: S.of(context).logoutSub,
-            onTap: () => _showLogoutWarningSheet(context),
-          ),
+            // 6. Logout
+            SettingActionTile(
+              icon: Icons.logout_rounded,
+              iconBgColor: AppColors.softBlueBg,
+              iconColor: AppColors.darkNavy,
+              title: S.of(context).logout,
+              subtitle: S.of(context).logoutSub,
+              onTap: () => _showLogoutWarningSheet(context),
+            ),
 
-          14.szH,
+            14.szH,
 
-          // 7. Delete Account
-          SettingActionTile(
-            icon: Icons.delete_outline_rounded,
-            iconBgColor: AppColors.errorBg,
-            iconColor: AppColors.errorRed,
-            title: S.of(context).deleteAccount,
-            subtitle: S.of(context).jobSeekerDeleteAccountSub,
-            onTap: () => _showDeleteAccountWarningSheet(context),
-          ),
+            // 7. Delete Account
+            SettingActionTile(
+              icon: Icons.delete_outline_rounded,
+              iconBgColor: AppColors.errorBg,
+              iconColor: AppColors.errorRed,
+              title: S.of(context).deleteAccount,
+              subtitle: S.of(context).jobSeekerDeleteAccountSub,
+              onTap: () => _showDeleteAccountWarningSheet(context),
+            ),
 
-          100.szH,
-        ],
+            100.szH,
+          ],
+        ),
       ),
     );
   }

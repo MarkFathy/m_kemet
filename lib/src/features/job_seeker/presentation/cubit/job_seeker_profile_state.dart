@@ -10,12 +10,16 @@ import 'package:m_kemet/src/features/job_seeker/domain/entities/qualification_en
 enum DocumentUploadStatus { initial, uploading, success, failure }
 enum SubmissionStatus { initial, loading, success, failure }
 enum LoadingStatus { initial, loading, success, failure }
+enum IdentityDocumentChoice { nationalId, passport, both }
 
 class JobSeekerProfileState extends Equatable {
   // Page load statuses
   final LoadingStatus lookupsStatus;
   final LoadingStatus profileFetchStatus;
   final SubmissionStatus submitStatus;
+
+  // Identity Document Preference
+  final IdentityDocumentChoice identityDocumentChoice;
 
   // Lookups lists
   final List<ProfessionEntity> professions;
@@ -65,6 +69,7 @@ class JobSeekerProfileState extends Equatable {
     this.lookupsStatus = LoadingStatus.initial,
     this.profileFetchStatus = LoadingStatus.initial,
     this.submitStatus = SubmissionStatus.initial,
+    this.identityDocumentChoice = IdentityDocumentChoice.nationalId,
     this.professions = const [],
     this.experienceLevels = const [],
     this.qualifications = const [],
@@ -125,6 +130,9 @@ class JobSeekerProfileState extends Equatable {
       videoStatus != DocumentUploadStatus.uploading &&
       videoStatus != DocumentUploadStatus.failure;
 
+  bool get isIdentityDocumentUploaded =>
+      isNationalIdUploaded || isPassportUploaded;
+
   bool get isAnyDocumentUploading =>
       personalPhotoStatus == DocumentUploadStatus.uploading ||
       nationalIdStatus == DocumentUploadStatus.uploading ||
@@ -134,8 +142,7 @@ class JobSeekerProfileState extends Equatable {
 
   bool get areAllDocumentsUploaded =>
       isPersonalPhotoUploaded &&
-      isNationalIdUploaded &&
-      isPassportUploaded &&
+      isIdentityDocumentUploaded &&
       isCvUploaded &&
       isVideoUploaded &&
       !isAnyDocumentUploading;
@@ -153,11 +160,10 @@ class JobSeekerProfileState extends Equatable {
     if (skills.isNotEmpty) earnedPoints++;
     if (selectedTargetCountries.isNotEmpty) earnedPoints++;
 
-    // Document uploads (worth 5 points)
-    totalPoints += 5;
+    // Document uploads (worth 4 points: photo, identity doc, cv, video)
+    totalPoints += 4;
     if (isPersonalPhotoUploaded) earnedPoints++;
-    if (isNationalIdUploaded) earnedPoints++;
-    if (isPassportUploaded) earnedPoints++;
+    if (isIdentityDocumentUploaded) earnedPoints++;
     if (isCvUploaded) earnedPoints++;
     if (isVideoUploaded) earnedPoints++;
 
@@ -168,6 +174,7 @@ class JobSeekerProfileState extends Equatable {
     LoadingStatus? lookupsStatus,
     LoadingStatus? profileFetchStatus,
     SubmissionStatus? submitStatus,
+    IdentityDocumentChoice? identityDocumentChoice,
     List<ProfessionEntity>? professions,
     List<ExperienceLevelEntity>? experienceLevels,
     List<QualificationEntity>? qualifications,
@@ -205,6 +212,7 @@ class JobSeekerProfileState extends Equatable {
       lookupsStatus: lookupsStatus ?? this.lookupsStatus,
       profileFetchStatus: profileFetchStatus ?? this.profileFetchStatus,
       submitStatus: submitStatus ?? this.submitStatus,
+      identityDocumentChoice: identityDocumentChoice ?? this.identityDocumentChoice,
       professions: professions ?? this.professions,
       experienceLevels: experienceLevels ?? this.experienceLevels,
       qualifications: qualifications ?? this.qualifications,
@@ -245,6 +253,7 @@ class JobSeekerProfileState extends Equatable {
         lookupsStatus,
         profileFetchStatus,
         submitStatus,
+        identityDocumentChoice,
         professions,
         experienceLevels,
         qualifications,

@@ -67,25 +67,25 @@ class SessionManager {
     try {
       final result = await sl<GetCandidateProfileUseCase>()();
       return await result.fold(
-        // On network error: fallback to cached bool
-        (_) async {
+        (failure) async {
+          if (failure.serverException.statusCode == 404) {
+            await setJobSeekerProfileCompleted(false);
+            return (route: NamedRoutes.jobSeekerProfileSetup, tabIndex: null);
+          }
           final completed = await isJobSeekerProfileCompleted();
           return completed
               ? (route: NamedRoutes.jobSeekerMain, tabIndex: 0)
               : (route: NamedRoutes.jobSeekerProfileSetup, tabIndex: null);
         },
         (profile) async {
-          final status = profile.status?.toLowerCase().trim();
-          final hasProfile = status == 'approved' ||
-              status == 'pending' ||
-              profile.isRejected ||
-              profile.hasCompletedOrSubmittedProfile;
+          final isSubmitted = profile.isFormSubmitted;
 
-          if (hasProfile) {
+          if (isSubmitted) {
             await setJobSeekerProfileCompleted(true);
             // Land on Profile tab (index 0)
             return (route: NamedRoutes.jobSeekerMain, tabIndex: 0);
           } else {
+            // Form has not been submitted yet! Must land on profile setup form
             await setJobSeekerProfileCompleted(false);
             return (route: NamedRoutes.jobSeekerProfileSetup, tabIndex: null);
           }
@@ -106,15 +106,17 @@ class SessionManager {
     try {
       final result = await sl<GetCandidateProfileUseCase>()();
       return await result.fold(
-        (_) async => isJobSeekerProfileCompleted(),
+        (failure) async {
+          if (failure.serverException.statusCode == 404) {
+            await setJobSeekerProfileCompleted(false);
+            return false;
+          }
+          return isJobSeekerProfileCompleted();
+        },
         (profile) async {
-          final status = profile.status?.toLowerCase().trim();
-          final hasProfile = status == 'approved' ||
-              status == 'pending' ||
-              profile.isRejected ||
-              profile.hasCompletedOrSubmittedProfile;
+          final isSubmitted = profile.isFormSubmitted;
 
-          if (hasProfile) {
+          if (isSubmitted) {
             await setJobSeekerProfileCompleted(true);
             return true;
           }

@@ -115,14 +115,18 @@ class CandidateProfileDetailModel extends CandidateProfileDetailEntity {
         ? rawPercentage
         : num.tryParse(rawPercentage?.toString() ?? '');
 
-    // Note: Do not extract top-level boolean "status: true" as candidate status
-    final rawStatus = profileMap['status'] ??
-        profileMap['request_status'] ??
+    // Extract candidate application status (do NOT extract API envelope statuses like 'success', 'ok', 'true')
+    final rawCandidateStatus = profileMap['request_status'] ??
         profileMap['approval_status'] ??
-        (dataMap['status'] is String ? dataMap['status'] : null) ??
-        dataMap['request_status'] ??
-        dataMap['approval_status'];
-    final String? candidateStatus = rawStatus is String ? rawStatus : null;
+        profileMap['status'];
+
+    String? candidateStatus;
+    if (rawCandidateStatus is String) {
+      final s = rawCandidateStatus.toLowerCase().trim();
+      if (s != 'success' && s != 'ok' && s != 'true' && s != 'false' && s != 'error' && s != 'fail') {
+        candidateStatus = s;
+      }
+    }
 
     return CandidateProfileDetailModel(
       id: parseId(profileMap['id'] ?? dataMap['id'] ?? profileMap['user_id'] ?? dataMap['user_id']),

@@ -64,6 +64,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "approvedHeaderTitle": MessageLookupByLibrary.simpleMessage(
       "Congratulations! Application Approved",
     ),
+    "atLeastOneRequired": MessageLookupByLibrary.simpleMessage(
+      "At least one required",
+    ),
+    "bothIdentityHelperMsg": MessageLookupByLibrary.simpleMessage(
+      "• You will be asked to upload both your ID card and passport for full verification.",
+    ),
     "camera": MessageLookupByLibrary.simpleMessage("Camera"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "candidateBioTitle": MessageLookupByLibrary.simpleMessage("Candidate Bio"),
@@ -85,6 +91,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "cellularData": MessageLookupByLibrary.simpleMessage("Cellular Data"),
     "changeImageAction": MessageLookupByLibrary.simpleMessage("Change"),
     "changeMedia": MessageLookupByLibrary.simpleMessage("Change"),
+    "choiceBoth": MessageLookupByLibrary.simpleMessage("Both"),
+    "choiceNationalId": MessageLookupByLibrary.simpleMessage("National ID"),
+    "choicePassport": MessageLookupByLibrary.simpleMessage("Passport"),
     "chooseImageSourceTitle": MessageLookupByLibrary.simpleMessage(
       "Select Image Source",
     ),
@@ -308,8 +317,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "hostUnreachableTitle": MessageLookupByLibrary.simpleMessage(
       "Server Unavailable",
     ),
+    "idCardSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Photo of both sides of ID card",
+    ),
     "idCardTitle": MessageLookupByLibrary.simpleMessage(
       "National ID / Passport Card",
+    ),
+    "identityDocumentSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "Identity Document",
     ),
     "importantInfoDesc": MessageLookupByLibrary.simpleMessage(
       "Ensure all documents are clear, passport is valid for at least 6 months, and your intro video is clear to accelerate job matches.",
@@ -375,6 +390,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Log out of your current account",
     ),
     "male": MessageLookupByLibrary.simpleMessage("Male"),
+    "nationalIdHelperMsg": MessageLookupByLibrary.simpleMessage(
+      "• You will only be asked to upload a clear photo of both sides of your ID card.",
+    ),
     "nationalIdSubtitle": MessageLookupByLibrary.simpleMessage(
       "Photo of both sides of ID card",
     ),
@@ -531,6 +549,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "PDF or JPG format, max size 5MB",
     ),
     "passportCopyTitle": MessageLookupByLibrary.simpleMessage("Passport Copy"),
+    "passportHelperMsg": MessageLookupByLibrary.simpleMessage(
+      "• You will only be asked to upload a clear photo or scan of your passport.",
+    ),
     "passportScanError": MessageLookupByLibrary.simpleMessage(
       "Failed to scan passport, please check camera permissions and retry",
     ),

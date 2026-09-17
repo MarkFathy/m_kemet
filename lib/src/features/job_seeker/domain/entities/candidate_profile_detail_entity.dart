@@ -55,16 +55,30 @@ class CandidateProfileDetailEntity extends Equatable {
   /// True if candidate's application was rejected by admin.
   bool get isRejected => status?.toLowerCase().trim() == 'rejected';
 
-  /// Returns true if the candidate has previously submitted documents (e.g. CV) or intro video or profession.
-  /// NOTE: Rejected candidates are NOT considered completed — they must resubmit.
-  /// NOTE: A newly registered user with only basic info (name/phone/email) is NOT completed.
-  bool get hasCompletedOrSubmittedProfile {
-    if (isRejected) return false;
-    final hasDocs = documents.isNotEmpty;
-    final hasVideo = videoUrl != null && videoUrl!.trim().isNotEmpty;
-    final hasProfession = professionId != null;
-    return hasDocs || hasVideo || hasProfession;
+  /// True if candidate's application was approved by admin.
+  bool get isApproved => status?.toLowerCase().trim() == 'approved';
+
+  /// True if the candidate has actually submitted the profile form request.
+  /// When a candidate registers, their DB record has status='pending' but no profession,
+  /// salary, specialization, or summary. They only count as submitted once the form
+  /// request has actually been sent to the server.
+  bool get isFormSubmitted {
+    if (isApproved) return true;
+    if (isRejected) return true;
+
+    // A candidate has submitted the form ONLY if the complete form request was sent to the server.
+    // The form request submits profession, expected salary, summary, and documents together.
+    // Simply uploading a document or having an initial registration record does NOT count.
+    final hasCompletedForm = professionId != null &&
+        expectedSalary != null &&
+        (summary != null && summary!.trim().isNotEmpty) &&
+        documents.isNotEmpty;
+
+    return hasCompletedForm;
   }
+
+  /// Returns true only if the candidate has actually submitted the form.
+  bool get hasCompletedOrSubmittedProfile => isFormSubmitted;
 
   @override
   List<Object?> get props => [

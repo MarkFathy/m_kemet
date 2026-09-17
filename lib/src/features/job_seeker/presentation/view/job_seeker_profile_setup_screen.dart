@@ -138,13 +138,12 @@ class _JobSeekerProfileSetupViewState extends State<_JobSeekerProfileSetupView> 
   }
 
   double _calculateCompletionPercentage(JobSeekerProfileState state) {
-    const total = 14;
+    const total = 13;
     int earned = 0;
 
-    // Media & Docs (5) - must be fully and successfully uploaded
+    // Media & Docs (4)
     if (state.isPersonalPhotoUploaded) earned++;
-    if (state.isNationalIdUploaded) earned++;
-    if (state.isPassportUploaded) earned++;
+    if (state.isIdentityDocumentUploaded) earned++;
     if (state.isCvUploaded) earned++;
     if (state.isVideoUploaded) earned++;
 
@@ -264,13 +263,6 @@ class _JobSeekerProfileSetupViewState extends State<_JobSeekerProfileSetupView> 
       listener: (context, state) {
         if (state.profileFetchStatus == LoadingStatus.success) {
           _populateProfileData(state);
-          // hasCompletedOrSubmittedProfile already returns false for rejected users
-          // so they stay on the form. Pending/approved users go to main.
-          if (state.profileDetail?.hasCompletedOrSubmittedProfile == true) {
-            SessionManager.setJobSeekerProfileCompleted(true);
-            Go.offAllNamed(NamedRoutes.jobSeekerMain);
-            return;
-          }
         }
 
         if (state.submitStatus == SubmissionStatus.success) {

@@ -64,6 +64,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "approvedHeaderTitle": MessageLookupByLibrary.simpleMessage(
       "تهانينا! تمت الموافقة على طلبك",
     ),
+    "atLeastOneRequired": MessageLookupByLibrary.simpleMessage(
+      "يكفي واحد على الأقل",
+    ),
+    "bothIdentityHelperMsg": MessageLookupByLibrary.simpleMessage(
+      "• سيُطلب منك إرفاق البطاقة الشخصية وجواز السفر معاً لتوثيق كامل.",
+    ),
     "camera": MessageLookupByLibrary.simpleMessage("الكاميرا"),
     "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
     "candidateBioTitle": MessageLookupByLibrary.simpleMessage("نبذة عن المرشح"),
@@ -85,6 +91,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "cellularData": MessageLookupByLibrary.simpleMessage("بيانات الجوال"),
     "changeImageAction": MessageLookupByLibrary.simpleMessage("تغيير"),
     "changeMedia": MessageLookupByLibrary.simpleMessage("تغيير"),
+    "choiceBoth": MessageLookupByLibrary.simpleMessage("كلاهما"),
+    "choiceNationalId": MessageLookupByLibrary.simpleMessage("بطاقة شخصية"),
+    "choicePassport": MessageLookupByLibrary.simpleMessage("جواز سفر"),
     "chooseImageSourceTitle": MessageLookupByLibrary.simpleMessage(
       "اختيار مصدر الصورة",
     ),
@@ -294,8 +303,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "hostUnreachableTitle": MessageLookupByLibrary.simpleMessage(
       "الخادم غير متاح",
     ),
+    "idCardSubtitle": MessageLookupByLibrary.simpleMessage(
+      "صورة وجهي البطاقة الشخصية",
+    ),
     "idCardTitle": MessageLookupByLibrary.simpleMessage(
       "صورة بطاقة الهوية / الرقم القومي",
+    ),
+    "identityDocumentSectionTitle": MessageLookupByLibrary.simpleMessage(
+      "وثيقة إثبات الهوية",
     ),
     "importantInfoDesc": MessageLookupByLibrary.simpleMessage(
       "تأكد من وضوح جميع المستندات وسريان مفعول جواز السفر لمدة لا تقل عن 6 أشهر وتصوير الفيديو بشكل واضح لتسريع ترشيحك للشركات.",
@@ -361,6 +376,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "تسجيل الخروج من الحساب الحالي",
     ),
     "male": MessageLookupByLibrary.simpleMessage("ذكر"),
+    "nationalIdHelperMsg": MessageLookupByLibrary.simpleMessage(
+      "• سيُطلب منك إرفاق صورة واضحة لوجهي البطاقة الشخصية فقط.",
+    ),
     "nationalIdSubtitle": MessageLookupByLibrary.simpleMessage(
       "صورة وجهي البطاقة الشخصية",
     ),
@@ -522,6 +540,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "passportCopyTitle": MessageLookupByLibrary.simpleMessage(
       "صورة جواز السفر",
+    ),
+    "passportHelperMsg": MessageLookupByLibrary.simpleMessage(
+      "• سيُطلب منك إرفاق صورة أو مسح ضوئي لجواز السفر فقط.",
     ),
     "passportScanError": MessageLookupByLibrary.simpleMessage(
       "تعذر مسح جواز السفر، يرجى التأكد من صلاحية الكاميرا والمحاولة مرة أخرى",

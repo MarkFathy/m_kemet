@@ -1055,6 +1055,86 @@ class S {
     );
   }
 
+  /// `صورة وجهي البطاقة الشخصية`
+  String get idCardSubtitle {
+    return Intl.message(
+      'صورة وجهي البطاقة الشخصية',
+      name: 'idCardSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `وثيقة إثبات الهوية`
+  String get identityDocumentSectionTitle {
+    return Intl.message(
+      'وثيقة إثبات الهوية',
+      name: 'identityDocumentSectionTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `يكفي واحد على الأقل`
+  String get atLeastOneRequired {
+    return Intl.message(
+      'يكفي واحد على الأقل',
+      name: 'atLeastOneRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `بطاقة شخصية`
+  String get choiceNationalId {
+    return Intl.message(
+      'بطاقة شخصية',
+      name: 'choiceNationalId',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `جواز سفر`
+  String get choicePassport {
+    return Intl.message('جواز سفر', name: 'choicePassport', desc: '', args: []);
+  }
+
+  /// `كلاهما`
+  String get choiceBoth {
+    return Intl.message('كلاهما', name: 'choiceBoth', desc: '', args: []);
+  }
+
+  /// `• سيُطلب منك إرفاق صورة واضحة لوجهي البطاقة الشخصية فقط.`
+  String get nationalIdHelperMsg {
+    return Intl.message(
+      '• سيُطلب منك إرفاق صورة واضحة لوجهي البطاقة الشخصية فقط.',
+      name: 'nationalIdHelperMsg',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `• سيُطلب منك إرفاق صورة أو مسح ضوئي لجواز السفر فقط.`
+  String get passportHelperMsg {
+    return Intl.message(
+      '• سيُطلب منك إرفاق صورة أو مسح ضوئي لجواز السفر فقط.',
+      name: 'passportHelperMsg',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `• سيُطلب منك إرفاق البطاقة الشخصية وجواز السفر معاً لتوثيق كامل.`
+  String get bothIdentityHelperMsg {
+    return Intl.message(
+      '• سيُطلب منك إرفاق البطاقة الشخصية وجواز السفر معاً لتوثيق كامل.',
+      name: 'bothIdentityHelperMsg',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `صورة جواز السفر`
   String get passportCopyTitle {
     return Intl.message(

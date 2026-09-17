@@ -5,6 +5,7 @@ import 'package:m_kemet/src/core/services/session_manager.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/country_entity.dart';
 import 'package:m_kemet/src/features/auth/domain/entities/gender_entity.dart';
 import 'package:m_kemet/src/features/job_seeker/data/models/candidate_profile_update_request.dart';
+import 'package:m_kemet/src/features/job_seeker/domain/entities/candidate_profile_detail_entity.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/entities/experience_level_entity.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/entities/profession_entity.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/entities/qualification_entity.dart';
@@ -79,71 +80,104 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
         }
       },
       (profile) {
-        if (isClosed) return;
-        ProfessionEntity? selectedProf;
-        if (profile.professionId != null) {
-          final matched = state.professions.where((p) => p.id == profile.professionId);
-          if (matched.isNotEmpty) selectedProf = matched.first;
-        }
-
-        ExperienceLevelEntity? selectedExp;
-        if (profile.experienceLevelId != null) {
-          final matched = state.experienceLevels.where((e) => e.id == profile.experienceLevelId);
-          if (matched.isNotEmpty) selectedExp = matched.first;
-        }
-
-        QualificationEntity? selectedQual;
-        if (profile.qualificationId != null) {
-          final matched = state.qualifications.where((q) => q.id == profile.qualificationId);
-          if (matched.isNotEmpty) selectedQual = matched.first;
-        } else if (profile.qualification != null) {
-          final matched = state.qualifications.where((q) => q.name == profile.qualification);
-          if (matched.isNotEmpty) selectedQual = matched.first;
-        }
-
-        CountryEntity? selectedCountry;
-        if (profile.currentCountryId != null) {
-          final matched = state.countries.where((c) => c.id == profile.currentCountryId);
-          if (matched.isNotEmpty) selectedCountry = matched.first;
-        }
-
-        GenderEntity? selectedGen;
-        if (profile.genderId != null) {
-          final matched = state.genders.where((g) => g.id == profile.genderId);
-          if (matched.isNotEmpty) selectedGen = matched.first;
-        }
-
-        final List<CountryEntity> selectedTargets = [];
-        for (final targetId in profile.targetCountryIds) {
-          final matched = state.countries.where((c) => c.id == targetId);
-          if (matched.isNotEmpty) selectedTargets.add(matched.first);
-        }
-
-        final personalPhoto = profile.documents.where((d) => d.documentType == 'personal_photo').firstOrNull;
-        final nationalId = profile.documents.where((d) => d.documentType == 'national_id').firstOrNull;
-        final passport = profile.documents.where((d) => d.documentType == 'passport').firstOrNull;
-        final cv = profile.documents.where((d) => d.documentType == 'cv').firstOrNull;
-
-        if (!isClosed) {
-          emit(state.copyWith(
-            profileFetchStatus: LoadingStatus.success,
-            profileDetail: () => profile,
-            selectedProfession: () => selectedProf,
-            selectedExperienceLevel: () => selectedExp,
-            selectedQualification: () => selectedQual,
-            selectedCurrentCountry: () => selectedCountry,
-            selectedGender: () => selectedGen,
-            selectedTargetCountries: selectedTargets,
-            languages: profile.languages,
-            skills: profile.skills,
-            uploadedPersonalPhoto: () => personalPhoto,
-            uploadedNationalId: () => nationalId,
-            uploadedPassport: () => passport,
-            uploadedCv: () => cv,
-          ));
-        }
+        _applyProfile(profile);
       },
     );
+  }
+
+  /// Fast, dedicated profile refresher that updates the candidate profile status immediately
+  /// without re-requesting all static lookups (professions, countries, etc.).
+  Future<void> refreshProfile() async {
+    if (isClosed) return;
+    final profileResult = await getCandidateProfileUseCase();
+    if (isClosed) return;
+    profileResult.fold(
+      (failure) {
+        // Keep current state on error
+      },
+      (profile) {
+        _applyProfile(profile);
+      },
+    );
+  }
+
+  void _applyProfile(CandidateProfileDetailEntity profile) {
+    if (isClosed) return;
+    ProfessionEntity? selectedProf;
+    if (profile.professionId != null) {
+      final matched = state.professions.where((p) => p.id == profile.professionId);
+      if (matched.isNotEmpty) selectedProf = matched.first;
+    }
+
+    ExperienceLevelEntity? selectedExp;
+    if (profile.experienceLevelId != null) {
+      final matched = state.experienceLevels.where((e) => e.id == profile.experienceLevelId);
+      if (matched.isNotEmpty) selectedExp = matched.first;
+    }
+
+    QualificationEntity? selectedQual;
+    if (profile.qualificationId != null) {
+      final matched = state.qualifications.where((q) => q.id == profile.qualificationId);
+      if (matched.isNotEmpty) selectedQual = matched.first;
+    } else if (profile.qualification != null) {
+      final matched = state.qualifications.where((q) => q.name == profile.qualification);
+      if (matched.isNotEmpty) selectedQual = matched.first;
+    }
+
+    CountryEntity? selectedCountry;
+    if (profile.currentCountryId != null) {
+      final matched = state.countries.where((c) => c.id == profile.currentCountryId);
+      if (matched.isNotEmpty) selectedCountry = matched.first;
+    }
+
+    GenderEntity? selectedGen;
+    if (profile.genderId != null) {
+      final matched = state.genders.where((g) => g.id == profile.genderId);
+      if (matched.isNotEmpty) selectedGen = matched.first;
+    }
+
+    final List<CountryEntity> selectedTargets = [];
+    for (final targetId in profile.targetCountryIds) {
+      final matched = state.countries.where((c) => c.id == targetId);
+      if (matched.isNotEmpty) selectedTargets.add(matched.first);
+    }
+
+    final personalPhoto = profile.documents.where((d) => d.documentType == 'personal_photo').firstOrNull;
+    final nationalId = profile.documents.where((d) => d.documentType == 'national_id').firstOrNull;
+    final passport = profile.documents.where((d) => d.documentType == 'passport').firstOrNull;
+    final cv = profile.documents.where((d) => d.documentType == 'cv').firstOrNull;
+
+    // Auto-detect choice if user already has uploaded documents from previous session
+    IdentityDocumentChoice detectedChoice = state.identityDocumentChoice;
+    if (nationalId != null && passport != null) {
+      detectedChoice = IdentityDocumentChoice.both;
+    } else if (passport != null) {
+      detectedChoice = IdentityDocumentChoice.passport;
+    } else if (nationalId != null) {
+      detectedChoice = IdentityDocumentChoice.nationalId;
+    }
+
+    emit(state.copyWith(
+      profileFetchStatus: LoadingStatus.success,
+      profileDetail: () => profile,
+      identityDocumentChoice: detectedChoice,
+      selectedProfession: () => selectedProf,
+      selectedExperienceLevel: () => selectedExp,
+      selectedQualification: () => selectedQual,
+      selectedCurrentCountry: () => selectedCountry,
+      selectedGender: () => selectedGen,
+      selectedTargetCountries: selectedTargets,
+      languages: profile.languages,
+      skills: profile.skills,
+      uploadedPersonalPhoto: () => personalPhoto,
+      uploadedNationalId: () => nationalId,
+      uploadedPassport: () => passport,
+      uploadedCv: () => cv,
+    ));
+  }
+
+  void selectIdentityDocumentChoice(IdentityDocumentChoice choice) {
+    emit(state.copyWith(identityDocumentChoice: choice));
   }
 
   void selectProfession(ProfessionEntity? profession) {

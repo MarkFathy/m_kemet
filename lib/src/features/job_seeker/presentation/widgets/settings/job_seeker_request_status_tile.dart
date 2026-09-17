@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,11 +10,56 @@ import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
+import 'package:m_kemet/src/core/services/notification_service.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_cubit.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_state.dart';
+import 'package:m_kemet/src/features/job_seeker/presentation/view/request_status_screen.dart';
 
-class JobSeekerRequestStatusTile extends StatelessWidget {
+class JobSeekerRequestStatusTile extends StatefulWidget {
   const JobSeekerRequestStatusTile({super.key});
+
+  @override
+  State<JobSeekerRequestStatusTile> createState() =>
+      _JobSeekerRequestStatusTileState();
+}
+
+class _JobSeekerRequestStatusTileState
+    extends State<JobSeekerRequestStatusTile> {
+  Timer? _pollingTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    // 1. Initial immediate check on mount
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<JobSeekerProfileCubit>().refreshProfile();
+      }
+    });
+
+    // 2. Periodic polling every 4 seconds to catch backend status changes live
+    _pollingTimer = Timer.periodic(const Duration(seconds: 4), (_) {
+      if (mounted) {
+        context.read<JobSeekerProfileCubit>().refreshProfile();
+      }
+    });
+
+    // 3. Instant 0ms update when any push notification arrives
+    NotificationService.notificationTriggerNotifier.addListener(_onNotificationReceived);
+  }
+
+  void _onNotificationReceived() {
+    if (mounted) {
+      context.read<JobSeekerProfileCubit>().refreshProfile();
+    }
+  }
+
+  @override
+  void dispose() {
+    _pollingTimer?.cancel();
+    NotificationService.notificationTriggerNotifier.removeListener(_onNotificationReceived);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,35 +70,42 @@ class JobSeekerRequestStatusTile extends StatelessWidget {
         final Color statusBgColor;
         final IconData statusIcon;
         final String statusLabel;
+        final RequestApprovalStatus initialStatusEnum;
 
         if (statusStr == 'approved') {
           statusColor = AppColors.successGreen;
           statusBgColor = AppColors.successBg;
           statusIcon = Icons.check_circle_rounded;
           statusLabel = S.of(context).statusApproved;
+          initialStatusEnum = RequestApprovalStatus.approved;
         } else if (statusStr == 'rejected') {
           statusColor = AppColors.errorRed;
           statusBgColor = AppColors.errorBg;
           statusIcon = Icons.cancel_rounded;
           statusLabel = S.of(context).statusRejected;
+          initialStatusEnum = RequestApprovalStatus.rejected;
         } else {
           statusColor = AppColors.warningAmber;
           statusBgColor = AppColors.warningBg;
           statusIcon = Icons.hourglass_top_rounded;
           statusLabel = S.of(context).statusPending;
+          initialStatusEnum = RequestApprovalStatus.pending;
         }
 
         return InkWell(
           onTap: () async {
-            await Go.toNamed(NamedRoutes.requestStatus);
+            await Go.toNamed(
+              NamedRoutes.requestStatus,
+              arguments: initialStatusEnum,
+            );
             // Reload profile from backend so the status badge is always up-to-date
-            // (e.g. pending after resubmit, approved after admin action)
             if (context.mounted) {
-              context.read<JobSeekerProfileCubit>().loadInitialData();
+              context.read<JobSeekerProfileCubit>().refreshProfile();
             }
           },
           borderRadius: BorderRadius.circular(16.r),
-          child: Container(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
@@ -70,7 +124,8 @@ class JobSeekerRequestStatusTile extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Container(
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
                   padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
                     color: statusBgColor,
@@ -97,8 +152,12 @@ class JobSeekerRequestStatusTile extends StatelessWidget {
                             ),
                           ),
                           8.szW,
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 2.h,
+                            ),
                             decoration: BoxDecoration(
                               color: statusBgColor,
                               borderRadius: BorderRadius.circular(6.r),

@@ -17,6 +17,7 @@ import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_pr
 import 'package:m_kemet/src/core/widgets/crop_image_modal.dart';
 import 'package:m_kemet/src/core/widgets/image_preview_modal.dart';
 import 'package:m_kemet/src/core/widgets/image_source_selection_bottom_sheet.dart';
+import 'package:m_kemet/src/features/job_seeker/presentation/widgets/profile_setup/identity_document_type_selector.dart';
 
 class DocumentsUploadSection extends StatelessWidget {
   const DocumentsUploadSection({super.key});
@@ -201,80 +202,92 @@ class DocumentsUploadSection extends StatelessWidget {
 
             12.szH,
 
-            // Item 2: National ID Card
-            _buildDocumentCard(
-              context: context,
-              title: S.of(context).idCardTitle,
-              subtitle: 'صورة وجهي البطاقة الشخصية',
-              icon: Icons.credit_card_rounded,
-              iconBgColor: AppColors.softBlueBg,
-              isUploaded: isNationalIdUploaded,
-              isUploading: isNationalIdUploading,
-              fileName: state.uploadedNationalId?.originalName ??
-                  state.localNationalIdPath?.split(Platform.pathSeparator).last,
-              onUploadTap: () => _pickAndUploadImage(
+            // Identity Document Choice Selector
+            IdentityDocumentTypeSelector(
+              selectedChoice: state.identityDocumentChoice,
+              onChoiceChanged: cubit.selectIdentityDocumentChoice,
+            ),
+
+            12.szH,
+
+            // Item 2: National ID Card (visible if choice is nationalId or both)
+            if (state.identityDocumentChoice == IdentityDocumentChoice.nationalId ||
+                state.identityDocumentChoice == IdentityDocumentChoice.both) ...[
+              _buildDocumentCard(
                 context: context,
-                uploadFn: cubit.uploadNationalId,
                 title: S.of(context).idCardTitle,
-                initialAspectRatio: 4 / 3,
-              ),
-              onPreviewTap: () {
-                final file = state.localNationalIdPath != null
-                    ? File(state.localNationalIdPath!)
-                    : null;
-                final url = state.uploadedNationalId?.fileUrl ??
-                    state.uploadedNationalId?.filePath;
-                ImagePreviewModal.show(
-                  context,
-                  file: file,
-                  imageUrl: url,
+                subtitle: S.of(context).idCardSubtitle,
+                icon: Icons.credit_card_rounded,
+                iconBgColor: AppColors.softBlueBg,
+                isUploaded: isNationalIdUploaded,
+                isUploading: isNationalIdUploading,
+                fileName: state.uploadedNationalId?.originalName ??
+                    state.localNationalIdPath?.split(Platform.pathSeparator).last,
+                onUploadTap: () => _pickAndUploadImage(
+                  context: context,
+                  uploadFn: cubit.uploadNationalId,
                   title: S.of(context).idCardTitle,
-                  onChange: () => _pickAndUploadImage(
-                    context: context,
-                    uploadFn: cubit.uploadNationalId,
+                  initialAspectRatio: 4 / 3,
+                ),
+                onPreviewTap: () {
+                  final file = state.localNationalIdPath != null
+                      ? File(state.localNationalIdPath!)
+                      : null;
+                  final url = state.uploadedNationalId?.fileUrl ??
+                      state.uploadedNationalId?.filePath;
+                  ImagePreviewModal.show(
+                    context,
+                    file: file,
+                    imageUrl: url,
                     title: S.of(context).idCardTitle,
-                    initialAspectRatio: 4 / 3,
-                  ),
-                );
-              },
-            ),
-
-            12.szH,
-
-            // Item 3: Passport Copy Card
-            _buildDocumentCard(
-              context: context,
-              title: S.of(context).passportCopyTitle,
-              icon: Icons.badge_outlined,
-              iconBgColor: AppColors.softBlueBg,
-              isUploaded: isPassportUploaded,
-              isUploading: isPassportUploading,
-              fileName: state.uploadedPassport?.originalName ??
-                  state.localPassportPath?.split(Platform.pathSeparator).last,
-              onUploadTap: () => _scanAndUploadPassport(
-                context: context,
-                uploadFn: cubit.uploadPassport,
+                    onChange: () => _pickAndUploadImage(
+                      context: context,
+                      uploadFn: cubit.uploadNationalId,
+                      title: S.of(context).idCardTitle,
+                      initialAspectRatio: 4 / 3,
+                    ),
+                  );
+                },
               ),
-              onPreviewTap: () {
-                final file = state.localPassportPath != null
-                    ? File(state.localPassportPath!)
-                    : null;
-                final url = state.uploadedPassport?.fileUrl ??
-                    state.uploadedPassport?.filePath;
-                ImagePreviewModal.show(
-                  context,
-                  file: file,
-                  imageUrl: url,
-                  title: S.of(context).passportCopyTitle,
-                  onChange: () => _scanAndUploadPassport(
-                    context: context,
-                    uploadFn: cubit.uploadPassport,
-                  ),
-                );
-              },
-            ),
+              12.szH,
+            ],
 
-            12.szH,
+            // Item 3: Passport Copy Card (visible if choice is passport or both)
+            if (state.identityDocumentChoice == IdentityDocumentChoice.passport ||
+                state.identityDocumentChoice == IdentityDocumentChoice.both) ...[
+              _buildDocumentCard(
+                context: context,
+                title: S.of(context).passportCopyTitle,
+                icon: Icons.badge_outlined,
+                iconBgColor: AppColors.softBlueBg,
+                isUploaded: isPassportUploaded,
+                isUploading: isPassportUploading,
+                fileName: state.uploadedPassport?.originalName ??
+                    state.localPassportPath?.split(Platform.pathSeparator).last,
+                onUploadTap: () => _scanAndUploadPassport(
+                  context: context,
+                  uploadFn: cubit.uploadPassport,
+                ),
+                onPreviewTap: () {
+                  final file = state.localPassportPath != null
+                      ? File(state.localPassportPath!)
+                      : null;
+                  final url = state.uploadedPassport?.fileUrl ??
+                      state.uploadedPassport?.filePath;
+                  ImagePreviewModal.show(
+                    context,
+                    file: file,
+                    imageUrl: url,
+                    title: S.of(context).passportCopyTitle,
+                    onChange: () => _scanAndUploadPassport(
+                      context: context,
+                      uploadFn: cubit.uploadPassport,
+                    ),
+                  );
+                },
+              ),
+              12.szH,
+            ],
 
             // Item 4: CV Upload Dropzone
             _buildCvUploadCard(
