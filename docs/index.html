@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M-Kemet | Terms of Service, Privacy Policy & Account Deletion</title>
+  <meta name="description" content="Legal terms, privacy policy, and account & data deletion policy for M-Kemet (مـ كيميت)." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #1A365D;
+      --primary-light: #2B6CB0;
+      --accent: #D69E2E;
+      --accent-hover: #B7791F;
+      --bg: #F7FAFC;
+      --surface: #FFFFFF;
+      --surface-border: #E2E8F0;
+      --text: #2D3748;
+      --text-muted: #718096;
+      --danger: #E53E3E;
+      --danger-bg: #FFF5F5;
+      --danger-border: #FEB2B2;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      --font-ar: 'Cairo', sans-serif;
+      --font-en: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-ar);
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    html[dir="ltr"] body {
+      font-family: var(--font-en);
+    }
+
+    /* Header & Navigation */
+    header {
+      background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
+      color: white;
+      padding: 2.5rem 1.5rem;
+      border-bottom: 3px solid var(--accent);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .header-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--accent);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: #0F172A;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .brand-title h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .brand-title span {
+      font-size: 0.85rem;
+      color: #93C5FD;
+    }
+
+    .controls {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .btn-lang {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    .btn-lang:hover {
+      background: var(--accent);
+      color: #0F172A;
+      border-color: var(--accent);
+    }
+
+    /* Quick Links Tabs */
+    .tabs-bar {
+      background: white;
+      border-bottom: 1px solid var(--surface-border);
+      position: sticky;
+      top: 105px;
+      z-index: 90;
+    }
+
+    .tabs-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      gap: 1rem;
+      padding: 0.75rem 1.5rem;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .tab-link {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .tab-link:hover, .tab-link.active {
+      color: var(--primary);
+      background: #EBF8FF;
+    }
+
+    .tab-link.deletion-tab {
+      color: var(--danger);
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+    }
+
+    .tab-link.deletion-tab:hover {
+      background: #FED7D7;
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .section-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--surface-border);
+      padding: 2.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .section-card h2 {
+      color: var(--primary);
+      font-size: 1.6rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #EDF2F7;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-card h3 {
+      color: #2D3748;
+      font-size: 1.2rem;
+      margin: 1.5rem 0 0.5rem 0;
+    }
+
+    .section-card p, .section-card li {
+      color: #4A5568;
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+    }
+
+    .section-card ul {
+      padding-inline-start: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Callout & Alert Box */
+    .alert-box {
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .alert-danger {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      color: #9B2C2C;
+    }
+
+    .alert-danger h3 {
+      color: #C53030;
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .badge-pill {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: #E2E8F0;
+      color: #4A5568;
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-card {
+      background: #F8FAFC;
+      border: 2px dashed #CBD5E0;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .contact-email {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      word-break: break-all;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: var(--primary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.2s;
+      width: fit-content;
+    }
+
+    .btn-action:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+    }
+
+    .btn-danger:hover {
+      background: #C53030;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--surface-border);
+      background: white;
+      margin-top: 3rem;
+    }
+
+    /* Print styles */
+    @media print {
+      header, .tabs-bar, .btn-lang {
+        display: none;
+      }
+      .section-card {
+        box-shadow: none;
+        border: 1px solid #CCC;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .section-card {
+        padding: 1.5rem;
+      }
+      .tabs-container {
+        padding: 0.5rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">M</div>
+        <div class="brand-title">
+          <h1 id="app-title">مـ كيميت (M-Kemet)</h1>
+          <span id="app-subtitle">البوابة القانونية وسياسات الاستخدام وحذف الحسابات</span>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn-lang" id="langToggleBtn" onclick="toggleLanguage()">
+          🌐 English
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Quick Navigation Tabs -->
+  <div class="tabs-bar">
+    <div class="tabs-container">
+      <a href="#terms" class="tab-link active" id="tab-terms">📜 الشروط والأحكام</a>
+      <a href="#privacy" class="tab-link" id="tab-privacy">🔒 سياسة الخصوصية</a>
+      <a href="#deletion" class="tab-link deletion-tab" id="tab-deletion">🗑️ حذف الحساب والبيانات</a>
+      <a href="#contact" class="tab-link" id="tab-contact">📬 اتصل بنا</a>
+    </div>
+  </div>
+
+  <main>
+    
+    <!-- ARABIC CONTENT -->
+    <div id="content-ar">
+      
+      <!-- Terms and Conditions -->
+      <section id="terms" class="section-card">
+        <span class="badge-pill">تاريخ السريان: 2026-09-27</span>
+        <h2>📜 الشروط والأحكام (Terms & Conditions)</h2>
+        <p>
+          أهلاً بكم في منصة وتطبيق <strong>مـ كيميت (M-Kemet)</strong> التابعة لشركة <strong>Fourth Pyramid</strong>. باستخدامك للتطبيق أو المنصة كمرشح (باحث عن عمل) أو كشركة (صاحب عمل)، فإنك توافق على الالتزام الكامل بهذه الشروط والأحكام.
+        </p>
+
+        <h3>1. تعريف المنصة والخدمات</h3>
+        <p>
+          <strong>مـ كيميت</strong> هي منصة تقنية تهدف إلى الربط بين الكفاءات والكوادر المهنية وبين أصحاب الأعمال والشركات الراغبة في استقدام وتوظيف العمالة المؤهلة والمحققة. المنصة تعمل كوسيط تقني لتنظيم طلبات التواصل وعرض السير الذاتية ومقاطع الفيديو التعريفية الموثقة.
+        </p>
+
+        <h3>2. التزامات الباحثين عن عمل (Job Seekers)</h3>
+        <ul>
+          <li>الالتزام بتقديم بيانات صحيحة ودقيقة (الاسم، المؤهلات، الخبرات، وصور الوثائق الرسمية).</li>
+          <li>تسجيل فيديو تعريفي احترافي يعبر بصدق عن هوية المرشح ومهاراته دون أي محتوى مضلل أو خادش للحياء.</li>
+          <li>الموافقة على قيام إدارة المنصة بمراجعة وتدقيق المستندات للتحقق من هوية المرشح قبل اعتماد الملف وإتاحته للشركات.</li>
+        </ul>
+
+        <h3>3. التزامات أصحاب الأعمال والشركات (Employers)</h3>
+        <ul>
+          <li>استخدام بيانات المرشحين لأغراض التوظيف الشرعية فقط والمحددة في طلبات التواصل.</li>
+          <li>عدم مشاركة أو تسريب أو إعادة بيع بيانات الاتصال أو السير الذاتية لأي طرف ثالث خارجي.</li>
+          <li>الالتزام بالقوانين المنظمة للعمل والتعاقدات في دولة التوظيف.</li>
+        </ul>
+
+        <h3>4. الملكية الفكرية والاستخدام المحظور</h3>
+        <p>
+          كافة العلامات التجارية، الأكواد، التصاميم، وشعار "M-Kemet" هي ملك حصري لشركة Fourth Pyramid. يُحظر تماماً محاولة تفكيك التطبيق (Reverse Engineering)، استخراج البيانات تلقائياً (Scraping)، أو استخدام المنصة لأي غرض غير قانوني.
+        </p>
+
+        <h3>5. حدود المسؤولية</h3>
+        <p>
+          تبذل إدارة المنصة أقصى مساعيها للتحقق من مصداقية الأطراف، ولكن لا تضمن المنصة استجابة أي مرشح أو إتمام أي صفقة عمل أو توظيف بين الشركات والمرشحين، وتقع مسؤولية المقابلات النهائية والاتفاقات المالية على عاتق الطرفين مباشرة.
+        </p>
+      </section>
+
+      <!-- Privacy Policy -->
+      <section id="privacy" class="section-card">
+        <span class="badge-pill">متوافق مع معايير Google Play</span>
+        <h2>🔒 سياسة الخصوصية (Privacy Policy)</h2>
+        <p>
+          نحن في <strong>M-Kemet</strong> ندرك أهمية خصوصية بياناتك ونلتزم بحمايتها وفق أعلى المعايير الأمنية. توضح هذه السياسة كيف نجمع بياناتك ونستخدمها ونخزنها.
+        </p>
+
+        <h3>1. البيانات التي نقوم بجمعها</h3>
+        <ul>
+          <li><strong>بيانات الحساب الشخصية:</strong> الاسم الكامل، البريد الإلكتروني، رقم الهاتف، الدولة الحالية، وكلمة المرور المشفرة.</li>
+          <li><strong>بيانات التحقق والملف المهني (للباحثين عن عمل):</strong> صورة الهوية الوطنية/الرقم القومي، صورة جواز السفر، ملف السيرة الذاتية (CV)، والمؤهلات الأكاديمية.</li>
+          <li><strong>الوسائط والمستندات:</strong> الصورة الشخصية الرسمية، والفيديو التعريفي (Intro Video) المسجل بكاميرا الهاتف.</li>
+          <li><strong>البيانات التقنية:</strong> معرّف الجهاز (Device ID)، عنوان IP، وسجلات تشخيص الأخطاء لتحسين أداء التطبيق عبر Firebase Crashlytics & Analytics.</li>
+        </ul>
+
+        <h3>2. أسباب جمع واستخدام البيانات</h3>
+        <ul>
+          <li>إنشاء الحساب وتأمينه عبر رمز التحقق (OTP).</li>
+          <li>التحقق من صحة المستندات وهوية الكوادر لمنع التزوير والاحتيال في التوظيف.</li>
+          <li>تمكين الشركات المعتمدة من البحث، تصفح السير الذاتية، وإرسال طلبات التواصل للمرشحين.</li>
+          <li>إرسال الإشعارات الفورية الهامة (Push Notifications) عبر Firebase Cloud Messaging.</li>
+        </ul>
+
+        <h3>3. مشاركة وحماية البيانات</h3>
+        <p>
+          بياناتك لا تُباع ولا تُؤجر لأي أطراف إعلانية خارجية. يتم تخزين وتناقل البيانات عبر قنوات مشفرة بمعيار SSL/TLS (HTTPS). يتم حصر إمكانية الوصول إلى وثائق الهوية فقط لإدارة المنصة المخولة لغرض الاعتماد.
+        </p>
+      </section>
+
+      <!-- Account Deletion Policy (Play Store Mandatory) -->
+      <section id="deletion" class="section-card">
+        <div class="alert-box alert-danger">
+          <h3>🗑️ سياسة حذف الحساب والبيانات (Account & Data Deletion)</h3>
+          <p>
+            تتيح منصة <strong>M-Kemet</strong> لجميع المستخدمين (مرشحين وشركات) الحق الكامل في حذف حساباتهم وبياناتهم المرتبطة بصورة نهائية ودائمة في أي وقت.
+          </p>
+        </div>
+
+        <h3>كيفية طلب حذف الحساب والبيانات:</h3>
+        <p>نوفر طريقتين بسيطتين لحذف حسابك:</p>
+
+        <div style="margin: 1.5rem 0;">
+          <h4>1️⃣ من داخل التطبيق مباشرة:</h4>
+          <ol style="padding-inline-start: 1.5rem; margin-top: 0.5rem;">
+            <li>سجل الدخول إلى حسابك في تطبيق <strong>M-Kemet</strong>.</li>
+            <li>انتقل إلى شاشة <strong>الملف الشخصي (Profile)</strong> أو <strong>الإعدادات (Settings)</strong>.</li>
+            <li>اختر <strong>"حذف الحساب" (Delete Account)</strong>.</li>
+            <li>قم بتأكيد رغبتك بالحذف، وسيتم مسح الحساب وبياناته فوراً.</li>
+          </ol>
+        </div>
+
+        <div style="margin: 1.5rem 0;">
+          <h4>2️⃣ عبر الويب أو البريد الإلكتروني (دون الحاجة لتثبيت التطبيق):</h4>
+          <p>
+            إذا قمت بحذف التطبيق أو تعذر تسجيل دخولك، يمكنك طلب الحذف المباشر بإرسال بريد إلكتروني إلى فريق الدعم المخصص للحذف:
+          </p>
+          <div class="contact-card">
+            <span>البريد الإلكتروني المعتمد لطلبات حذف الحسابات:</span>
+            <a href="mailto:fourthpyramid21@gmail.com?subject=M-Kemet%20Account%20Deletion%20Request" class="contact-email">
+              fourthpyramid21@gmail.com
+            </a>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">
+              يرجى إرسال الرسالة من نفس البريد الإلكتروني المسجل به الحساب أو كتابة رقم الهاتف المرتبط بالحساب مع عنوان "طلب حذف حساب M-Kemet".
+            </p>
+            <a href="mailto:fourthpyramid21@gmail.com?subject=M-Kemet%20Account%20Deletion%20Request" class="btn-action btn-danger">
+              ✉️ إرسال طلب حذف الحساب
+            </a>
+          </div>
+        </div>
+
+        <h3>ما البيانات التي يتم حذفها نهائياً؟</h3>
+        <ul>
+          <li><strong>بيانات الملف الشخصي:</strong> الاسم، البريد، رقم الهاتف، والبيانات التعريفية.</li>
+          <li><strong>المستندات والصور:</strong> صور الهوية، جواز السفر، والسيرة الذاتية (CV).</li>
+          <li><strong>مقاطع الفيديو:</strong> الفيديو التعريفي من سيرفرات التخزين.</li>
+          <li><strong>سجلات الاتصال والمفضلة:</strong> طلبات التواصل المسجلة وقوائم الحفظ.</li>
+        </ul>
+
+        <h3>فترة المعالجة والاحتفاظ المؤقت (Data Retention):</h3>
+        <p>
+          تتم معالجة طلبات الحذف الإلكترونية خلال <strong>48 إلى 72 ساعة كحد أقصى</strong>. يتم مسح جميع البيانات من قواعد البيانات النشطة. قد يتم الاحتفاظ بسجلات المعاملات المالية أو الإجراءات القانونية لفترة محددة طبقاً للالتزامات الضريبية والقانونية فقط، ثم تُتلف تلقائياً.
+        </p>
+      </section>
+
+      <!-- Contact Info -->
+      <section id="contact" class="section-card">
+        <h2>📬 التواصل والدعم الفني</h2>
+        <p>إذا كانت لديك أي استفسارات تتعلق بالشروط والأحكام، الخصوصية، أو حذف الحساب، يمكنك التواصل معنا مباشرة عبر:</p>
+        <div class="contact-card">
+          <p><strong>الجهة المالكة:</strong> Fourth Pyramid</p>
+          <p><strong>البريد الإلكتروني:</strong> <a href="mailto:fourthpyramid21@gmail.com" class="contact-email">fourthpyramid21@gmail.com</a></p>
+          <p><strong>التطبيق:</strong> M-Kemet (مـ كيميت)</p>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ENGLISH CONTENT -->
+    <div id="content-en" style="display: none;">
+      
+      <!-- Terms and Conditions -->
+      <section id="terms-en" class="section-card">
+        <span class="badge-pill">Effective Date: September 27, 2026</span>
+        <h2>📜 Terms and Conditions</h2>
+        <p>
+          Welcome to the <strong>M-Kemet</strong> application and platform, operated by <strong>Fourth Pyramid</strong>. By using our platform as a candidate (job seeker) or employer (company), you explicitly agree to comply with and be bound by the following Terms and Conditions.
+        </p>
+
+        <h3>1. Platform Scope and Services</h3>
+        <p>
+          <strong>M-Kemet</strong> is an innovative talent recruitment platform connecting qualified professionals across Egypt, the Arab world, and the Gulf region with verified employers and companies. The platform acts as a technology intermediary to facilitate verified candidate profiles, video pitches, resume verification, and interview/contact requests.
+        </p>
+
+        <h3>2. Job Seeker Obligations</h3>
+        <ul>
+          <li>Provide accurate, genuine, and verified personal, educational, and professional data.</li>
+          <li>Record and maintain a professional one-minute introduction video reflecting skills without inappropriate or misleading material.</li>
+          <li>Acknowledge that administrative review of documents (ID/Passport/CV) is mandatory prior to candidate profile approval and employer visibility.</li>
+        </ul>
+
+        <h3>3. Employer Obligations</h3>
+        <ul>
+          <li>Utilize candidate data strictly for legitimate recruitment and interview evaluation purposes.</li>
+          <li>Refrain from sharing, publishing, or reselling candidate documents or contact info to unauthorized third parties.</li>
+          <li>Adhere to applicable labor laws, contract norms, and recruitment ethics.</li>
+        </ul>
+
+        <h3>4. Intellectual Property & Prohibited Activities</h3>
+        <p>
+          All trademarks, logos, app designs, graphics, and backend code associated with M-Kemet are the exclusive property of Fourth Pyramid. Reverse engineering, unauthorized web scraping, and malicious activities are strictly prohibited.
+        </p>
+
+        <h3>5. Limitation of Liability</h3>
+        <p>
+          While M-Kemet implements verification mechanisms, we do not guarantee job placement, candidate response rates, or employment outcomes. Contracting terms, compensation, and workplace agreements remain solely between the employer and the candidate.
+        </p>
+      </section>
+
+      <!-- Privacy Policy -->
+      <section id="privacy-en" class="section-card">
+        <span class="badge-pill">Google Play Compliant</span>
+        <h2>🔒 Privacy Policy</h2>
+        <p>
+          At <strong>M-Kemet</strong>, we are committed to safeguarding your privacy and ensuring your personal information is protected with industry-standard encryption and security protocols.
+        </p>
+
+        <h3>1. Information We Collect</h3>
+        <ul>
+          <li><strong>Account Data:</strong> Full name, email address, phone number, current country, and securely hashed passwords.</li>
+          <li><strong>Identity & Verification Records (Candidates):</strong> National ID cards, Passport copies, CV/Resume documents, and career credentials.</li>
+          <li><strong>Media Files:</strong> Official profile photo and candidate 1-minute intro video recorded via mobile camera.</li>
+          <li><strong>Technical Diagnostics:</strong> Device ID, IP address, system OS, and diagnostic crash logs via Firebase Services.</li>
+        </ul>
+
+        <h3>2. Purpose of Data Processing</h3>
+        <ul>
+          <li>Account creation, authentication, and secure login via One-Time Passwords (OTP).</li>
+          <li>Candidate verification by administrative staff to prevent identity fraud and ensure recruitment authenticity.</li>
+          <li>Enabling approved employers to filter candidate qualifications and submit formal contact requests.</li>
+          <li>Dispatching mission-critical alerts and status updates using Firebase Cloud Messaging (FCM).</li>
+        </ul>
+
+        <h3>3. Data Security and Confidentiality</h3>
+        <p>
+          We do not sell, rent, or monetize your personal data. All data transfers are safeguarded using end-to-end HTTPS/TLS protocols. Access to sensitive verification documents is restricted to authorized platform personnel.
+        </p>
+      </section>
+
+      <!-- Account Deletion Policy (Play Store Mandatory) -->
+      <section id="deletion-en" class="section-card">
+        <div class="alert-box alert-danger">
+          <h3>🗑️ Account and Data Deletion Policy</h3>
+          <p>
+            In compliance with Google Play Store User Data policies, <strong>M-Kemet</strong> guarantees all users the unequivocal right to request complete deletion of their account and all associated personal data at any time.
+          </p>
+        </div>
+
+        <h3>How to Request Account & Data Deletion:</h3>
+        <p>Users can delete their account through either of the following methods:</p>
+
+        <div style="margin: 1.5rem 0;">
+          <h4>1️⃣ Directly In-App:</h4>
+          <ol style="padding-inline-start: 1.5rem; margin-top: 0.5rem;">
+            <li>Log in to your account inside the <strong>M-Kemet</strong> app.</li>
+            <li>Navigate to the <strong>Profile</strong> or <strong>Settings</strong> screen.</li>
+            <li>Select <strong>"Delete Account"</strong>.</li>
+            <li>Confirm your action to trigger permanent erasure of your account and files.</li>
+          </ol>
+        </div>
+
+        <div style="margin: 1.5rem 0;">
+          <h4>2️⃣ Via Web or Email (Without Installing the App):</h4>
+          <p>
+            If you have uninstalled the app or cannot access your account, you can submit a deletion request directly to our dedicated administrative support email:
+          </p>
+          <div class="contact-card">
+            <span>Official Account Deletion Support Email:</span>
+            <a href="mailto:fourthpyramid21@gmail.com?subject=M-Kemet%20Account%20Deletion%20Request" class="contact-email">
+              fourthpyramid21@gmail.com
+            </a>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">
+              Please send your request from the registered email address or provide your registered phone number with the subject "M-Kemet Account Deletion Request".
+            </p>
+            <a href="mailto:fourthpyramid21@gmail.com?subject=M-Kemet%20Account%20Deletion%20Request" class="btn-action btn-danger">
+              ✉️ Send Deletion Request
+            </a>
+          </div>
+        </div>
+
+        <h3>What Data Is Permanently Deleted?</h3>
+        <ul>
+          <li><strong>User Profile:</strong> Full name, phone number, email address, and authentication credentials.</li>
+          <li><strong>Uploaded Verification Documents:</strong> National ID images, passport documents, and uploaded CV files.</li>
+          <li><strong>Media Storage:</strong> Recorded introductory video from cloud storage.</li>
+          <li><strong>Application Activity:</strong> Saved bookmarks and logged communication requests.</li>
+        </ul>
+
+        <h3>Data Retention & Processing Timeframes:</h3>
+        <p>
+          Account deletion requests received via email are processed within <strong>48 to 72 business hours</strong>. All active database entries and media files are permanently purged. Certain minimal transaction records may be retained temporarily only where strictly required by law or regulatory compliance before permanent destruction.
+        </p>
+      </section>
+
+      <!-- Contact Info -->
+      <section id="contact-en" class="section-card">
+        <h2>📬 Contact & Legal Inquiries</h2>
+        <p>For inquiries regarding our Terms of Service, Privacy Policy, or Data Deletion requests, reach out to us at:</p>
+        <div class="contact-card">
+          <p><strong>Organization:</strong> Fourth Pyramid</p>
+          <p><strong>Email Address:</strong> <a href="mailto:fourthpyramid21@gmail.com" class="contact-email">fourthpyramid21@gmail.com</a></p>
+          <p><strong>Application:</strong> M-Kemet</p>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 M-Kemet (مـ كيميت) by Fourth Pyramid. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    let currentLang = 'ar';
+
+    function toggleLanguage() {
+      if (currentLang === 'ar') {
+        setLanguage('en');
+      } else {
+        setLanguage('ar');
+      }
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      const html = document.documentElement;
+      const arContent = document.getElementById('content-ar');
+      const enContent = document.getElementById('content-en');
+      const btn = document.getElementById('langToggleBtn');
+      const appTitle = document.getElementById('app-title');
+      const appSubtitle = document.getElementById('app-subtitle');
+      
+      const tabTerms = document.getElementById('tab-terms');
+      const tabPrivacy = document.getElementById('tab-privacy');
+      const tabDeletion = document.getElementById('tab-deletion');
+      const tabContact = document.getElementById('tab-contact');
+
+      if (lang === 'en') {
+        html.setAttribute('lang', 'en');
+        html.setAttribute('dir', 'ltr');
+        arContent.style.display = 'none';
+        enContent.style.display = 'block';
+        btn.innerHTML = '🌐 العربية';
+        appTitle.innerText = 'M-Kemet';
+        appSubtitle.innerText = 'Terms of Service, Privacy Policy & Account Deletion';
+
+        tabTerms.innerHTML = '📜 Terms';
+        tabTerms.setAttribute('href', '#terms-en');
+        tabPrivacy.innerHTML = '🔒 Privacy';
+        tabPrivacy.setAttribute('href', '#privacy-en');
+        tabDeletion.innerHTML = '🗑️ Delete Account';
+        tabDeletion.setAttribute('href', '#deletion-en');
+        tabContact.innerHTML = '📬 Contact';
+        tabContact.setAttribute('href', '#contact-en');
+      } else {
+        html.setAttribute('lang', 'ar');
+        html.setAttribute('dir', 'rtl');
+        arContent.style.display = 'block';
+        enContent.style.display = 'none';
+        btn.innerHTML = '🌐 English';
+        appTitle.innerText = 'مـ كيميت (M-Kemet)';
+        appSubtitle.innerText = 'البوابة القانونية وسياسات الاستخدام وحذف الحسابات';
+
+        tabTerms.innerHTML = '📜 الشروط والأحكام';
+        tabTerms.setAttribute('href', '#terms');
+        tabPrivacy.innerHTML = '🔒 سياسة الخصوصية';
+        tabPrivacy.setAttribute('href', '#privacy');
+        tabDeletion.innerHTML = '🗑️ حذف الحساب والبيانات';
+        tabDeletion.setAttribute('href', '#deletion');
+        tabContact.innerHTML = '📬 اتصل بنا';
+        tabContact.setAttribute('href', '#contact');
+      }
+    }
+
+    // Handle hash on load (e.g. #deletion or #delete-account or #privacy)
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.toLowerCase();
+      if (hash.includes('en')) {
+        setLanguage('en');
+      }
+      if (hash.includes('del')) {
+        const target = currentLang === 'en' ? document.getElementById('deletion-en') : document.getElementById('deletion');
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+  </script>
+</body>
+</html>
