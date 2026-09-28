@@ -65,6 +65,7 @@ class DocumentsUploadSection extends StatelessWidget {
 
   Future<void> _scanAndUploadPassport({
     required BuildContext context,
+    required JobSeekerProfileCubit cubit,
     required Future<void> Function(File file) uploadFn,
   }) async {
     // If not running on Android (e.g. iOS), fallback to regular image picker with crop
@@ -89,6 +90,7 @@ class DocumentsUploadSection extends StatelessWidget {
       final result = await documentScanner.scanDocument();
       final images = result.images;
       if (images != null && images.isNotEmpty) {
+        cubit.setPassportUploading();
         final processedPath =
             await DocumentFilterHelper.processCamScannerImage(images.first);
         final file = File(processedPath);
@@ -96,6 +98,7 @@ class DocumentsUploadSection extends StatelessWidget {
         await uploadFn(file);
       }
     } catch (e) {
+      cubit.resetPassportStatus();
       debugPrint('Error scanning passport: $e');
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -266,6 +269,7 @@ class DocumentsUploadSection extends StatelessWidget {
                     state.localPassportPath?.split(Platform.pathSeparator).last,
                 onUploadTap: () => _scanAndUploadPassport(
                   context: context,
+                  cubit: cubit,
                   uploadFn: cubit.uploadPassport,
                 ),
                 onPreviewTap: () {
@@ -281,6 +285,7 @@ class DocumentsUploadSection extends StatelessWidget {
                     title: S.of(context).passportCopyTitle,
                     onChange: () => _scanAndUploadPassport(
                       context: context,
+                      cubit: cubit,
                       uploadFn: cubit.uploadPassport,
                     ),
                   );

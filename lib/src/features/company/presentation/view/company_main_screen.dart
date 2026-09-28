@@ -9,6 +9,7 @@ import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/network/connectivity_cubit.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
+import 'package:m_kemet/src/core/widgets/app_upgrade_alert.dart';
 import 'package:m_kemet/src/core/widgets/floating_bottom_nav_bar.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:m_kemet/src/features/bookmarks/presentation/cubit/bookmarks_cubit.dart';
@@ -102,48 +103,50 @@ class _CompanyMainScreenState extends State<CompanyMainScreen> {
             },
           ),
         ],
-        child: AppScaffold(
-          safeTop: true,
-          safeBottom: true,
-          extendBody: true,
-          backgroundColor: AppColors.pageBg,
-          body: IndexedStack(
-            index: _currentIndex,
-            children: [
-              CandidateSearchTab(
-                searchController: _searchController,
-                onViewCandidateProfile: _onViewCandidateProfile,
-              ),
-              const RequestsTab(),
-              const ProfileTab(),
-              const SettingsTab(),
-            ],
-          ),
-          bottomNavigationBar: FloatingBottomNavBar(
-            currentIndex: _currentIndex,
-            onTap: (index) => setState(() => _currentIndex = index),
-            items: [
-              FloatingNavItem(
-                icon: Icons.person_search_outlined,
-                activeIcon: Icons.person_search_rounded,
-                label: S.of(context).navSearchCandidates,
-              ),
-              FloatingNavItem(
-                icon: Icons.assignment_outlined,
-                activeIcon: Icons.assignment_rounded,
-                label: S.of(context).navRequests,
-              ),
-              FloatingNavItem(
-                icon: Icons.business_outlined,
-                activeIcon: Icons.business_rounded,
-                label: S.of(context).navProfile,
-              ),
-              FloatingNavItem(
-                icon: Icons.settings_outlined,
-                activeIcon: Icons.settings_rounded,
-                label: S.of(context).navSettings,
-              ),
-            ],
+        child: AppUpgradeAlert(
+          child: AppScaffold(
+            safeTop: true,
+            safeBottom: true,
+            extendBody: true,
+            backgroundColor: AppColors.pageBg,
+            body: IndexedStack(
+              index: _currentIndex,
+              children: [
+                CandidateSearchTab(
+                  searchController: _searchController,
+                  onViewCandidateProfile: _onViewCandidateProfile,
+                ),
+                const RequestsTab(),
+                const ProfileTab(),
+                const SettingsTab(),
+              ],
+            ),
+            bottomNavigationBar: FloatingBottomNavBar(
+              currentIndex: _currentIndex,
+              onTap: (index) => setState(() => _currentIndex = index),
+              items: [
+                FloatingNavItem(
+                  icon: Icons.person_search_outlined,
+                  activeIcon: Icons.person_search_rounded,
+                  label: S.of(context).navSearchCandidates,
+                ),
+                FloatingNavItem(
+                  icon: Icons.assignment_outlined,
+                  activeIcon: Icons.assignment_rounded,
+                  label: S.of(context).navRequests,
+                ),
+                FloatingNavItem(
+                  icon: Icons.business_outlined,
+                  activeIcon: Icons.business_rounded,
+                  label: S.of(context).navProfile,
+                ),
+                FloatingNavItem(
+                  icon: Icons.settings_outlined,
+                  activeIcon: Icons.settings_rounded,
+                  label: S.of(context).navSettings,
+                ),
+              ],
+            ),
           ),
         ),
       ),

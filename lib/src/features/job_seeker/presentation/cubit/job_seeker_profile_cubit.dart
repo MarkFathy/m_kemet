@@ -276,6 +276,18 @@ class JobSeekerProfileCubit extends Cubit<JobSeekerProfileState> {
     );
   }
 
+  void setPassportUploading() {
+    emit(state.copyWith(passportStatus: DocumentUploadStatus.uploading));
+  }
+
+  void resetPassportStatus() {
+    emit(state.copyWith(
+      passportStatus: state.uploadedPassport != null
+          ? DocumentUploadStatus.success
+          : DocumentUploadStatus.initial,
+    ));
+  }
+
   Future<void> uploadPassport(File file) async {
     emit(state.copyWith(
       passportStatus: DocumentUploadStatus.uploading,

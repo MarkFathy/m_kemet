@@ -10,7 +10,8 @@ import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_ty
 abstract class AuthRepository {
   Future<Either<Failure, AuthEntity>> registerCandidate({
     required String name,
-    required String email,
+    /* Email optional */
+    String? email,
     required String phone,
     required String password,
     required String passwordConfirmation,
@@ -22,13 +23,15 @@ abstract class AuthRepository {
   Future<Either<Failure, AuthEntity>> registerCompany({
     required String name,
     required String phone,
-    required String email,
+    /* Email optional */
+    String? email,
     required String password,
     required String passwordConfirmation,
   });
 
   Future<Either<Failure, AuthEntity>> login({
-    required String email,
+    /* required String email, */
+    required String phone,
     required String password,
     UserType? expectedUserType,
   });

@@ -92,16 +92,29 @@ class AuthCubit extends Cubit<AuthState> {
           errorMessage: failure.serverException.message,
         ),
       ),
-      (authEntity) => emit(
-        state.copyWith(
-          status: AuthStatus.registerSuccess,
-          authEntity: authEntity,
-          user: authEntity.user,
-          pendingEmail: params.email,
-          userType: UserType.jobSeeker,
-          successMessage: authEntity.message ?? _l10n.registrationSuccessMessage,
-        ),
-      ),
+      (authEntity) async {
+        // If backend did not return token on register (because it formerly relied on OTP),
+        // seamlessly auto-login using phone + password so the user is authenticated directly!
+        if (authEntity.accessToken == null || authEntity.accessToken!.isEmpty) {
+          await login(
+            phone: params.phone,
+            password: params.password,
+            fallbackUserType: UserType.jobSeeker,
+          );
+          return;
+        }
+
+        emit(
+          state.copyWith(
+            status: AuthStatus.registerSuccess,
+            authEntity: authEntity,
+            user: authEntity.user,
+            pendingEmail: params.phone,
+            userType: UserType.jobSeeker,
+            successMessage: authEntity.message ?? _l10n.registrationSuccessMessage,
+          ),
+        );
+      },
     );
   }
 
@@ -115,21 +128,34 @@ class AuthCubit extends Cubit<AuthState> {
           errorMessage: failure.serverException.message,
         ),
       ),
-      (authEntity) => emit(
-        state.copyWith(
-          status: AuthStatus.registerSuccess,
-          authEntity: authEntity,
-          user: authEntity.user,
-          pendingEmail: params.email,
-          userType: UserType.employer,
-          successMessage: authEntity.message ?? _l10n.registrationSuccessMessage,
-        ),
-      ),
+      (authEntity) async {
+        // If backend did not return token on register, seamlessly auto-login using phone + password
+        if (authEntity.accessToken == null || authEntity.accessToken!.isEmpty) {
+          await login(
+            phone: params.phone,
+            password: params.password,
+            fallbackUserType: UserType.employer,
+          );
+          return;
+        }
+
+        emit(
+          state.copyWith(
+            status: AuthStatus.registerSuccess,
+            authEntity: authEntity,
+            user: authEntity.user,
+            pendingEmail: params.phone,
+            userType: UserType.employer,
+            successMessage: authEntity.message ?? _l10n.registrationSuccessMessage,
+          ),
+        );
+      },
     );
   }
 
   Future<void> login({
-    required String email,
+    /* String? email, */
+    required String phone,
     required String password,
     UserType? fallbackUserType,
   }) async {
@@ -137,7 +163,7 @@ class AuthCubit extends Cubit<AuthState> {
     final expectedType = fallbackUserType ?? state.userType;
     final result = await loginUseCase(
       LoginParams(
-        email: email,
+        phone: phone,
         password: password,
         expectedUserType: expectedType,
       ),

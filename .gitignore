@@ -46,3 +46,12 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Keystore and signing secrets
+*.keystore
+*.jks
+**/android/key.properties
+
+/android/build/
+android/.gradle/
+

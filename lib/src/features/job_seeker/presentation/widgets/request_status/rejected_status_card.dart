@@ -9,7 +9,7 @@ import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/services/session_manager.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
-import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
+// import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
 import 'package:m_kemet/src/core/widgets/status_badge.dart';
 import 'package:m_kemet/src/features/job_seeker/domain/entities/candidate_document_entity.dart';
 
@@ -205,36 +205,36 @@ class RejectedStatusCard extends StatelessWidget {
             textStyle: getTextStyle().whiteColor.w700.s16,
           ),
 
-          12.szH,
+          // 12.szH,
 
-          // ── Contact Support Button ───────────────────────────────────────
-          OutlinedButton(
-            onPressed: () {
-              CustomSnackBar.showInfo(
-                context,
-                message: S.of(context).supportReadyToHelp,
-              );
-            },
-            style: OutlinedButton.styleFrom(
-              minimumSize: Size(double.infinity, 44.h),
-              foregroundColor: AppColors.darkNavy,
-              side: const BorderSide(color: AppColors.darkNavy),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.headset_mic_outlined, size: 18.sp, color: AppColors.darkNavy),
-                8.szW,
-                Text(
-                  S.of(context).contactSupport,
-                  style: getTextStyle().darkNavy.w700.s14,
-                ),
-              ],
-            ),
-          ),
+          // // ── Contact Support Button ───────────────────────────────────────
+          // OutlinedButton(
+          //   onPressed: () {
+          //     CustomSnackBar.showInfo(
+          //       context,
+          //       message: S.of(context).supportReadyToHelp,
+          //     );
+          //   },
+          //   style: OutlinedButton.styleFrom(
+          //     minimumSize: Size(double.infinity, 44.h),
+          //     foregroundColor: AppColors.darkNavy,
+          //     side: const BorderSide(color: AppColors.darkNavy),
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(12.r),
+          //     ),
+          //   ),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Icon(Icons.headset_mic_outlined, size: 18.sp, color: AppColors.darkNavy),
+          //       8.szW,
+          //       Text(
+          //         S.of(context).contactSupport,
+          //         style: getTextStyle().darkNavy.w700.s14,
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

@@ -52,13 +52,15 @@ class _LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<_LoginView> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  /* final _emailController = TextEditingController(); */
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isCheckingProfile = false;
 
   @override
   void dispose() {
-    _emailController.dispose();
+    /* _emailController.dispose(); */
+    _phoneController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -67,7 +69,8 @@ class _LoginViewState extends State<_LoginView> {
     if (_isCheckingProfile) return;
     if (_formKey.currentState?.validate() ?? false) {
       context.read<AuthCubit>().login(
-            email: _emailController.text.trim(),
+            /* email: _emailController.text.trim(), */
+            phone: _phoneController.text.trim(),
             password: _passwordController.text,
             fallbackUserType: widget.userType,
           );
@@ -135,7 +138,22 @@ class _LoginViewState extends State<_LoginView> {
 
                   36.szH,
 
-                  // Email Input
+                  // Phone Input (Replaces email input as per client request)
+                  DefaultTextField(
+                    controller: _phoneController,
+                    label: S.of(context).phoneLabel,
+                    hint: S.of(context).phoneHint,
+                    isPhone: true,
+                    prefixIcon: Icon(Icons.phone_outlined, color: AppColors.greyColor, size: 20.sp),
+                    validator: (value) => Validators.validatePhone(
+                      value,
+                      emptyMessage: S.of(context).phoneHint,
+                      invalidMessage: S.of(context).phoneValidationMessage,
+                    ),
+                  ),
+
+                  /*
+                  // Email Input (Commented out as per client request)
                   DefaultTextField(
                     controller: _emailController,
                     label: S.of(context).emailLabel,
@@ -148,6 +166,7 @@ class _LoginViewState extends State<_LoginView> {
                       invalidMessage: S.of(context).emailValidationMessage,
                     ),
                   ),
+                  */
 
                   20.szH,
 
@@ -168,7 +187,8 @@ class _LoginViewState extends State<_LoginView> {
 
                   12.szH,
 
-                  // Forgot Password Link
+                  /*
+                  // Forgot Password Link (Commented out as per client request)
                   Align(
                     alignment: AlignmentDirectional.centerEnd,
                     child: TextButton(
@@ -181,6 +201,7 @@ class _LoginViewState extends State<_LoginView> {
                       ),
                     ),
                   ),
+                  */
 
                   24.szH,
 

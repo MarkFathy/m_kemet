@@ -6,6 +6,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Used to scan passport and documents</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used to select photos and documents from gallery</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

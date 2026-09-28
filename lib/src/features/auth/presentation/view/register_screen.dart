@@ -11,6 +11,7 @@ import 'package:m_kemet/src/core/helpers/validators.dart';
 import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
+import 'package:m_kemet/src/core/services/session_manager.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_back_button.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
@@ -20,7 +21,7 @@ import 'package:m_kemet/src/features/auth/domain/usecases/register_candidate_use
 import 'package:m_kemet/src/features/auth/domain/usecases/register_company_usecase.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_state.dart';
-import 'package:m_kemet/src/features/auth/presentation/view/otp_verification_screen.dart';
+/* import 'package:m_kemet/src/features/auth/presentation/view/otp_verification_screen.dart'; */
 import 'package:m_kemet/src/features/auth/presentation/widgets/auth_widgets.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 
@@ -110,7 +111,7 @@ class _RegisterViewState extends State<_RegisterView> {
         RegisterCompanyParams(
           name: _nameController.text.trim(),
           phone: _phoneController.text.trim(),
-          email: _emailController.text.trim(),
+          /* email: _emailController.text.trim(), */
           password: _passwordController.text,
           passwordConfirmation: _confirmPasswordController.text,
         ),
@@ -119,7 +120,7 @@ class _RegisterViewState extends State<_RegisterView> {
       cubit.registerCandidate(
         RegisterCandidateParams(
           name: _nameController.text.trim(),
-          email: _emailController.text.trim(),
+          /* email: _emailController.text.trim(), */
           phone: _phoneController.text.trim(),
           password: _passwordController.text,
           passwordConfirmation: _confirmPasswordController.text,
@@ -188,7 +189,11 @@ class _RegisterViewState extends State<_RegisterView> {
       listener: (context, state) {
         if (state.status == AuthStatus.error && state.errorMessage != null) {
           CustomSnackBar.showError(context, message: state.errorMessage!);
-        } else if (state.status == AuthStatus.registerSuccess) {
+        } else if (state.status == AuthStatus.registerSuccess ||
+            state.status == AuthStatus.loginSuccess ||
+            state.status == AuthStatus.authenticated) {
+          /*
+          // Commented out OTP verification as per client request
           Go.toNamed(
             NamedRoutes.otpVerification,
             arguments: OtpScreenArgs(
@@ -197,6 +202,17 @@ class _RegisterViewState extends State<_RegisterView> {
               isPasswordReset: false,
             ),
           );
+          */
+          CustomSnackBar.showSuccess(
+            context,
+            message: state.successMessage ?? S.of(context).registrationSuccessMessage,
+          );
+          if (isEmployer) {
+            Go.offAllNamed(NamedRoutes.companyMain);
+          } else {
+            SessionManager.setJobSeekerProfileCompleted(false);
+            Go.offAllNamed(NamedRoutes.jobSeekerProfileSetup);
+          }
         }
       },
       builder: (context, state) {
@@ -276,7 +292,8 @@ class _RegisterViewState extends State<_RegisterView> {
 
                   16.szH,
 
-                  // 3. Email Input
+                  /*
+                  // 3. Email Input (Commented out as per client request)
                   DefaultTextField(
                     controller: _emailController,
                     label: S.of(context).emailLabel,
@@ -289,6 +306,8 @@ class _RegisterViewState extends State<_RegisterView> {
                       invalidMessage: S.of(context).emailValidationMessage,
                     ),
                   ),
+                  16.szH,
+                  */
 
                   // Specific to Job Seeker
                   if (!isEmployer)

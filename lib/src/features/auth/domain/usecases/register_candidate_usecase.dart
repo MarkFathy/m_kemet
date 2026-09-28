@@ -7,7 +7,8 @@ import 'package:m_kemet/src/features/auth/domain/repositories/auth_repository.da
 
 class RegisterCandidateParams extends Equatable {
   final String name;
-  final String email;
+  /* Email made optional as per client request to register with phone only */
+  final String? email;
   final String phone;
   final String password;
   final String passwordConfirmation;
@@ -17,7 +18,7 @@ class RegisterCandidateParams extends Equatable {
 
   const RegisterCandidateParams({
     required this.name,
-    required this.email,
+    this.email,
     required this.phone,
     required this.password,
     required this.passwordConfirmation,

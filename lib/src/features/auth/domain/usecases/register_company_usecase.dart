@@ -8,14 +8,15 @@ import 'package:m_kemet/src/features/auth/domain/repositories/auth_repository.da
 class RegisterCompanyParams extends Equatable {
   final String name;
   final String phone;
-  final String email;
+  /* Email made optional as per client request to register with phone only */
+  final String? email;
   final String password;
   final String passwordConfirmation;
 
   const RegisterCompanyParams({
     required this.name,
     required this.phone,
-    required this.email,
+    this.email,
     required this.password,
     required this.passwordConfirmation,
   });

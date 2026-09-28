@@ -79,6 +79,7 @@ class JobSeekerDetailsCard extends StatelessWidget {
             label: S.of(context).phoneLabel,
             value: phone.isNotEmpty ? phone : '—',
           ),
+          /*
           12.szH,
           const Divider(color: AppColors.dividerGrey, height: 1),
           12.szH,
@@ -89,6 +90,7 @@ class JobSeekerDetailsCard extends StatelessWidget {
             label: S.of(context).emailLabel,
             value: email.isNotEmpty ? email : '—',
           ),
+          */
           if (countryDisplay.isNotEmpty) ...[
             12.szH,
             const Divider(color: AppColors.dividerGrey, height: 1),

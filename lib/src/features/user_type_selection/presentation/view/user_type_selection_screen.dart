@@ -12,6 +12,7 @@ import 'package:m_kemet/src/core/navigation/named_routes.dart';
 import 'package:m_kemet/src/core/navigation/navigator.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
+import 'package:m_kemet/src/core/widgets/app_upgrade_alert.dart';
 import 'package:m_kemet/src/core/widgets/buttons/custom_button.dart';
 import 'package:m_kemet/src/core/widgets/buttons/language_switcher_button.dart';
 import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
@@ -39,7 +40,8 @@ class UserTypeSelectionScreen extends StatelessWidget {
         builder: (context, state) {
           final cubit = context.read<UserTypeCubit>();
 
-          return AppScaffold(
+          return AppUpgradeAlert(
+            child: AppScaffold(
             safeTop: true,
             safeBottom: true,
             backgroundColor: AppColors.pageBg,
@@ -133,6 +135,7 @@ class UserTypeSelectionScreen extends StatelessWidget {
                   12.szH,
                 ],
               ),
+            ),
             ),
           );
         },

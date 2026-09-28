@@ -8,6 +8,7 @@ import 'package:m_kemet/src/core/network/connectivity_cubit.dart';
 import 'package:m_kemet/src/core/services/service_locator/service_locator.dart';
 import 'package:m_kemet/src/core/services/session_manager.dart';
 import 'package:m_kemet/src/core/widgets/app_scaffold.dart';
+import 'package:m_kemet/src/core/widgets/app_upgrade_alert.dart';
 import 'package:m_kemet/src/core/widgets/floating_bottom_nav_bar.dart';
 import 'package:m_kemet/src/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/cubit/job_seeker_profile_cubit.dart';
@@ -93,39 +94,41 @@ class _JobSeekerMainScreenState extends State<JobSeekerMainScreen>
             },
           ),
         ],
-        child: AppScaffold(
-          safeTop: true,
-          safeBottom: true,
-          extendBody: true,
-          backgroundColor: AppColors.pageBg,
-          body: IndexedStack(
-            index: _currentIndex,
-            children: const [
-              JobSeekerProfileTab(),
-              JobSeekerSettingsTab(),
-            ],
-          ),
-          bottomNavigationBar: FloatingBottomNavBar(
-            currentIndex: _currentIndex,
-            onTap: (index) {
-              setState(() => _currentIndex = index);
-              if (index == 1) {
-                // Switching to Settings tab -> immediately refresh profile status!
-                _profileCubit.refreshProfile();
-              }
-            },
-            items: [
-              FloatingNavItem(
-                icon: Icons.person_outline_rounded,
-                activeIcon: Icons.person_rounded,
-                label: S.of(context).navProfile,
-              ),
-              FloatingNavItem(
-                icon: Icons.settings_outlined,
-                activeIcon: Icons.settings_rounded,
-                label: S.of(context).navSettings,
-              ),
-            ],
+        child: AppUpgradeAlert(
+          child: AppScaffold(
+            safeTop: true,
+            safeBottom: true,
+            extendBody: true,
+            backgroundColor: AppColors.pageBg,
+            body: IndexedStack(
+              index: _currentIndex,
+              children: const [
+                JobSeekerProfileTab(),
+                JobSeekerSettingsTab(),
+              ],
+            ),
+            bottomNavigationBar: FloatingBottomNavBar(
+              currentIndex: _currentIndex,
+              onTap: (index) {
+                setState(() => _currentIndex = index);
+                if (index == 1) {
+                  // Switching to Settings tab -> immediately refresh profile status!
+                  _profileCubit.refreshProfile();
+                }
+              },
+              items: [
+                FloatingNavItem(
+                  icon: Icons.person_outline_rounded,
+                  activeIcon: Icons.person_rounded,
+                  label: S.of(context).navProfile,
+                ),
+                FloatingNavItem(
+                  icon: Icons.settings_outlined,
+                  activeIcon: Icons.settings_rounded,
+                  label: S.of(context).navSettings,
+                ),
+              ],
+            ),
           ),
         ),
       ),

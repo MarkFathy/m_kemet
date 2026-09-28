@@ -65,6 +65,7 @@ class CompanyProfileDetailsCard extends StatelessWidget {
               value: phone,
             ),
           ],
+          /*
           if (email.trim().isNotEmpty) ...[
             12.szH,
             const Divider(color: AppColors.dividerGrey, height: 1),
@@ -77,6 +78,7 @@ class CompanyProfileDetailsCard extends StatelessWidget {
               value: email,
             ),
           ],
+          */
           if (crNumber != null && crNumber!.trim().isNotEmpty) ...[
             12.szH,
             const Divider(color: AppColors.dividerGrey, height: 1),

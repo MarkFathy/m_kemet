@@ -28,7 +28,8 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, AuthEntity>> registerCandidate({
     required String name,
-    required String email,
+    /* Email optional */
+    String? email,
     required String phone,
     required String password,
     required String passwordConfirmation,
@@ -78,7 +79,8 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, AuthEntity>> registerCompany({
     required String name,
     required String phone,
-    required String email,
+    /* Email optional */
+    String? email,
     required String password,
     required String passwordConfirmation,
   }) async {
@@ -135,13 +137,15 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, AuthEntity>> login({
-    required String email,
+    /* required String email, */
+    required String phone,
     required String password,
     UserType? expectedUserType,
   }) async {
     try {
       final result = await remoteDataSource.login(
-        email: email,
+        /* email: email, */
+        phone: phone,
         password: password,
       );
 

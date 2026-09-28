@@ -5,7 +5,7 @@ import 'package:m_kemet/src/config/res/color_manager.dart';
 import 'package:m_kemet/src/config/res/font_manager.dart';
 import 'package:m_kemet/src/config/res/text_style_extensions.dart';
 import 'package:m_kemet/src/core/extensions/sized_box_helper.dart';
-import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
+// import 'package:m_kemet/src/core/widgets/custom_snack_bar.dart';
 import 'package:m_kemet/src/core/widgets/status_badge.dart';
 import 'package:m_kemet/src/features/job_seeker/presentation/widgets/request_status/application_timeline_step.dart';
 
@@ -144,39 +144,39 @@ class PendingStatusCard extends StatelessWidget {
             ),
           ),
 
-          20.szH,
+          // 20.szH,
 
-          // Support Button
-          OutlinedButton(
-            onPressed: () {
-              CustomSnackBar.showInfo(
-                context,
-                message: S.of(context).supportAvailable247,
-              );
-            },
-            style: OutlinedButton.styleFrom(
-              minimumSize: Size(double.infinity, 48.h),
-              side: const BorderSide(color: AppColors.darkNavy),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.support_agent_rounded,
-                  color: AppColors.darkNavy,
-                  size: 20.sp,
-                ),
-                8.szW,
-                Text(
-                  S.of(context).contactSupport,
-                  style: getTextStyle().darkNavy.w700.s14,
-                ),
-              ],
-            ),
-          ),
+          // // Support Button
+          // OutlinedButton(
+          //   onPressed: () {
+          //     CustomSnackBar.showInfo(
+          //       context,
+          //       message: S.of(context).supportAvailable247,
+          //     );
+          //   },
+          //   style: OutlinedButton.styleFrom(
+          //     minimumSize: Size(double.infinity, 48.h),
+          //     side: const BorderSide(color: AppColors.darkNavy),
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(12.r),
+          //     ),
+          //   ),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Icon(
+          //         Icons.support_agent_rounded,
+          //         color: AppColors.darkNavy,
+          //         size: 20.sp,
+          //       ),
+          //       8.szW,
+          //       Text(
+          //         S.of(context).contactSupport,
+          //         style: getTextStyle().darkNavy.w700.s14,
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

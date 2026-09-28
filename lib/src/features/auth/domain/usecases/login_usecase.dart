@@ -7,18 +7,20 @@ import 'package:m_kemet/src/features/auth/domain/repositories/auth_repository.da
 import 'package:m_kemet/src/features/user_type_selection/domain/entities/user_type.dart';
 
 class LoginParams extends Equatable {
-  final String email;
+  /* final String email; */
+  final String phone;
   final String password;
   final UserType? expectedUserType;
 
   const LoginParams({
-    required this.email,
+    /* required this.email, */
+    required this.phone,
     required this.password,
     this.expectedUserType,
   });
 
   @override
-  List<Object?> get props => [email, password, expectedUserType];
+  List<Object?> get props => [phone, password, expectedUserType];
 }
 
 class LoginUseCase implements BaseUseCase<AuthEntity, LoginParams> {
@@ -29,7 +31,8 @@ class LoginUseCase implements BaseUseCase<AuthEntity, LoginParams> {
   @override
   Future<Either<Failure, AuthEntity>> call(LoginParams params) {
     return repository.login(
-      email: params.email,
+      /* email: params.email, */
+      phone: params.phone,
       password: params.password,
       expectedUserType: params.expectedUserType,
     );

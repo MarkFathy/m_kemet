@@ -11,7 +11,8 @@ import 'package:m_kemet/src/features/auth/data/models/user_model.dart';
 abstract class AuthRemoteDataSource {
   Future<AuthResponseModel> registerCandidate({
     required String name,
-    required String email,
+    /* Email optional */
+    String? email,
     required String phone,
     required String password,
     required String passwordConfirmation,
@@ -23,13 +24,15 @@ abstract class AuthRemoteDataSource {
   Future<AuthResponseModel> registerCompany({
     required String name,
     required String phone,
-    required String email,
+    /* Email optional */
+    String? email,
     required String password,
     required String passwordConfirmation,
   });
 
   Future<AuthResponseModel> login({
-    required String email,
+    /* required String email, */
+    required String phone,
     required String password,
   });
 
@@ -76,7 +79,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<AuthResponseModel> registerCandidate({
     required String name,
-    required String email,
+    /* Email optional */
+    String? email,
     required String phone,
     required String password,
     required String passwordConfirmation,
@@ -84,18 +88,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String birthDate,
     required int genderId,
   }) async {
+    final Map<String, dynamic> data = {
+      'name': name,
+      'phone': phone,
+      'password': password,
+      'password_confirmation': passwordConfirmation,
+      'current_country_id': currentCountryId,
+      'birth_date': birthDate,
+      'gender_id': genderId,
+    };
+    if (email != null && email.isNotEmpty) {
+      data['email'] = email;
+    }
+
     final response = await _dioClient.dio.post(
       ApiEndpoints.registerCandidate,
-      data: {
-        'name': name,
-        'email': email,
-        'phone': phone,
-        'password': password,
-        'password_confirmation': passwordConfirmation,
-        'current_country_id': currentCountryId,
-        'birth_date': birthDate,
-        'gender_id': genderId,
-      },
+      data: data,
     );
 
     if (response.data is Map<String, dynamic>) {
@@ -108,20 +116,25 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<AuthResponseModel> registerCompany({
     required String name,
     required String phone,
-    required String email,
+    /* Email optional */
+    String? email,
     required String password,
     required String passwordConfirmation,
   }) async {
+    final Map<String, dynamic> data = {
+      'company_name': name,
+      'name': name,
+      'phone': phone,
+      'password': password,
+      'password_confirmation': passwordConfirmation,
+    };
+    if (email != null && email.isNotEmpty) {
+      data['email'] = email;
+    }
+
     final response = await _dioClient.dio.post(
       ApiEndpoints.registerCompany,
-      data: {
-        'company_name': name,
-        'name': name,
-        'phone': phone,
-        'email': email,
-        'password': password,
-        'password_confirmation': passwordConfirmation,
-      },
+      data: data,
     );
 
     if (response.data is Map<String, dynamic>) {
@@ -132,12 +145,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<AuthResponseModel> login({
-    required String email,
+    /* required String email, */
+    required String phone,
     required String password,
   }) async {
     final response = await _dioClient.dio.post(
       ApiEndpoints.login,
-      data: {'email': email, 'password': password},
+      data: {
+        'phone': phone,
+        'email': phone, // Pass phone as both phone and email to support all backend implementations
+        'password': password,
+      },
     );
 
     if (response.data is Map<String, dynamic>) {
